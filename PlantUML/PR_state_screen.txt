@@ -1,0 +1,50 @@
+@startuml
+title <u><b>画面遷移図</b></u>
+left to right direction
+
+[*] -> タイトル
+タイトル --> メニュー
+
+メニュー --> ゲーム画面
+ゲーム画面 --> メニュー
+
+state メニュー {
+    [*] -> メインメニュー
+    メインメニュー --> 強化メニュー : 強化
+    メインメニュー --> 設定メニュー : 設定
+    メインメニュー --> 出撃メニュー : 出撃
+    メインメニュー -> [*] : 終了
+    出撃メニュー -> [*] : メインチャレンジ/ステージセレクト
+
+    メインメニュー: 出撃
+    メインメニュー: 強化
+    メインメニュー: 設定
+    メインメニュー: ゲームを終了する
+    強化メニュー: 対象を選択して強化
+    設定メニュー: データを初期化する
+
+
+    強化メニュー -[hidden]> 出撃メニュー
+    設定メニュー -[hidden]> 出撃メニュー
+
+}
+
+state ゲーム画面 {
+    [*] -> Ready
+    Ready -> Play : Game Start
+    Play --> GameOver : Player撃破
+    Play --> GameOver : 家破壊
+    Play --> StageClear : ボス撃破
+    Play --> Pause : ポーズ
+    Pause --> Play : ポーズ解除
+
+    GameOver --> Ready : リトライ
+    GameOver --> [*] : メニューに戻る
+    StageClear --> [*] : [通しプレイ]Next
+    StageClear --> Ready : [ステージ選択プレイ]リトライ
+    StageClear --> [*] : [ステージ選択プレイ]メニューに戻る
+    Pause --> [*] : メニューに戻る
+}
+
+
+@enduml

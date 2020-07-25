@@ -1,0 +1,203 @@
+@startuml
+title ゲーム画面(ざっくり)
+skinparam classAttributeIconSize 0
+
+interface IStateEventReceiver {
+    + OnStart()
+    + OnPlayerDefeated()
+    + OnHouseDestroyed()
+    + OnBossDefeated()
+    + OnRetry()
+}
+note top of IStateEventReceiver : 状態遷移トリガー\nこれを受けて状態遷移し\nその変化をReactivePropertyで参照させる
+
+enum GameState {
+    Ready
+    Play
+    GameOver
+    StageClear
+}
+class GameStateProperty {
+    + {static} IReadOnlyReactiveProperty<GameState> state
+}
+
+GameStateProperty --* GameState
+GameStateProperty -up-|> IStateEventReceiver
+
+package Bullet {
+    class Bullet {
+        - int size
+        - float speed
+    }
+    enum BulletType {
+        Player_Mikan : メインショット
+        Player_Sakana : サブウェポン(魚)
+        Player_Block : サブウェポン(岩)
+        Player_Kaju : 果汁レーザー
+        Enemy_Point
+        Enemy_Needle
+        Enemy_xxx
+    }
+    Bullet -* BulletType
+}
+
+class GameController {
+    + IReadOnlyReactiveProperty<int> Score
+    + IReadOnlyReactiveProperty<int> Combo
+    + IReadOnlyReactiveProperty<int> Hight
+    + IReadOnlyReactiveProperty<int> Money
+    + IReadOnlyReactiveProperty<float> RiseSpeed
+    + OnPauseMenu(bool)
+        
+}
+
+class SettingInfo {
+    - Stage構成情報:画像・敵生成情報・音楽のリソース・高度など
+    - 現在のプレイ情報:ステージ・スコア・コンティニュー回数など
+    - Playerの各種強化レベル
+    - Houseの各種強化レベル
+    - 上昇速度倍率上限
+    - コンティニュー上限回数
+    - 所持金
+    - 情報読み込み()
+    + 各種情報取得IF()
+}
+note "シーン起動時に読み込む各種設定(詳細は省略)" as a
+SettingInfo . a
+
+package Player {
+    interface IInputProvider {
+        {abstract} +bool GetShot()
+        {abstract} +bool GetThrow( ref angle )
+        {abstract} +Vector2 GetMoveDist()
+    }
+    note top of IInputProvider : PCか携帯かなどで紐づける入力方法を変える
+    class Player {
+        + IReadOnlyReactiveProperty<int> life
+        + IReadOnlyReactiveProperty<int> bomb
+    }
+    Player -up> IInputProvider
+
+}
+
+class House {
+    + IReadOnlyReactiveProperty<int> life
+}
+
+package Enemy {
+    class EnemyGenerator {}
+    class Enemy {}
+    Enemy_A -up-|> Enemy
+    Enemy_B -up-|> Enemy
+
+    class Block {
+        + onGrab()
+        + onRelease()
+    }
+    Block -up-|> Enemy
+    note top of Block : 弾では撃破できず\n触れても被弾せず押したり\n掴んで投げたりできる特殊な敵
+}
+
+package InputDAL {
+    class TouchInputProvider {
+
+    }
+
+    class MouseInputProvider {
+
+    }
+}
+
+package UI {
+    enum ButtonType {
+        Shot
+        Throw
+        Bomb
+        Menu
+    }
+    class Button {
+    }
+    Button -* ButtonType
+
+    class OperationButton {}
+    OperationButton -up-|> Button
+
+    class SystemButton {}
+    SystemButton -up-|> Button
+    note bottom of SystemButton : ボタン押下の他に特定キー入力も処理
+
+    class ScoreBoard {
+        + Score
+        + HighScore
+    }
+    class HightMetor {}
+    class SpeedMetor {
+        + RiseSpeed
+        + SpeedRate
+    }
+    class PlayInfo {
+        + PlayTime
+        + Combo
+    }
+
+    class LifeGauge {
+        + PlayerLife
+        + HouseLife
+    }
+}
+
+TouchInputProvider -up--|> IInputProvider
+MouseInputProvider -up--|> IInputProvider
+
+package Unity {
+    class Input {}
+}
+
+/'依存関係'/
+TouchInputProvider --> Input
+TouchInputProvider --> OperationButton
+MouseInputProvider --> Input
+
+Player --> Bullet
+Enemy --> Bullet
+EnemyGenerator --> Enemy : 生成
+SystemButton --> GameController : ポーズ操作
+
+Button ..> Player : ボム数参照
+LifeGauge ..> Player : HP参照
+LifeGauge ..> House : HP参照
+GameController .> GameStateProperty : 状態参照
+Player .> GameStateProperty : 状態参照
+House .> GameStateProperty : 状態参照
+EnemyGenerator ..> GameController : 現在高度参照
+HightMetor .> GameController : 現在高度参照
+SpeedMetor .> GameController : 上昇速度倍率参照
+ScoreBoard .> GameController : スコアと所持金参照
+
+
+@enduml
+
+◆playerとして毎フレーム取得したい入力情報(IInputProviderが提供するIF)
+・ショット用の操作がされているか
+　　マウスの場合は左クリック押下
+　　タッチの場合は[みかん]タッチ押下
+・サブ用の操作がされているか
+　　マウスの場合は右クリック押下後の離され(方向)
+　　タッチの場合は[魚]タッチ押下後の離され(方向)
+・移動量
+　　マウスの場合は前回フレームと今回フレームのカーソル移動量
+　　タッチの場合は前回フレームと今回フレームの移動用タッチの移動量
+
+InputDALというのはInput Device Abstraction Layer という造語
+移動量に対する実際の移動距離の調整、ショット操作に対する発射間隔の調整などは
+player側で実施する
+
+OperationButtonではボタンの押され表現も自前で行う
+ただしボタンが状況によって押せないなど非アクティブ表現する場合の対策
+案１：
+　別のClassを用意してGameControllerなどから情報取得して対応する
+　マウスだったらクリックはいつでもできる、ただし反応するかはゲームの状況次第
+　何も反応しないか、あるいはBeep音出して操作不可を表現することもありうる
+案２：
+　OperationButtonを利用するPlayer側から情報を伝えて表現変えてもらう
+
