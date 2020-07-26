@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Zenject;
 
 namespace Player
 {
@@ -18,9 +19,8 @@ namespace Player
         Rect borderRect = new Rect();                 // 移動範囲用の矩形
 
         // 入力操作受け付け
-        private IInputProvider input;
-        [SerializeField] float moveSense = 1.0f;     // 移動量に対する実際の移動距離調整用感度
-        public InputDAL.MouseInputProvider test;         // テスト用に手動で設定できるようにする
+        [Inject] IInputProvider input;                // DIで紐づけ
+        [SerializeField] float moveSense = 1.0f;      // 移動量に対する実際の移動距離調整用感度
 
         // ライフ ReactivePropertyで監視できるようにする
         [SerializeField] int defaultLife = 3;
@@ -36,9 +36,6 @@ namespace Player
             // 初期化
             _lifeReactiveProperty.Value = defaultLife;
 
-            // TODO:正式な入力方法設定はDIで
-            input = test;
-
             // 移動範囲設定
             SetMoveArea();
 
@@ -52,14 +49,6 @@ namespace Player
         }
 
         /***** Playe個別処理 ****************************************************/
-        // 入力方法設定
-        /*
-        public void SetInputMethod(IInputProvider method)
-        {
-            input = method;
-        }
-        */
-
         // 移動範囲設定
         void SetMoveArea()
         {
