@@ -2,27 +2,29 @@
 title ゲーム画面(ざっくり)
 skinparam classAttributeIconSize 0
 
-interface IStateEventReceiver {
-    + OnStart()
-    + OnPlayerDefeated()
-    + OnHouseDestroyed()
-    + OnBossDefeated()
-    + OnRetry()
-}
-note top of IStateEventReceiver : 状態遷移トリガー\nこれを受けて状態遷移し\nその変化をReactivePropertyで参照させる
+package GameState {
+    interface IStateEventReceiver {
+        + OnStart()
+        + OnPlayerDefeated()
+        + OnHouseDestroyed()
+        + OnBossDefeated()
+        + OnRetry()
+    }
+    note top of IStateEventReceiver : 状態遷移トリガー\nこれを受けて状態遷移し\nその変化をReactivePropertyで参照させる
 
-enum GameState {
-    Ready
-    Play
-    GameOver
-    StageClear
-}
-class GameStateProperty {
-    + {static} IReadOnlyReactiveProperty<GameState> state
-}
+    enum GameState {
+        Ready
+        Play
+        GameOver
+        StageClear
+    }
+    class GameStateProperty {
+        + {static} IReadOnlyReactiveProperty<GameState> state
+    }
 
-GameStateProperty --* GameState
-GameStateProperty -up-|> IStateEventReceiver
+    GameStateProperty --* GameState
+    GameStateProperty -up-|> IStateEventReceiver
+}
 
 package Bullet {
     class Bullet {
@@ -47,9 +49,16 @@ class GameController {
     + IReadOnlyReactiveProperty<int> Hight
     + IReadOnlyReactiveProperty<int> Money
     + IReadOnlyReactiveProperty<float> RiseSpeed
+    + IReadOnlyReactiveProperty<xxx> ...and more!
     + OnPauseMenu(bool)
-        
 }
+
+class GameArea {
+    + void GetArea()
+    + Vector2 GetPosFromRate(Vector2 rate)
+    + Rect GetAreaRect()
+}
+note top of GameArea : ゲームウィンドウの範囲取得・\n縦横割合指定で座標取得など
 
 class SettingInfo {
     - Stage構成情報:画像・敵生成情報・音楽のリソース・高度など
@@ -117,7 +126,7 @@ package UI {
     }
     class Button {
     }
-    Button -* ButtonType
+    Button -right* ButtonType
 
     class OperationButton {}
     OperationButton -up-|> Button
@@ -135,10 +144,8 @@ package UI {
         + RiseSpeed
         + SpeedRate
     }
-    class PlayInfo {
-        + PlayTime
-        + Combo
-    }
+    class PlayTime {}
+    class Combo {}
 
     class LifeGauge {
         + PlayerLife
@@ -149,13 +156,13 @@ package UI {
 TouchInputProvider -up--|> IInputProvider
 MouseInputProvider -up--|> IInputProvider
 
-package Unity {
+package UnityEngine {
     class Input {}
 }
 
 /'依存関係'/
 TouchInputProvider --> Input
-TouchInputProvider --> OperationButton
+TouchInputProvider -> OperationButton
 MouseInputProvider --> Input
 
 Player --> Bullet
@@ -163,6 +170,7 @@ Enemy --> Bullet
 EnemyGenerator --> Enemy : 生成
 SystemButton --> GameController : ポーズ操作
 
+Player ..> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
 Button ..> Player : ボム数参照
 LifeGauge ..> Player : HP参照
 LifeGauge ..> House : HP参照
@@ -173,6 +181,8 @@ EnemyGenerator ..> GameController : 現在高度参照
 HightMetor .> GameController : 現在高度参照
 SpeedMetor .> GameController : 上昇速度倍率参照
 ScoreBoard .> GameController : スコアと所持金参照
+Combo .> GameController : コンボ数参照
+PlayTime .> GameController : プレイ時間参照
 
 
 @enduml
