@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using Zenject;
+using InputProvider;
 
 namespace Player
 {
@@ -44,7 +45,7 @@ namespace Player
         void Update()
         {
             // 操作入力を受け取ってもろもろ動作する
-            InputAction();
+            //InputAction();
 
         }
 
@@ -102,7 +103,7 @@ namespace Player
             // ショット操作
             if (input.GetShot())
             {
-                Debug.Log("Shot!!");
+                //Debug.Log("Shot!!");
             }
 
             // 投げ操作
@@ -113,6 +114,52 @@ namespace Player
             }
 
             return;
+        }
+
+        // ショット操作
+        public void Shot()
+        {
+            Debug.Log("Shot from InputPresenter!!");
+            return;
+        }
+
+        // 投げ操作
+        public void Throw(float angle)
+        {
+            Debug.Log("Throw from InputPresenter!! " + angle + " deg");
+            return;
+        }
+
+        // ボム操作
+        public void Bomb()
+        {
+            Debug.Log("Bomb from InputPresenter!!");
+            return;
+        }
+
+        // 移動
+        public void MovePlayer(Vector2 moveSpeed)
+        {
+            if (Vector2.zero != moveSpeed)
+            {
+                // 移動量取得
+                // 取得した移動速度に感度とTime.deltaTimeをかけ合わせて自機移動量を出す
+                // 使用端末の画面の大きさによらず、一定距離動かしたらゲーム画面上で一定割合自機が動くことを想定
+                Vector2 dist = moveSpeed * moveSense * Time.deltaTime;
+                Vector2 newPos = (Vector2)transform.position + dist;
+
+                // 画面から出ない範囲で自機移動
+                if (borderRect.xMax < newPos.x) newPos.x = borderRect.xMax;
+                if (borderRect.xMin > newPos.x) newPos.x = borderRect.xMin;
+                if (borderRect.yMax < newPos.y) newPos.y = borderRect.yMax;
+                if (borderRect.yMin > newPos.y) newPos.y = borderRect.yMin;
+
+                transform.position = newPos;
+
+                // Debug用位置情報表示
+                //Debug.Log("move dist:" + dist + ", new pos: " + newPos);
+                DispPosInfo(moveSpeed, newPos);
+            }
         }
 
         // Debug用位置情報表示

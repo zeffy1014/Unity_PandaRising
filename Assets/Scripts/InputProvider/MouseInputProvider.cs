@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Player;
 
-namespace InputDAL
+namespace InputProvider
 {
     // マウスによる操作入力Class
     public class MouseInputProvider : MonoBehaviour, IInputProvider
