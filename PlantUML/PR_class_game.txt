@@ -75,18 +75,33 @@ note "シーン起動時に読み込む各種設定(詳細は省略)" as a
 SettingInfo . a
 
 package Player {
-    interface IInputProvider {
-        {abstract} +bool GetShot()
-        {abstract} +bool GetThrow( ref angle )
-        {abstract} +Vector2 GetMoveDist()
-    }
-    note top of IInputProvider : PCか携帯かなどで紐づける入力方法を変える
     class Player {
         + IReadOnlyReactiveProperty<int> life
         + IReadOnlyReactiveProperty<int> bomb
     }
-    Player -up> IInputProvider
+}
 
+package InputProvider {
+    class InputPresenter {
+    }
+
+    interface IInputProvider {
+    }
+    note top of IInputProvider : PCか携帯かなどで\n紐づける入力方法を変える
+
+    class TouchInputProvider {
+    }
+    class PCInputProvider {
+    }
+
+    TouchInputProvider -up-|> IInputProvider
+    PCInputProvider -up-|> IInputProvider
+
+    package OperationHandler(MonoBehaviour) {
+        class MouseOperation {}
+        class KeyOperation {}
+        class TouchOperation {}
+    }
 }
 
 class House {
@@ -107,16 +122,6 @@ package Enemy {
     note top of Block : 弾では撃破できず\n触れても被弾せず押したり\n掴んで投げたりできる特殊な敵
 }
 
-package InputDAL {
-    class TouchInputProvider {
-
-    }
-
-    class MouseInputProvider {
-
-    }
-}
-
 package UI {
     enum ButtonType {
         Shot
@@ -124,16 +129,9 @@ package UI {
         Bomb
         Menu
     }
-    class Button {
+    class xxxButton {
     }
-    Button -right* ButtonType
-
-    class OperationButton {}
-    OperationButton -up-|> Button
-
-    class SystemButton {}
-    SystemButton -up-|> Button
-    note bottom of SystemButton : ボタン押下の他に特定キー入力も処理
+    xxxButton -right* ButtonType
 
     class ScoreBoard {
         + Score
@@ -153,22 +151,24 @@ package UI {
     }
 }
 
-TouchInputProvider -up--|> IInputProvider
-MouseInputProvider -up--|> IInputProvider
 
 package UnityEngine {
     class Input {}
 }
 
 /'依存関係'/
-TouchInputProvider --> Input
-TouchInputProvider -> OperationButton
-MouseInputProvider --> Input
+InputPresenter --> IInputProvider : 各種操作をSubscribe
+TouchInputProvider --> TouchOperation : タッチ操作をSubscribe
+TouchInputProvider -> xxxButton : 各種ボタン操作をSubscribe
+PCInputProvider --> MouseOperation : マウス/キーボード入力を\nSubscribe
+PCInputProvider --> KeyOperation : キーボード入力を\nSubscribe
+KeyOperation --> Input
+MouseOperation --> Input
+TouchOperation --> Input
 
 Player --> Bullet
 Enemy --> Bullet
 EnemyGenerator --> Enemy : 生成
-SystemButton --> GameController : ポーズ操作
 
 Player ..> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
 Button ..> Player : ボム数参照
@@ -177,6 +177,7 @@ LifeGauge ..> House : HP参照
 GameController .> GameStateProperty : 状態参照
 Player .> GameStateProperty : 状態参照
 House .> GameStateProperty : 状態参照
+InputPresenter .> GameStateProperty : 状態参照
 EnemyGenerator ..> GameController : 現在高度参照
 HightMetor .> GameController : 現在高度参照
 SpeedMetor .> GameController : 上昇速度倍率参照
@@ -211,3 +212,4 @@ OperationButtonではボタンの押され表現も自前で行う
 案２：
 　OperationButtonを利用するPlayer側から情報を伝えて表現変えてもらう
 
+◆情報参照・受け渡しの依存関係対応
