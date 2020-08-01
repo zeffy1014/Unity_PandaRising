@@ -62,7 +62,8 @@ namespace InputProvider
                     {
                         onMoveSubject.OnNext(moveSpeed);
                     }
-                });
+                })
+                .AddTo(this);
 
         }
     }

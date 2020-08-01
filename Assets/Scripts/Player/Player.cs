@@ -72,50 +72,6 @@ namespace Player
             return;
         }
 
-        // Input内容に応じて動作する
-        void InputAction()
-        {
-            if (null == input) return;
-
-            // 移動
-            Vector2 moveSpeed = input.GetMoveSpeed();
-            if (Vector2.zero != moveSpeed)
-            {
-                // 移動量取得
-                // 取得した移動速度に感度とTime.deltaTimeをかけ合わせて自機移動量を出す
-                // 使用端末の画面の大きさによらず、一定距離動かしたらゲーム画面上で一定割合自機が動くことを想定
-                Vector2 dist = moveSpeed * moveSense * Time.deltaTime;
-                Vector2 newPos = (Vector2)transform.position + dist;
-
-                // 画面から出ない範囲で自機移動
-                if (borderRect.xMax < newPos.x) newPos.x = borderRect.xMax;
-                if (borderRect.xMin > newPos.x) newPos.x = borderRect.xMin;
-                if (borderRect.yMax < newPos.y) newPos.y = borderRect.yMax;
-                if (borderRect.yMin > newPos.y) newPos.y = borderRect.yMin;
-
-                transform.position = newPos;
-
-                // Debug用位置情報表示
-                //Debug.Log("move dist:" + dist + ", new pos: " + newPos);
-                DispPosInfo(moveSpeed, newPos);
-            }
-
-            // ショット操作
-            if (input.GetShot())
-            {
-                //Debug.Log("Shot!!");
-            }
-
-            // 投げ操作
-            float throwAngle = default;
-            if (input.GetThrow(ref throwAngle))
-            {
-                Debug.Log("Throw!! " + throwAngle + " deg");
-            }
-
-            return;
-        }
-
         // ショット操作
         public void Shot()
         {

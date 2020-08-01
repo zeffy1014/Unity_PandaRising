@@ -6,10 +6,10 @@ using UnityEngine.Events;
 
 public class YesNoDialog : MonoBehaviour
 {
-    private Text title;
-    private Text description;
-    private Button yesButton;
-    private Button noButton;
+    private Text title = default;
+    private Text description = default;
+    private Button yesButton = default;
+    private Button noButton = default;
 
     private static readonly string PREFAB_NAME = "YesNoDialogPrefab";
     private static GameObject prefab;
