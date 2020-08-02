@@ -23,8 +23,8 @@ namespace InputProvider
         public IObservable<Unit> OnBomb => onBombSubject;
 
         // 移動監視
-        private Subject<Vector2> onMovePlayerSubject = new Subject<Vector2>();
-        public IObservable<Vector2> OnMovePlayer => onMovePlayerSubject;
+        private Subject<MoveInfo> onMovePlayerSubject = new Subject<MoveInfo>();
+        public IObservable<MoveInfo> OnMovePlayer => onMovePlayerSubject;
 
         private MouseOperation mouse;
 
@@ -51,7 +51,7 @@ namespace InputProvider
                 .Subscribe(_ => onBombSubject.OnNext(Unit.Default));
 
             this.mouse.OnMove
-                .Subscribe(speed => onMovePlayerSubject.OnNext(speed));
+                .Subscribe(info => onMovePlayerSubject.OnNext(info));
         }
 
 

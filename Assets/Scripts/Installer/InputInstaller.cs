@@ -6,6 +6,7 @@ using Zenject;
 public class InputInstaller : MonoInstaller<InputInstaller>
 {
     [SerializeField] Player.Player player = default;
+    [SerializeField] bool unityRemote = false;    // テスト用 UnityRemoteで動作確認するときはInspecter上でtrueにする
 
     public override void InstallBindings()
     {

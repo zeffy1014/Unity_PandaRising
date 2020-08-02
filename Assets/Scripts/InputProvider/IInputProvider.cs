@@ -6,12 +6,25 @@ using System;
 
 namespace InputProvider
 {
+    // タッチ・マウス共通の移動情報(操作速度と位置)
+    public class MoveInfo
+    {
+        public MoveInfo(Vector2 speed, Vector2 position)
+        {
+            MoveSpeed = speed;
+            MovePosition = position;
+        }
+
+        public Vector2 MoveSpeed { get; private set; }
+        public Vector2 MovePosition { get; private set; }
+    }
+
     public interface IInputProvider
     {
         IObservable<Unit> OnShot { get; }
         IObservable<float> OnThrow { get; }
         IObservable<Unit> OnBomb { get; }
-        IObservable<Vector2> OnMovePlayer { get; }
+        IObservable<MoveInfo> OnMovePlayer { get; }
 
     }
 }

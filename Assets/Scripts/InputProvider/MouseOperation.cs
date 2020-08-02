@@ -25,9 +25,9 @@ namespace InputProvider
         private Subject<Unit> onWheelClickDownSubject = new Subject<Unit>();
         public IObservable<Unit> OnWheelClickDown => onWheelClickDownSubject;
 
-        // マウス移動速度監視
-        private Subject<Vector2> onMoveSubject = new Subject<Vector2>();
-        public IObservable<Vector2> OnMove => onMoveSubject;
+        // マウス移動速度・位置監視
+        private Subject<MoveInfo> onMoveSubject = new Subject<MoveInfo>();
+        public IObservable<MoveInfo> OnMove => onMoveSubject;
 
         void Start()
         {
@@ -60,7 +60,7 @@ namespace InputProvider
                         Input.GetAxis("Mouse Y")/Time.deltaTime);
                     if (Vector2.zero != moveSpeed)
                     {
-                        onMoveSubject.OnNext(moveSpeed);
+                        onMoveSubject.OnNext(new MoveInfo(moveSpeed, Input.mousePosition));
                     }
                 })
                 .AddTo(this);

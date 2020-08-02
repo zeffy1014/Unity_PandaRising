@@ -3386,6 +3386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1582861}
+  unityRemote: 0
 --- !u!114 &955889628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3833,8 +3834,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -112, y: -238}
-  m_SizeDelta: {x: 300, y: 100}
+  m_AnchoredPosition: {x: -110.3, y: -219.7}
+  m_SizeDelta: {x: 327.1, y: 136.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1137957042
 MonoBehaviour:
@@ -3867,7 +3868,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Speed: (000, 000)
+  m_Text: 'Position: (000, 000)
+
+    Speed: (000, 000)
 
     Player: (000, 000)'
 --- !u!222 &1137957043

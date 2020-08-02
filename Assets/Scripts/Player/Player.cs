@@ -94,35 +94,61 @@ namespace Player
         }
 
         // 移動
-        public void MovePlayer(Vector2 moveSpeed)
+        public void MovePlayer(MoveInfo info)
         {
-            if (Vector2.zero != moveSpeed)
+            Vector2 moveSpeed = info.MoveSpeed;
+            Vector2 movePosition = info.MovePosition;
+            Vector2 newPosition = Vector2.zero;
+
+            // 端末に応じて動かし方を変える
+            // ・携帯端末: 入力(タッチ)移動速度に応じて現在位置から動く
+            // ・上記以外: 入力(マウスなど)のポインタ位置に動く
+            
+            // 携帯端末の場合
+            if (PlatformInfo.IsMobile())
             {
-                // 移動量取得
-                // 取得した移動速度に感度とTime.deltaTimeをかけ合わせて自機移動量を出す
-                // 使用端末の画面の大きさによらず、一定距離動かしたらゲーム画面上で一定割合自機が動くことを想定
-                Vector2 dist = moveSpeed * moveSense * Time.deltaTime;
-                Vector2 newPos = (Vector2)transform.position + dist;
+                if (Vector2.zero != moveSpeed)
+                {
+                    // 移動量取得
+                    // 取得した移動速度に感度とTime.deltaTimeをかけ合わせて自機移動量を出す
+                    // 使用端末の画面の大きさによらず、一定距離動かしたらゲーム画面上で一定割合自機が動くことを想定
+                    Vector2 dist = moveSpeed * moveSense * Time.deltaTime;
+                    newPosition = (Vector2)transform.position + dist;
 
-                // 画面から出ない範囲で自機移動
-                if (borderRect.xMax < newPos.x) newPos.x = borderRect.xMax;
-                if (borderRect.xMin > newPos.x) newPos.x = borderRect.xMin;
-                if (borderRect.yMax < newPos.y) newPos.y = borderRect.yMax;
-                if (borderRect.yMin > newPos.y) newPos.y = borderRect.yMin;
-
-                transform.position = newPos;
-
-                // Debug用位置情報表示
-                //Debug.Log("move dist:" + dist + ", new pos: " + newPos);
-                DispPosInfo(moveSpeed, newPos);
+                }
             }
+            // 携帯端末以外の場合
+            else
+            {
+                // 入力位置(スクリーン座標)をワールド座標へ変換
+                float distanceToCamera = default;
+                distanceToCamera = Mathf.Abs(Camera.main.gameObject.transform.position.z);  // メインカメラとの距離を取得
+                newPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceToCamera));
+                //Debug.Log(Input.mousePosition + "->" + newPosition);
+
+            }
+
+            // 画面から出ない範囲で自機移動
+            if (borderRect.xMax < newPosition.x) newPosition.x = borderRect.xMax;
+            if (borderRect.xMin > newPosition.x) newPosition.x = borderRect.xMin;
+            if (borderRect.yMax < newPosition.y) newPosition.y = borderRect.yMax;
+            if (borderRect.yMin > newPosition.y) newPosition.y = borderRect.yMin;
+
+            transform.position = newPosition;
+
+            // Debug用位置情報表示
+            //Debug.Log("move dist:" + dist + ", new pos: " + newPos);
+            DispPosInfo(movePosition, moveSpeed, newPosition);
         }
 
         // Debug用位置情報表示
-        void DispPosInfo(Vector2 inputSpeed, Vector2 pos)
+        void DispPosInfo(Vector2 inputPosition, Vector2 inputSpeed, Vector2 pos)
         {
             // 文字列生成
-            posInfo.text = "Speed:" + inputSpeed.x.ToString("f1") + ", " + inputSpeed.y.ToString("f1") + "\nPos:" + pos.x.ToString("f1") + ", " + pos.y.ToString("f1");
+            posInfo.text =
+                "Position:" + inputPosition.x.ToString("f1") + ", " + inputPosition.y.ToString("f1") + "\n" +
+                "Speed:" + inputSpeed.x.ToString("f1") + ", " + inputSpeed.y.ToString("f1") + "\n" +
+                "Player:" + pos.x.ToString("f1") + ", " + pos.y.ToString("f1");
 
             // 文字列移動
             float sideOffset = 0.0f;  // 横方向にずらす距離
