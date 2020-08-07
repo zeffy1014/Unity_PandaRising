@@ -15,6 +15,7 @@ package GameState {
     enum GameState {
         Ready
         Play
+        Pause
         GameOver
         StageClear
     }
@@ -58,7 +59,7 @@ class GameArea {
     + Vector2 GetPosFromRate(Vector2 rate)
     + Rect GetAreaRect()
 }
-note top of GameArea : ゲームウィンドウの範囲取得・\n縦横割合指定で座標取得など
+note bottom of GameArea : ゲームウィンドウの範囲取得・\n縦横割合指定で座標取得など
 
 class SettingInfo {
     - Stage構成情報:画像・敵生成情報・音楽のリソース・高度など
@@ -74,12 +75,11 @@ class SettingInfo {
 note "シーン起動時に読み込む各種設定(詳細は省略)" as a
 SettingInfo . a
 
-package Player {
-    class Player {
-        + IReadOnlyReactiveProperty<int> life
-        + IReadOnlyReactiveProperty<int> bomb
-    }
+class Player {
+    + IReadOnlyReactiveProperty<int> life
+    + IReadOnlyReactiveProperty<int> bomb
 }
+
 
 package InputProvider {
     class InputPresenter {
@@ -87,7 +87,7 @@ package InputProvider {
 
     interface IInputProvider {
     }
-    note top of IInputProvider : PCか携帯かなどで\n紐づける入力方法を変える
+    note top of IInputProvider : PCか携帯かなどで\n紐づける入力方法を変える\n生の入力値を操作に変換
 
     class TouchInputProvider {
     }
@@ -129,9 +129,9 @@ package UI {
         Bomb
         Menu
     }
-    class xxxButton {
+    class OperateButton {
     }
-    xxxButton -right* ButtonType
+    OperateButton -right* ButtonType
 
     class ScoreBoard {
         + Score
@@ -149,6 +149,9 @@ package UI {
         + PlayerLife
         + HouseLife
     }
+    class UIPresenter {
+
+    }
 }
 
 
@@ -159,31 +162,40 @@ package UnityEngine {
 /'依存関係'/
 InputPresenter --> IInputProvider : 各種操作をSubscribe
 TouchInputProvider --> TouchOperation : タッチ操作をSubscribe
-TouchInputProvider -> xxxButton : 各種ボタン操作をSubscribe
+TouchInputProvider -> OperateButton : 各種ボタン操作をSubscribe
 PCInputProvider --> MouseOperation : マウス/キーボード入力を\nSubscribe
 PCInputProvider --> KeyOperation : キーボード入力を\nSubscribe
 KeyOperation --> Input
 MouseOperation --> Input
 TouchOperation --> Input
 
+InputPresenter --> Player : 状態に応じた操作入力
+InputPresenter --> GameController : 状態に応じた操作入力
+
 Player --> Bullet
 Enemy --> Bullet
 EnemyGenerator --> Enemy : 生成
 
-Player ..> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
-Button ..> Player : ボム数参照
-LifeGauge ..> Player : HP参照
-LifeGauge ..> House : HP参照
+Player .> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
+
+UIPresenter ..> GameController : 各種表示情報参照
+note on link : 各種情報\n・コンボ\n・現在高度\n・上昇速度倍率\n・スコア\n・所持金\n・時間\n・etc...
+UIPresenter ..> Player : HP・ボム数・状態参照
+UIPresenter ..> House : HP参照
+
 GameController .> GameStateProperty : 状態参照
 Player .> GameStateProperty : 状態参照
 House .> GameStateProperty : 状態参照
 InputPresenter .> GameStateProperty : 状態参照
 EnemyGenerator ..> GameController : 現在高度参照
-HightMetor .> GameController : 現在高度参照
-SpeedMetor .> GameController : 上昇速度倍率参照
-ScoreBoard .> GameController : スコアと所持金参照
-Combo .> GameController : コンボ数参照
-PlayTime .> GameController : プレイ時間参照
+
+UIPresenter --up> OperateButton : ボム数・投げ状態表示
+UIPresenter --up> LifeGauge : HP表示
+UIPresenter --up> HightMetor : 現在高度表示
+UIPresenter --up> SpeedMetor : 上昇速度倍率表示
+UIPresenter --up> ScoreBoard : スコアと所持金表示
+UIPresenter --up> Combo : コンボ数表示
+UIPresenter --up> PlayTime : プレイ時間表示
 
 
 @enduml

@@ -22,6 +22,10 @@ namespace InputProvider
         private Subject<Unit> onBombSubject = new Subject<Unit>();
         public IObservable<Unit> OnBomb => onBombSubject;
 
+        // Menu操作監視
+        private Subject<Unit> onMenuSubject = new Subject<Unit>();
+        public IObservable<Unit> OnMenu => onMenuSubject;
+
         // 移動監視
         private Subject<MoveInfo> onMovePlayerSubject = new Subject<MoveInfo>();
         public IObservable<MoveInfo> OnMovePlayer => onMovePlayerSubject;
