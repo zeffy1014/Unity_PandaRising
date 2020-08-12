@@ -21,12 +21,19 @@ public class Player : MonoBehaviour
     [Inject] IInputProvider input;                // DIで紐づけ
     [SerializeField] float moveSense = 1.0f;      // 移動量に対する実際の移動距離調整用感度
 
-    // ライフ ReactivePropertyで監視できるようにする
+    [SerializeField] Text posInfo = default;
+
+
+    /***** ReactivePropertyで監視させるものたち ****************************************************/
+    // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
+    // ライフ
     [SerializeField] int defaultLife = 3;
     private ReactiveProperty<int> _lifeReactiveProperty = new ReactiveProperty<int>(default);
-    public IReadOnlyReactiveProperty<int> lifeReactiveProperty { get { return _lifeReactiveProperty; } }
+    public IReadOnlyReactiveProperty<int> LifeReactiveProperty { get { return _lifeReactiveProperty; } }
 
-    [SerializeField] Text posInfo = default;
+    // ボム数
+    ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
+    public IReadOnlyReactiveProperty<int> BombReactiveProperty { get { return _bombReactiveProperty; } }
 
 
     /***** MonoBehaviourイベント処理 ****************************************************/

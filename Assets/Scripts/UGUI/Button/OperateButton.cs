@@ -6,7 +6,7 @@ using UniRx;
 using UniRx.Triggers;
 using System;
 
-namespace UI
+namespace UGUI
 {
     public enum ButtonType
     {
@@ -49,7 +49,7 @@ namespace UI
             eventTrigger.OnPointerDownAsObservable()
                 .Subscribe(data =>
                 {
-                    Debug.Log("Button Down type:" + type);
+                    //Debug.Log("Button Down type:" + type);
                     pressInfo.Down = true;
                     pressInfo.Position = data.position;
                     PushButton(true);
@@ -58,7 +58,7 @@ namespace UI
             eventTrigger.OnPointerUpAsObservable()
                 .Subscribe(data =>
                 {
-                    Debug.Log("Button Up type:" + type);
+                    //Debug.Log("Button Up type:" + type);
                     pressInfo.Down = false;
                     pressInfo.Position = data.position;
                     PushButton(false);

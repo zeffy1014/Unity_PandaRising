@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UniRx;
 using System;
 using Zenject;
-using UI;
+using UGUI;
 
 namespace InputProvider
 {
@@ -201,9 +201,8 @@ namespace InputProvider
             if (Vector2.zero != startPos)
             {
                 // 開始→終了の位置で方向を定める
-                Vector2 endRightClickPos = Input.mousePosition;
-                float diffX = endRightClickPos.x - startPos.x;
-                float diffY = endRightClickPos.y - startPos.y;
+                float diffX = endPos.x - startPos.x;
+                float diffY = endPos.y - startPos.y;
                 if (diffX == 0.0f && diffY == 0.0f)
                 {
                     // 角度指定なし

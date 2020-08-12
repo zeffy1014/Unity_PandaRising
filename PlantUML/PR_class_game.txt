@@ -132,6 +132,8 @@ package UI {
     class OperateButton {
     }
     OperateButton -right* ButtonType
+    class ThrowButtonView{}
+    class BombButtonView{}
 
     class ScoreBoard {
         + Score
@@ -139,8 +141,7 @@ package UI {
     }
     class HightMetor {}
     class SpeedMetor {
-        + RiseSpeed
-        + SpeedRate
+        + SpeedMagnification
     }
     class PlayTime {}
     class Combo {}
@@ -189,7 +190,8 @@ House .> GameStateProperty : 状態参照
 InputPresenter .> GameStateProperty : 状態参照
 EnemyGenerator ..> GameController : 現在高度参照
 
-UIPresenter --up> OperateButton : ボム数・投げ状態表示
+UIPresenter --up> BombButtonView : ボム数表示
+UIPresenter --up> ThrowButtonView : 投げ状態表示
 UIPresenter --up> LifeGauge : HP表示
 UIPresenter --up> HightMetor : 現在高度表示
 UIPresenter --up> SpeedMetor : 上昇速度倍率表示

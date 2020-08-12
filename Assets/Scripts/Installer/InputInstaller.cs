@@ -1,7 +1,7 @@
 using UnityEngine;
 using InputProvider;
 using Zenject;
-using UI;
+using UGUI;
 
 public class InputInstaller : MonoInstaller<InputInstaller>
 {

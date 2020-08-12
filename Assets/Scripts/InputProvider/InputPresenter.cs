@@ -16,13 +16,13 @@ public class InputPresenter
         this.input = input;
 
         // 各種操作を監視してPlayerを動かす
-        this.input.OnShot.Subscribe(_ => player.Shot());
-        this.input.OnThrow.Subscribe(angle => player.Throw(angle));
-        this.input.OnBomb.Subscribe(_ => player.Bomb());
+        this.input.OnShot.Subscribe(_ => this.player.Shot());
+        this.input.OnThrow.Subscribe(angle => this.player.Throw(angle));
+        this.input.OnBomb.Subscribe(_ => this.player.Bomb());
 
         this.input.OnMovePlayer
             .Where(info => Vector2.zero != info.MoveSpeed)
-            .Subscribe(info => player.MovePlayer(info));
+            .Subscribe(info => this.player.MovePlayer(info));
 
         // 各種操作を監視してGameControllerへ通知する
         this.input.OnMenu.Subscribe(_ => { });  // TODO:後で実装
