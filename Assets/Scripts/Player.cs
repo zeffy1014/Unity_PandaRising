@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     public IReadOnlyReactiveProperty<int> LifeReactiveProperty { get { return _lifeReactiveProperty; } }
 
     // ボム数
+    [SerializeField] int defaultBomb = 3;
     ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> BombReactiveProperty { get { return _bombReactiveProperty; } }
 
@@ -40,7 +41,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         // 初期化
-        _lifeReactiveProperty.Value = defaultLife;
+        // TODO:今はここで呼ぶが本来は読み込み完了のSignalを受けて呼ぶ
+        OnSettingInfoLoaded();
 
         // 移動範囲設定
         SetMoveArea();
@@ -52,6 +54,15 @@ public class Player : MonoBehaviour
         // 操作入力を受け取ってもろもろ動作する
         //InputAction();
 
+    }
+
+    /***** Signal受信時処理 **************************************************/
+    // 設定読み込み完了
+    void OnSettingInfoLoaded()
+    {
+        // TODO:ライフとボム数は前ステージの値を引き継ぐ 1面は初期値
+        _lifeReactiveProperty.Value = defaultLife;
+        _bombReactiveProperty.Value = defaultBomb;
     }
 
     /***** Playe個別処理 ****************************************************/

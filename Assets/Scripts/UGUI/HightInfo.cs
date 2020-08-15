@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UGUI
 {
-    public class Hight : MonoBehaviour
+    public class HightInfo : MonoBehaviour
     {
         [SerializeField] int startHight = default;  // スタート地点の高度 ステージで固定
         [SerializeField] int goalHight = default;   // ゴール地点の高度 ステージで固定

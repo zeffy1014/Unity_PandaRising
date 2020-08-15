@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Speed : MonoBehaviour
+public class SpeedInfo : MonoBehaviour
 {
     [SerializeField] float minMagnification = 0.5f;         // 上昇速度倍率 最小値
     [SerializeField] float maxMagnification = 2.0f;         // 上昇速度倍率 最大値
@@ -12,7 +12,7 @@ public class Speed : MonoBehaviour
     [SerializeField] Image speedNeedle;
 
     // 現在上昇速度倍率更新
-    public void UpdateCurrentSpeed(int mag)
+    public void UpdateCurrentSpeed(float mag)
     {
         // そのまま文字表示
         currentSpeedText.text = "x" + mag.ToString("f1");

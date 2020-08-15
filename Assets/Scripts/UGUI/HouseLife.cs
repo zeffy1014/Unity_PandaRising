@@ -27,14 +27,14 @@ public class HouseLife : MonoBehaviour
         lifeLabel.text = "----/----";
     }
 
-    void UpdateCurrentLife(int life)
+    public void UpdateCurrentLife(int life)
     {
         currentLife = life;
         // 初回設定
         if (-1 == nowLife) nowLife = currentLife;
     }
 
-    void UpdateMaxLife(int life)
+    public void UpdateMaxLife(int life)
     {
         maxLife = life;
     }
@@ -65,8 +65,9 @@ public class HouseLife : MonoBehaviour
                 frontSprite.fillAmount = (float)nowLife / (float)maxLife;
 
             }
-            lifeLabel.text = nowLife + "/" + maxLife;
         }
+
+        lifeLabel.text = nowLife + "/" + maxLife;
     }
 
 }
