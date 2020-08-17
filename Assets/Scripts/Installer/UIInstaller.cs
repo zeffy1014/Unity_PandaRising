@@ -12,7 +12,7 @@ public class UIInstaller : MonoInstaller<InputInstaller>
     [SerializeField] HouseLife hLife;
     [SerializeField] BossLife bLife;
     [SerializeField] SpeedInfo sInfo;
-    [SerializeField] HightInfo hInfo;
+    [SerializeField] HeightInfo hInfo;
     [SerializeField] Combo combo;
     [SerializeField] PlayTime time;
     [SerializeField] Score score;
@@ -33,7 +33,7 @@ public class UIInstaller : MonoInstaller<InputInstaller>
         Container.Bind<HouseLife>().FromInstance(hLife).AsCached();
         Container.Bind<BossLife>().FromInstance(bLife).AsCached();
         Container.Bind<SpeedInfo>().FromInstance(sInfo).AsCached();
-        Container.Bind<HightInfo>().FromInstance(hInfo).AsCached();
+        Container.Bind<HeightInfo>().FromInstance(hInfo).AsCached();
         Container.Bind<Combo>().FromInstance(combo).AsCached();
         Container.Bind<PlayTime>().FromInstance(time).AsCached();
         Container.Bind<Score>().FromInstance(score).AsCached();

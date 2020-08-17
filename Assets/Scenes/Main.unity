@@ -423,7 +423,7 @@ GameObject:
   m_Component:
   - component: {fileID: 77192137}
   m_Layer: 5
-  m_Name: GoalHight
+  m_Name: GoalHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -792,7 +792,7 @@ GameObject:
   - component: {fileID: 167785966}
   - component: {fileID: 167785967}
   m_Layer: 0
-  m_Name: HightMetor
+  m_Name: HeightMetor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -841,14 +841,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41b7adecc484bb94b925895c80169463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHight: 0
-  goalHight: 0
+  startHeight: 0
+  goalHeight: 0
   dispPosMin: 0
   dispPosMax: 0
-  startHightText: {fileID: 1284308971}
-  goalHightText: {fileID: 1606921994}
-  currentHightText: {fileID: 1695682432}
-  currentHightDisp: {fileID: 1609101476}
+  startHeightText: {fileID: 1284308971}
+  goalHeightText: {fileID: 1606921994}
+  currentHeightText: {fileID: 1695682432}
+  currentHeightDisp: {fileID: 1609101476}
 --- !u!1 &187675823
 GameObject:
   m_ObjectHideFlags: 0
@@ -2714,7 +2714,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 12.8, y: 11.3}
+  m_AnchoredPosition: {x: 12.8, y: -15.09}
   m_SizeDelta: {x: 60.7, y: 22.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &808828128
@@ -3870,7 +3870,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1204583599}
   m_Layer: 5
-  m_Name: StartHight
+  m_Name: StartHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4143,7 +4143,7 @@ GameObject:
   - component: {fileID: 1284308971}
   - component: {fileID: 1284308970}
   m_Layer: 5
-  m_Name: Hight
+  m_Name: Height
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4165,7 +4165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -4.9003, y: -17.42}
+  m_AnchoredPosition: {x: -4.9, y: 13.63}
   m_SizeDelta: {x: 96.1, y: 27.26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1284308970
@@ -4334,7 +4334,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -1, y: -42}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 220, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1312467370
 MonoBehaviour:
@@ -5372,7 +5372,7 @@ GameObject:
   - component: {fileID: 1606921994}
   - component: {fileID: 1606921993}
   m_Layer: 5
-  m_Name: Hight
+  m_Name: Height
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5464,7 +5464,7 @@ GameObject:
   - component: {fileID: 1609101478}
   - component: {fileID: 1609101477}
   m_Layer: 5
-  m_Name: CurrentHight
+  m_Name: CurrentHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5613,7 +5613,7 @@ GameObject:
   - component: {fileID: 1695682432}
   - component: {fileID: 1695682431}
   m_Layer: 5
-  m_Name: Hight
+  m_Name: Height
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

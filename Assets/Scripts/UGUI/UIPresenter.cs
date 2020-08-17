@@ -16,7 +16,7 @@ namespace UGUI
         private HouseLife hLife;
         private BossLife bLife;
         private SpeedInfo sInfo;
-        private HightInfo hInfo;
+        private HeightInfo hInfo;
         private Combo combo;
         private PlayTime time;
         private Score score;
@@ -34,7 +34,7 @@ namespace UGUI
             HouseLife hLifeIn,
             BossLife bLifeIn,
             SpeedInfo sInfoIn,
-            HightInfo hInfoIn,
+            HeightInfo hInfoIn,
             Combo comboIn,
             PlayTime timeIn,
             Score scoreIn,
@@ -79,14 +79,14 @@ namespace UGUI
             // 一旦決め打ちで設定しておく
             sInfo.SetMinMagnification(0.7f);
             sInfo.SetMaxMagnification(1.5f);
-            hInfo.SetStartHight(0);
-            hInfo.SetGoalHight(2000);
+            hInfo.SetStartHeight(0);
+            hInfo.SetGoalHeight(2000);
             score.SetHiScore(50000);
             
             /******各種監視*************************************************************************************/
             // GameController監視(上昇速度倍率, 現在高度, コンボ数, ...)
             gameController.SpeedMagReactiveProperty.DistinctUntilChanged().Subscribe(x => sInfo.UpdateCurrentSpeed(x));
-            gameController.HightReactiveProperty.DistinctUntilChanged().Subscribe(x => hInfo.UpdateCurrentHight(x));
+            gameController.HeightReactiveProperty.DistinctUntilChanged().Subscribe(x => hInfo.UpdateCurrentHeight(x));
             gameController.ComboReactiveProperty.DistinctUntilChanged().Subscribe(x => combo.UpdateCombo(x));
             gameController.PlayTimeReactiveProperty.DistinctUntilChanged().Subscribe(x => time.UpdatePlayTime(x));
             gameController.ScoreReactiveProperty.DistinctUntilChanged().Subscribe(x => score.UpdateScore(x));

@@ -33,8 +33,8 @@ public class GameController : MonoBehaviour
     public IReadOnlyReactiveProperty<int> MoneyReactiveProperty { get { return _moneyReactiveProperty; } }
 
     // 現在高度
-    ReactiveProperty<int> _hightReactiveProperty = new ReactiveProperty<int>(default);
-    public IReadOnlyReactiveProperty<int> HightReactiveProperty { get { return _hightReactiveProperty; } }
+    ReactiveProperty<int> _heightReactiveProperty = new ReactiveProperty<int>(default);
+    public IReadOnlyReactiveProperty<int> HeightReactiveProperty { get { return _heightReactiveProperty; } }
 
     // 上昇速度倍率
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
@@ -71,7 +71,7 @@ public class GameController : MonoBehaviour
 
         heightMax = 2000;
         heightMin = 0;
-        _hightReactiveProperty.Value = heightMin;
+        _heightReactiveProperty.Value = heightMin;
 
         hiScore = 50000;
         _scoreReactiveProperty.Value = 0;
