@@ -26,23 +26,28 @@ namespace InputProvider
         private Subject<Unit> onMenuSubject = new Subject<Unit>();
         public IObservable<Unit> OnMenu => onMenuSubject;
 
+        // Speed変更操作監視
+        private Subject<float> onSpeedEditSubject = new Subject<float>();
+        public IObservable<float> OnSpeedEdit => onSpeedEditSubject;
+
         // 移動監視
         private Subject<MoveInfo> onMovePlayerSubject = new Subject<MoveInfo>();
         public IObservable<MoveInfo> OnMovePlayer => onMovePlayerSubject;
 
         private MouseOperation mouse;
+        private KeyOperation key;
 
-        PCInputProvider(MouseOperation mouse)
+        PCInputProvider(MouseOperation mouse, KeyOperation key)
         {
             this.mouse = mouse;
+            this.key = key;
 
-            // MouseOperationの操作を監視
-            this.mouse.OnLeftClick
-                .Subscribe(_ => onShotSubject.OnNext(Unit.Default));
+            /***** MouseOperationの操作を監視 *****/
+            // 左クリック(押しっぱなしあり)でShot操作発行
+            this.mouse.OnLeftClick.Subscribe(_ => onShotSubject.OnNext(Unit.Default));
 
-            this.mouse.OnRightClickDown
-                .Subscribe(pos => throwBegin = pos);  // 右クリック開始位置を保持
-
+            // 右クリック押し→離しで投げ操作発行
+            this.mouse.OnRightClickDown.Subscribe(pos => throwBegin = pos);  // 右クリック開始位置を保持
             this.mouse.OnRightClickUp
                 .Subscribe(pos => 
                 {
@@ -51,14 +56,20 @@ namespace InputProvider
                     throwBegin = Vector2.zero;  // 初期化
                 });
 
-            this.mouse.OnWheelClickDown
-                .Subscribe(_ => onBombSubject.OnNext(Unit.Default));
+            // ホイールクリックでボム操作発行
+            this.mouse.OnWheelClickDown.Subscribe(_ => onBombSubject.OnNext(Unit.Default));
 
-            this.mouse.OnMove
-                .Subscribe(info => onMovePlayerSubject.OnNext(info));
+            // マウス移動でPlayer移動操作発行
+            this.mouse.OnMove.Subscribe(info => onMovePlayerSubject.OnNext(info));
+
+            /***** KeyOperationの操作を監視 *****/
+            // スペースキー押しでMenu操作発行
+            this.key.OnSpaceKey.Subscribe(_ => onMenuSubject.OnNext(Unit.Default));
+
+            // 左右キー押しで速度変更操作発行
+            this.key.OnRightKey.Subscribe(_ => onSpeedEditSubject.OnNext(0.1f));  // 固定で0.1増加
+            this.key.OnLeftKey.Subscribe(_ => onSpeedEditSubject.OnNext(-0.1f));  // 固定で0.1減少
         }
-
-
 
         // クリック開始終了位置からドラッグの方向を出す(angleは角度(0.0f-360.f deg), -1.0fは方角指定なしとする)
         private float ThrowAngle(Vector2 startPos, Vector2 endPos)

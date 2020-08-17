@@ -15,13 +15,13 @@ public class SpeedInfo : MonoBehaviour
     public void UpdateCurrentSpeed(float mag)
     {
         // そのまま文字表示
-        currentSpeedText.text = "x" + mag.ToString("f1");
+        currentSpeedText.text = "x" + mag.ToString("f2");
 
         // 最小～最大倍率の間で針を回転 80deg ～ -80deg
         float minMagDeg = 80.0f;
         float maxMagDeg = -80.0f;
-        float angle = minMagDeg - ((minMagDeg - maxMagDeg) * (mag / (maxMagnification - minMagnification)));
-        speedNeedle.transform.Rotate(0.0f, 0.0f, angle);
+        float angle = minMagDeg - ((minMagDeg - maxMagDeg) * ((mag - minMagnification) / (maxMagnification - minMagnification)));
+        speedNeedle.transform.rotation = Quaternion.Euler(0.0f, 0.0f, angle);
 
         return;
     }

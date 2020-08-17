@@ -9,11 +9,13 @@ public class InputPresenter
 {
     private Player player;
     private IInputProvider input;
+    private GameController gameController;
 
-    InputPresenter(IInputProvider input, Player player)
+    InputPresenter(IInputProvider input, Player player, GameController gameController)
     {
         this.player = player;
         this.input = input;
+        this.gameController = gameController;
 
         // 各種操作を監視してPlayerを動かす
         this.input.OnShot.Subscribe(_ => this.player.Shot());
@@ -26,6 +28,7 @@ public class InputPresenter
 
         // 各種操作を監視してGameControllerへ通知する
         this.input.OnMenu.Subscribe(_ => { });  // TODO:後で実装
+        this.input.OnSpeedEdit.Subscribe(rate => this.gameController.UpdateSpeedMagnification(rate, EditMode.Rate_Delta));
 
     }
 

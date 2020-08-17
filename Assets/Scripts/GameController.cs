@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+// 各種設定値変更の方法
+public enum EditMode
+{
+    Value_Direct,   // 直接指定(値)
+    Value_Delta,    // 現在値からの変化量で指定(値)
+    Rate_Direct,    // 直接指定(全体に対する割合)
+    Rate_Delta      // 現在値からの変化量で指定(全体に対する割合)
+}
+
 public class GameController : MonoBehaviour
 {
     /***** ReactivePropertyで監視させるものたち ****************************************************/
@@ -31,16 +40,81 @@ public class GameController : MonoBehaviour
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
     public IReadOnlyReactiveProperty<float> SpeedMagReactiveProperty { get { return _speedMagReactiveProperty; } }
 
+    /***** 設定値読み込みで保持するものたち ****************************************************/
+    float speedMaxMagnification = default;  // 速度倍率上限
+    float speedMinMagnification = default;  // 速度倍率下限
+    int heightMax = default;                // 高度上限
+    int heightMin = default;                // 高度下限
+    int hiScore = default;                  // ハイスコア(更新される可能性あり)
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
     {
-        
+        // TODO:一時的にここで呼ぶ
+        OnSettingInfoLoaded();
     }
 
     void FixedUpdate()
     {
         _playTimeReactiveProperty.Value += Time.deltaTime;
         // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
+    }
+
+    // 各種設定・情報読み込み完了時の処理
+    void OnSettingInfoLoaded()
+    {
+        /******各種設定反映と初期化*************************************************************************************/
+        // TODO:今は決め打ち
+        speedMaxMagnification = 1.5f;
+        speedMinMagnification = 0.7f;
+        _speedMagReactiveProperty.Value = 1.0f;
+
+        heightMax = 2000;
+        heightMin = 0;
+        _hightReactiveProperty.Value = heightMin;
+
+        hiScore = 50000;
+        _scoreReactiveProperty.Value = 0;
+    }
+
+    // 速度倍率変更操作
+    public void UpdateSpeedMagnification(float value, EditMode mode)
+    {
+        // 割合指定の場合は全体量にかけて値に変換する
+        if (EditMode.Rate_Direct == mode || EditMode.Rate_Delta == mode)
+        {
+            value *= speedMaxMagnification - speedMinMagnification;
+        }
+
+        // 直接指定 or 変化量で指定
+        if (EditMode.Value_Direct == mode || EditMode.Rate_Direct == mode)
+        {
+            // 範囲限定
+            if (speedMaxMagnification < value) value = speedMaxMagnification;
+            if (speedMinMagnification > value) value = speedMinMagnification;
+
+            _speedMagReactiveProperty.Value = value;
+        }
+        else if (EditMode.Value_Delta == mode || EditMode.Rate_Delta == mode)
+        {
+            // 範囲限定
+            if (speedMaxMagnification < _speedMagReactiveProperty.Value + value)
+            {
+                _speedMagReactiveProperty.Value = speedMaxMagnification;
+            }
+            else if (speedMinMagnification > _speedMagReactiveProperty.Value + value)
+            {
+                _speedMagReactiveProperty.Value = speedMinMagnification;
+            }
+            else
+            {
+                _speedMagReactiveProperty.Value += value;
+            }
+        }
+        else
+        {
+            // Do nothing
+        }
+        return;
     }
 }

@@ -23,6 +23,7 @@ public class InputInstaller : MonoInstaller<InputInstaller>
             Debug.Log("Bind PCInputProvider as IInputProvider");
             Container.Bind<IInputProvider>().To<PCInputProvider>().AsCached();
             Container.Bind<MouseOperation>().FromNewComponentOnNewGameObject().AsCached();
+            Container.Bind<KeyOperation>().FromNewComponentOnNewGameObject().AsCached();
         }
 
         // 入力受け付けクラスのBind 参照されないのでNonLazyで生成
@@ -30,5 +31,7 @@ public class InputInstaller : MonoInstaller<InputInstaller>
 
         // PlayerのBind Inspectorで指定したPlayerを使う
         Container.Bind<Player>().FromInstance(player).AsCached();
+
+        // GameContollerは別のInstallerでBindするのでここには書かない
     }
 }

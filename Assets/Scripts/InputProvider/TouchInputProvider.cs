@@ -28,6 +28,10 @@ namespace InputProvider
         private Subject<Unit> onMenuSubject = new Subject<Unit>();
         public IObservable<Unit> OnMenu => onMenuSubject;
 
+        // Speed変更操作監視
+        private Subject<float> onSpeedEditSubject = new Subject<float>();
+        public IObservable<float> OnSpeedEdit => onSpeedEditSubject;
+
         // 移動監視
         private Subject<MoveInfo> onMovePlayerSubject = new Subject<MoveInfo>();
         public IObservable<MoveInfo> OnMovePlayer => onMovePlayerSubject;
@@ -39,6 +43,7 @@ namespace InputProvider
         OperateButton throwButton = default;
         OperateButton bombButton = default;
         OperateButton menuButton = default;
+        SlideArea slideArea = default;
 
         TouchInputProvider(
             TouchOperation touch,
@@ -46,13 +51,15 @@ namespace InputProvider
             [Inject(Id = "Shot")] OperateButton shotButton,
             [Inject(Id = "Throw")] OperateButton throwButton,
             [Inject(Id = "Bomb")] OperateButton bombButton,
-            [Inject(Id = "Menu")] OperateButton menuButton)
+            [Inject(Id = "Menu")] OperateButton menuButton,
+            SlideArea slide)
         {
             this.touch = touch;
             this.shotButton = shotButton;
             this.throwButton = throwButton;
             this.bombButton = bombButton;
             this.menuButton = menuButton;
+            this.slideArea = slide;
 
             // ShotはuGUIボタン操作 押しっぱなし中操作を発行
             this.shotButton.OnButton
@@ -61,8 +68,7 @@ namespace InputProvider
 
             // ThrowはuGUIボタン操作 押され→離されを検出して操作を発行
             this.throwButton.OnButton
-                .DistinctUntilChanged()
-                .Skip(1)
+                .DistinctUntilChanged(info => info.Down)
                 .Subscribe(info =>
                 {
                     if(info.Down)  // 押された初期位置を保持
@@ -71,16 +77,18 @@ namespace InputProvider
                     }
                     else  // 離されたら押され位置との角度で投げ操作を発行
                     {
-                        onThrowSubject.OnNext(ThrowAngle(throwBegin, info.Position));
-                        throwBegin = Vector2.zero;  // 初期化
+                        if (Vector2.zero != throwBegin)
+                        {
+                            onThrowSubject.OnNext(ThrowAngle(throwBegin, info.Position));
+                            throwBegin = Vector2.zero;  // 初期化
+                        }
                     }
                 });
 
             // BombはuGUIボタン操作 離されたのがボタン上だったら操作を発行
             this.bombButton.OnButton
+                .DistinctUntilChanged(info => info.Down)
                 .Where(info => false == info.Down)
-                .DistinctUntilChanged()
-                .Skip(1)
                 .Subscribe(info =>
                 {
                     // 離され位置がBombボタン上かどうか
@@ -89,16 +97,21 @@ namespace InputProvider
 
             // MenuはuGUIボタン操作 離されたのがボタン上だったら操作を発行
             this.menuButton.OnButton
+                .DistinctUntilChanged(info => info.Down)
                 .Where(info => false == info.Down)
-                .DistinctUntilChanged()
-                .Skip(1)
                 .Subscribe(info =>
                 {
                     // 離され位置がMenuボタン上かどうか
                     if (true == CheckOnObject(info.Position, menuButton.gameObject)) onMenuSubject.OnNext(Unit.Default);
                 });
 
-
+            // Speed変更操作 Drag情報(Vector2)をボタンサイズに対する水平方向の移動割合として発行
+            this.slideArea.OnSlide
+                .Subscribe(delta =>
+                {
+                    Rect area = slideArea.GetComponent<RectTransform>().rect;
+                    onSpeedEditSubject.OnNext(delta.x / area.width);
+                });
 
             // 移動はタッチ操作
             // 初期化
@@ -159,7 +172,7 @@ namespace InputProvider
                             case TouchPhase.Canceled:
                             default:
                                 // 移動用タッチ情報をクリアして先に進む
-                                Debug.Log("Finger for move has released.");
+                                // Debug.Log("Finger for move has released.");
                                 moveTouch.fingerId = -1;
                                 break;
                         }
@@ -179,7 +192,7 @@ namespace InputProvider
                     if (0 < raycastResults.Count)
                     {
                         // 当たっていたら無効
-                        Debug.Log("Touch has began, but out of range... index:" + i);
+                        // Debug.Log("Touch has began, but out of range... index:" + i);
                     }
                     else { 
                         // 当たっていなかったらそれが新たな移動用タッチ

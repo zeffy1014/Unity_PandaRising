@@ -25,6 +25,7 @@ namespace InputProvider
         IObservable<float> OnThrow { get; }
         IObservable<Unit> OnBomb { get; }
         IObservable<Unit> OnMenu { get; }
+        IObservable<float> OnSpeedEdit { get; }
         IObservable<MoveInfo> OnMovePlayer { get; }
 
     }

@@ -132,6 +132,7 @@ package UI {
     class OperateButton {
     }
     OperateButton -right* ButtonType
+    class SlideArea{}
     class ThrowButtonView{}
     class BombButtonView{}
 
@@ -164,6 +165,7 @@ package UnityEngine {
 InputPresenter --> IInputProvider : 各種操作をSubscribe
 TouchInputProvider --> TouchOperation : タッチ操作をSubscribe
 TouchInputProvider -> OperateButton : 各種ボタン操作をSubscribe
+TouchInputProvider -> SlideArea : スライド操作をSubscribe
 PCInputProvider --> MouseOperation : マウス/キーボード入力を\nSubscribe
 PCInputProvider --> KeyOperation : キーボード入力を\nSubscribe
 KeyOperation --> Input
