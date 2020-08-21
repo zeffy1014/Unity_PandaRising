@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DataBase;
+using Zenject;
 
 // 各種設定値変更の方法
 public enum EditMode
@@ -46,6 +48,8 @@ public class GameController : MonoBehaviour
     int heightMax = default;                // 高度上限
     int heightMin = default;                // 高度下限
     int hiScore = default;                  // ハイスコア(更新される可能性あり)
+
+    [Inject] DataLibrarian dataLibrarian;   // 読み込み先のデータ管理者
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()

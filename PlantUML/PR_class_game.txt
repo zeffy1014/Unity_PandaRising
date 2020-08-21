@@ -61,19 +61,53 @@ class GameArea {
 }
 note bottom of GameArea : ゲームウィンドウの範囲取得・\n縦横割合指定で座標取得など
 
-class SettingInfo {
-    - Stage構成情報:画像・敵生成情報・音楽のリソース・高度など
-    - 現在のプレイ情報:ステージ・スコア・コンティニュー回数など
-    - Playerの各種強化レベル
-    - Houseの各種強化レベル
-    - 上昇速度倍率上限
-    - コンティニュー上限回数
-    - 所持金
-    - 情報読み込み()
-    + 各種情報取得IF()
+package DataBase {
+    class DataLibrarian{
+        + GetLibrarian() : インスタンス取得
+        + StageInfo GetStageInfo(StageNumber)
+        + 各種UserDataのGet()
+   }
+    note right of DataLibrarian : ゲーム起動時にJSONで各種情報を読み込んで\n情報取得IFを提供する
+
+    class UniversalData {
+        - List Stage構成情報[Stage_Num]
+     }
+     note bottom of UniversalData : 変わることのないデータ\nリソースの一部として保持
+
+    class StageInfo {
+        - StageNumber stage
+        - string 敵生成テーブルの格納パス
+        - string 背景画像の格納パス
+        - string BGMの格納パス(ステージ・ボス)
+        - int Start高度
+        - int Goal高度
+    }
+
+    enum StageNumber {
+        Tutorial,
+        Stage1,
+        Stage2,
+        Stage3,
+        Stage4,
+        Stage5,
+
+        Stage_Num
+    }
+
+    class UserData {
+        - Playerの各種強化レベル
+        - Houseの各種強化レベル
+        - 上昇速度倍率上限
+        - コンティニュー上限回数
+        - ハイスコア
+        - 所持金
+    }
+    note bottom of UserData : 強化などで変わっていくデータ
+
+    DataLibrarian *-- UniversalData
+    DataLibrarian *-- UserData
+
 }
-note "シーン起動時に読み込む各種設定(詳細は省略)" as a
-SettingInfo . a
 
 class Player {
     + IReadOnlyReactiveProperty<int> life

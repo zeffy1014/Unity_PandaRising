@@ -3,7 +3,7 @@ using InputProvider;
 using Zenject;
 using UGUI;
 
-public class InputInstaller : MonoInstaller<InputInstaller>
+public class InputInstaller : MonoInstaller
 {
     [SerializeField] Player player = default;
     [SerializeField] bool unityRemote = false;    // テスト用 UnityRemoteで動作確認するときはInspecter上でtrueにする

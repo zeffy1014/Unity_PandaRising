@@ -4,7 +4,7 @@ using UnityEngine;
 using UGUI;
 using Zenject;
 
-public class UIInstaller : MonoInstaller<InputInstaller>
+public class UIInstaller : MonoInstaller
 {
     [SerializeField] ThrowButtonView tButtonView;
     [SerializeField] BombButtonView bButtonView;

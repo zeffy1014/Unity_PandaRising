@@ -1,0 +1,14 @@
+{
+	"highScore":0,
+	"pocketMoney":0,
+	"shotRapidity":1,
+	"shotPower":1,
+	"laserOption":0,
+	"laserPower":0,
+	"fishPower":1,
+	"fishToughness":1,
+	"houseDurability":1,
+	"houseHealingPower":1,
+	"speedMagRange":1,
+	"continueCredit":3
+}
