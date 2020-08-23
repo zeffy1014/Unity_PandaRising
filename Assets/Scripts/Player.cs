@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
     // ショット操作
     public void Shot()
     {
-        Debug.Log("Shot from InputPresenter!!");
+        // Debug.Log("Shot from InputPresenter!!");
         return;
     }
 

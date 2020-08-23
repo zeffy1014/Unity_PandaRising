@@ -82,7 +82,12 @@ package DataBase {
         - int Start高度
         - int Goal高度
     }
-
+    class ReinforcementTableInfo {
+        - int[] shotPowerTable : 強化レベルに対するショット威力
+        - int[] shotRapidityTable : 強化レベルに対する連射力
+        - int[] houseDurabilityTable : 強化レベルに対する家のライフ最大値
+        - ...
+    }
     enum StageNumber {
         Tutorial,
         Stage1,

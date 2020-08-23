@@ -35,6 +35,8 @@ namespace DataBase
         public void MakeInitialData(string fileName)
         {
             // 初期値はこうする
+            highScore = 0;
+            pocketMoney = 0;
             shotRapidity = 1;
             shotPower = 1;
             laserOption = 0;
