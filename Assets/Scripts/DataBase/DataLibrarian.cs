@@ -13,7 +13,21 @@ namespace DataBase
         UserData userData;
         string userDataPath = CommonUtils.GetExecDirectory() + "/user.json";  // TODO:暗号化
 
-        DataLibrarian()
+        // Singletonにする
+        private static DataLibrarian librarianInstance;
+        public static DataLibrarian Instance
+        {
+            get
+            {
+                if (librarianInstance == null)
+                {
+                    librarianInstance = new DataLibrarian(); // 生成およびデータ読み込み
+                }
+                return librarianInstance;
+            }
+        }
+
+        private DataLibrarian()
         {
             string dataStr;
 
@@ -36,6 +50,26 @@ namespace DataBase
             }
 
         }
+
+        // UniversalData初期ファイル作成(通常は使用しない)
+        private void MakeInitUniversalData()
+        {
+            string initStr = CommonUtils.GetExecDirectory() + "/init.json";
+            universalData = new UniversalData();
+            universalData.MakeTestJson(initStr);
+
+            return;
+        }
+
+        /*****各種情報取得IF**********************************************/
+        // ステージ構成情報取得
+        public StageInfo GetStageInfo(StageNumber stage)
+        {
+            Debug.Log("Get StageInfo stage: " + stage.ToString());
+            return universalData.GetStageInfo(stage);
+        }
+
+        // プレー情報取得
 
     }
 }

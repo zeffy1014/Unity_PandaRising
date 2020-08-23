@@ -27,6 +27,10 @@ namespace DataBase
         [SerializeField] int speedMagRange;     // 上昇速度の変化幅
         [SerializeField] int continueCredit;    // コンティニュー可能回数
 
+        // 情報取得IF
+
+        // 情報更新IF
+
         // 初期データ作成
         public void MakeInitialData(string fileName)
         {

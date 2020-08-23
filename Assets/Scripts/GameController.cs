@@ -26,8 +26,8 @@ public class GameController : MonoBehaviour
     ReactiveProperty<int> _comboReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> ComboReactiveProperty { get { return _comboReactiveProperty; } }
 
-    // スコア
-    ReactiveProperty<int> _scoreReactiveProperty = new ReactiveProperty<int>(default);
+    // スコア　※シーンをまたいで引き継ぐ
+    static ReactiveProperty<int> _scoreReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> ScoreReactiveProperty { get { return _scoreReactiveProperty; } }
 
     // 所持金
@@ -49,13 +49,16 @@ public class GameController : MonoBehaviour
     int heightMin = default;                // 高度下限
     int hiScore = default;                  // ハイスコア(更新される可能性あり)
 
-    [Inject] DataLibrarian dataLibrarian;   // 読み込み先のデータ管理者
+    /***** その他プレー情報 ********************************************************************/
+    static StageNumber playingStage = default;     // 現在のステージ
+    static int continueTimes = default;     // コンティニュー回数
+
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
     {
-        // TODO:一時的にここで呼ぶ
-        OnSettingInfoLoaded();
+        // 各種設定・情報を読み込む
+        LoadData();
     }
 
     void FixedUpdate()
@@ -64,11 +67,20 @@ public class GameController : MonoBehaviour
         // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
     }
 
-    // 各種設定・情報読み込み完了時の処理
-    void OnSettingInfoLoaded()
+    /***** GameController処理 ****************************************************/
+    // 各種設定・情報読み込み
+    void LoadData()
     {
-        /******各種設定反映と初期化*************************************************************************************/
-        // TODO:今は決め打ち
+        // ステージ構成情報取得
+        StageInfo stageInfo = DataLibrarian.Instance.GetStageInfo(playingStage);
+        if (null == stageInfo)
+        {
+            Debug.Log("GameController LoadData failed... cannot get StageInfo");
+            return;
+        }
+
+        // 各種
+
         speedMaxMagnification = 1.5f;
         speedMinMagnification = 0.7f;
         _speedMagReactiveProperty.Value = 1.0f;
@@ -79,6 +91,16 @@ public class GameController : MonoBehaviour
 
         hiScore = 50000;
         _scoreReactiveProperty.Value = 0;
+    }
+
+    // データ初期化(新規ゲーム開始時に呼ぶこと！)
+    static public void InitStaticData(StageNumber stage)
+    {
+        Debug.Log("GameController InitStaticData, stage: " + stage.ToString());
+
+        _scoreReactiveProperty.Value = 0;
+        continueTimes = 0;
+        playingStage = stage;
     }
 
     // 速度倍率変更操作
