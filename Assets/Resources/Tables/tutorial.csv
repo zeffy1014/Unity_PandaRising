@@ -1,0 +1,10 @@
+id,enemy_type,height,position_x,angle,active_time
+1,EnemyA,10,0.5,0,0
+2,EnemyA,20,0.5,0,0
+3,EnemyC,50,0.2,0,0
+4,EnemyC,50,0.4,0,0
+5,EnemyC,50,0.6,0,0
+6,EnemyC,50,0.8,0,0
+7,EnemyB,100,0.25,30,5000
+8,EnemyB,100,0.5,0,5000
+9,EnemyB,100,0.75,-30,5000

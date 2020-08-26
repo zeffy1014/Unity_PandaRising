@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace DataBase
 {
@@ -45,6 +46,14 @@ namespace DataBase
             this.heightGoal = heightG;
         }
 
+        // 情報取得IF
+        public string GetPathEnemyGenerateTable() { return pathEnemyGenerateTable; }
+        public string GetPathBackGroundImage() { return pathBackGroundImage; }
+        public string GetPathBackGroundMusicStage() { return pathBackGroundMusicStage; }
+        public string GetPathBackGroundMusicBoll() { return pathBackGroundMusicBoss; }
+        public int GetHeightStart() { return heightStart; }
+        public int GetHeightGoal() { return heightGoal; }
+
     }
 
     // 各強化レベルに対する具体的なパラメータ(強化レベルがそのまま値になるものは扱わない)
@@ -79,14 +88,19 @@ namespace DataBase
         }
     }
 
+    // 敵のPrefab格納パスのリスト -> ただの文字列リストのためClass化する必要はない
+
+
     // ゲーム全体を通じて不変となる情報 JSONで読み込む
     [Serializable]
     public class UniversalData
     {
-        [SerializeField] StageInfo[] stageInfo;
-        [SerializeField] ReinforcementTableInfo rtInfo;
+        [SerializeField] StageInfo[] stageInfo;           // ステージ構成情報
+        [SerializeField] ReinforcementTableInfo rtInfo;   // 強化レベルに対するパラメータ
+        [SerializeField] string[] enemyPrefabPath;        // 敵のPrefab格納パス
 
-        // 情報取得IF
+        /***** 情報取得IF ****************************************************************/
+        // ステージ構成情報取得
         public StageInfo GetStageInfo(StageNumber stage)
         {
             if (stageInfo.Length > (int)stage)
@@ -99,6 +113,21 @@ namespace DataBase
                 return null;
             }
         }
+
+        // 敵のPrefab可能パス取得
+        public string GetEnemyPrefabPath(Enemy.EnemyType type)
+        {
+            if (enemyPrefabPath.Length > (int)type)
+            {
+                return enemyPrefabPath[(int)type];
+            }
+            else
+            {
+                Debug.Log("enemy type is out of range... Max:" + enemyPrefabPath.Length + ", Selected:" + (int)type);
+                return null;
+            }
+        }
+
 
         // for Make TestData
         public void MakeTestJson(string filePath)
@@ -115,6 +144,9 @@ namespace DataBase
             // ReinforcementTableInfo初期データ
             rtInfo = new ReinforcementTableInfo();
             rtInfo.MakeInitTable();
+
+            // 敵Prefabパス
+            enemyPrefabPath = Enumerable.Repeat<string>("Prefabs/Enemy/EnemyPrefab_xxx", (int)Enemy.EnemyType.EnemyType_Num).ToArray();
 
             StreamWriter writer;
             string jsonstr = JsonUtility.ToJson(this);

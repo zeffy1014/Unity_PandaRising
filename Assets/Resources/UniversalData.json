@@ -2,7 +2,7 @@
 	"stageInfo":[
 		{
 			"stage":0,
-			"pathEnemyGenerateTable":"",
+			"pathEnemyGenerateTable":"Tables/tutorial",
 			"pathBackGroundImage":"Images/tutorial",
 			"pathBackGroundMusicStage":"Audio/stage_tutorial",
 			"pathBackGroundMusicBoss":"",
@@ -66,5 +66,10 @@
 		"houseHealingPowerTable":[1,2,3,4,5],
 		"speedMaxMagRangeTable":[1.5,2.0,3.0],
 		"speedMinMagRangeTable":[0.699999988079071,0.5,0.30000001192092898]
-	}
+	},
+	"enemyPrefabPath":[
+		"Prefabs/Enemy/EnemyPrefab_xxx",
+		"Prefabs/Enemy/EnemyPrefab_xxx",
+		"Prefabs/Enemy/EnemyPrefab_xxx"
+	]
 }

@@ -7,6 +7,9 @@ namespace DataBase
 {
     public class DataLibrarian
     {
+        // 初期ファイル生成用フラグ(Test用)
+        bool makeInitData = false;
+
         // 保持するデータと在り処
         UniversalData universalData;
         string universalDataPath = "UniversalData";  // Resource/UniversalData.json
@@ -49,6 +52,9 @@ namespace DataBase
                 userData = JsonUtility.FromJson<UserData>(dataStr);
             }
 
+            // 初期ファイル生成する場合
+            if (makeInitData) MakeInitUniversalData();
+
         }
 
         // UniversalData初期ファイル作成(通常は使用しない)
@@ -71,5 +77,13 @@ namespace DataBase
 
         // プレー情報取得
 
+        // 敵Prefab格納パス取得
+        public string GetEnemyPrefabPath(Enemy.EnemyType type)
+        {
+            string retStr = universalData.GetEnemyPrefabPath(type);
+            Debug.Log("Get EnemyPrefabPath Type:" + type + ", Path:" + retStr);
+
+            return retStr;
+        }
     }
 }

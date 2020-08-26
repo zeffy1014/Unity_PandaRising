@@ -50,8 +50,13 @@ public class GameController : MonoBehaviour
     int hiScore = default;                  // ハイスコア(更新される可能性あり)
 
     /***** その他プレー情報 ********************************************************************/
-    static StageNumber playingStage = default;     // 現在のステージ
-    static int continueTimes = default;     // コンティニュー回数
+    // 現在のステージ
+    static StageNumber playingStage = default;       // シーンをまたいで保持する
+    public StageNumber PlayingStage => playingStage; // 参照用
+
+    // 現在のコンティニュー回数
+    static int continueTimes = default;              // シーンをまたいで保持する
+    public int ContinueTimes => continueTimes;       // 参照用
 
 
     /***** MonoBehaviourイベント処理 ****************************************************/
@@ -63,6 +68,7 @@ public class GameController : MonoBehaviour
 
     void FixedUpdate()
     {
+        // プレー時間
         _playTimeReactiveProperty.Value += Time.deltaTime;
         // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
     }
@@ -93,7 +99,7 @@ public class GameController : MonoBehaviour
         _scoreReactiveProperty.Value = 0;
     }
 
-    // データ初期化(新規ゲーム開始時に呼ぶこと！)
+    // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)
     static public void InitStaticData(StageNumber stage)
     {
         Debug.Log("GameController InitStaticData, stage: " + stage.ToString());
