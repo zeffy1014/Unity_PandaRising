@@ -1,0 +1,117 @@
+@startuml
+
+digraph g {
+    graph [fontname = "monospace", fontsize = 10, rankdir = LR];
+    node  [fontname = "monospace", fontsize = 10, shape=record];
+    edge  [fontname = "monospace", fontsize = 10];
+
+    DataLibrarian [shape=circle]
+
+    subgraph cluster_universal_data {
+        label = "UniversalData";
+        labelloc = "t";
+        labeljust = "l";
+
+        UniversalData [shape=record]
+
+        StageInfoList [
+            label="{
+                StageInfo\nList|
+                {
+                    <top>Tutorial|
+                    Stage1|
+                    Stage2|
+                    Stage3|
+                    Sgate4|
+                    Stage5
+                }
+            }"
+        ];
+
+        StageInfo [
+            label="
+                path string of Enemy Generate Table |
+                path string of Background Image |
+                path string of BGM(stage) |
+                path string of BGM(boss) |
+                height of start point[m] |
+                height of goal point[m]
+            "
+        ];
+
+        ReinforcementInfo [shape=record];
+        xxxTable [label="{xxxTable |{...and|so|on!}}"];
+        ShotRapidityTable [label="{
+            ShotRapidity\nTable |
+            {
+                Lv1:0.20f|Lv2:0.18f|Lv3:0.15f|Lv4:0.11f|Lv5:0.07f
+            }
+        }"];
+        ShotPowerTable [label="{
+            ShotPower\nTable |
+            {
+                Lv1:100|Lv2:120|Lv3:150|Lv4:190|Lv5:240
+            }
+        }"];
+        HouseDurabilityTable [label="{
+            HouseDurability\nTable |
+            {
+                Lv1:1000|Lv2:1200|Lv3:1600|Lv4:2400|Lv5:3500
+            }
+        }"];
+
+        EnemyPrefabPathList [
+            label="{
+                EnemyPrefabPath\nList|
+                {
+                    EnemyA:\"/Prefabs/Enemy/EnemyA\" |
+                    EnemyB:\"/Prefabs/Enemy/EnemyB\" |
+                    EnemyC:\"/Prefabs/Enemy/EnemyC\" |
+                    ... |
+                    EnemyXXX:\"/Prefabs/Enemy/EnemyXXX\" |
+                }
+            }"
+        ];
+    };
+
+    subgraph cluster_user_data {
+        label = "UserData";
+        labelloc = "t";
+        labeljust = "l";
+
+        UserData [
+            label="{
+                User Data|
+                {
+                    Shot Rapidity Level: 1|
+                    Shot Power Level: 1|
+                    Number of Laser Option: 0|
+                    House Durability Level: 1|
+                    Number of Continue Credit: 3|
+                    ...
+                }
+            }"
+        ];
+    }
+
+    // edge
+    DataLibrarian -> UniversalData [label="Load\n(Resource File)"];
+    DataLibrarian -> UserData [label="Load\n(Saved File)"];
+
+    UniversalData -> StageInfoList
+    UniversalData -> ReinforcementInfo
+    UniversalData -> EnemyPrefabPathList
+    StageInfoList:top -> StageInfo
+
+    ReinforcementInfo -> ShotRapidityTable
+    ReinforcementInfo -> ShotPowerTable
+    ReinforcementInfo -> HouseDurabilityTable
+    ReinforcementInfo -> xxxTable
+ 
+    GameController -> DataLibrarian [label="Get Data"];
+    EnemyGenerator -> DataLibrarian [label="Get Data"];
+    xxx -> DataLibrarian [label="Get Data"];
+
+}
+
+@enduml
