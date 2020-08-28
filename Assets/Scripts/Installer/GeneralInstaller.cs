@@ -11,7 +11,7 @@ public class GeneralInstaller : MonoInstaller
     {
         //Container.Bind<DataLibrarian>().AsCached(); Singletonにした
 
-        // PresenterのBind 参照されないのでNonLazyで生成
+        // EnemyGenerator 参照されないのでNonLazyで生成
         Container.Bind<EnemyGenerator>().AsSingle().NonLazy();
     }
 }

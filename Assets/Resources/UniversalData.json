@@ -3,7 +3,7 @@
 		{
 			"stage":0,
 			"pathEnemyGenerateTable":"Tables/tutorial",
-			"pathBackGroundImage":"Images/tutorial",
+			"pathBackGroundImage":"Images/game_bg_sky_01",
 			"pathBackGroundMusicStage":"Audio/stage_tutorial",
 			"pathBackGroundMusicBoss":"",
 			"heightStart":0,
