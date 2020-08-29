@@ -42,12 +42,18 @@ public class GameController : MonoBehaviour
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
     public IReadOnlyReactiveProperty<float> SpeedMagReactiveProperty { get { return _speedMagReactiveProperty; } }
 
+    // 読み込み完了
+    ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
+    public IReadOnlyReactiveProperty<bool> OnLoadCompleteProperty => _onLoadCompleteProperty;
+
     /***** 設定値読み込みで保持するものたち ****************************************************/
     float speedMaxMagnification = default;  // 速度倍率上限
     float speedMinMagnification = default;  // 速度倍率下限
     int heightMax = default;                // 高度上限
     int heightMin = default;                // 高度下限
     int hiScore = default;                  // ハイスコア(更新される可能性あり)
+    // それぞれ参照用に公開する
+
 
     /***** その他プレー情報 ********************************************************************/
     // 現在のステージ
@@ -85,18 +91,25 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        // 各種
+        // プレーデータと各種強化テーブル取得
+        UserData userData = DataLibrarian.Instance.GetUserData();
+        ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
 
-        speedMaxMagnification = 1.5f;
-        speedMinMagnification = 0.7f;
+        // 各種強化レベルと対応パラメータから上昇速度範囲を設定
+        speedMaxMagnification = rtInfo.GetSpeedMaxMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
+        speedMinMagnification = rtInfo.GetSpeedMinMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
+        // 現在設定値は固定とする
         _speedMagReactiveProperty.Value = 1.0f;
 
-        heightMax = 2000;
-        heightMin = 0;
+        // ステージ構成情報から現在ステージのスタートゴール高度取得
+        heightMax = stageInfo.GetHeightGoal();
+        heightMin = stageInfo.GetHeightStart();
+        // スタート高度に設定
         _heightReactiveProperty.Value = heightMin;
 
-        hiScore = 50000;
-        _scoreReactiveProperty.Value = 0;
+        // ハイスコア設定
+        hiScore = userData.GetHighScore();
+
     }
 
     // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)

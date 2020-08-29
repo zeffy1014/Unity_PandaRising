@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DataBase;
 
 public class House : MonoBehaviour
 {
@@ -13,8 +14,8 @@ public class House : MonoBehaviour
 
     /***** ReactivePropertyで監視させるもの ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
-    // 現在ライフ
-    private ReactiveProperty<int> _currentLifeReactiveProperty = new ReactiveProperty<int>(default);
+    // 現在ライフ　※シーンをまたいで引き継ぐ
+    private static  ReactiveProperty<int> _currentLifeReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> CurrentLifeReactiveProperty { get { return _currentLifeReactiveProperty; } }
 
     // 最大ライフ
@@ -23,11 +24,11 @@ public class House : MonoBehaviour
 
 
     /***** MonoBehaviourイベント処理 ****************************************************/
-    void Awake()
+    void Start()
     {
-        // 各種初期化
-        _maxLifeReactiveProperty.Value = maxLife;
-        _currentLifeReactiveProperty.Value = maxLife;
+        // 設定読み込み
+        LoadData();
+
         waitHeal = 0.0f;
 
     }
@@ -42,8 +43,35 @@ public class House : MonoBehaviour
             waitHeal = 0;
         }
     }
-    
+
     /***** House独自処理 ****************************************************/
+    // 各種設定・情報読み込み
+    void LoadData()
+    {
+        // プレーデータと各種強化テーブル取得
+        UserData userData = DataLibrarian.Instance.GetUserData();
+        ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
+
+        // 各種強化レベルと対応パラメータから最大ライフと回復量を設定
+        _maxLifeReactiveProperty.Value = rtInfo.GetHouseDurability(userData.GetLevel(ReinforceTarget.HouseDurability));
+        autoHealAmount = rtInfo.GetHouseHealingPower(userData.GetLevel(ReinforceTarget.HouseHealingPower));
+
+        return;
+    }
+
+    // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)
+    static public void InitStaticData()
+    {
+        Debug.Log("House InitStaticData");
+
+        // ちょっと冗長だけれども現在ライフを家の最大耐久値で初期化する
+        UserData userData = DataLibrarian.Instance.GetUserData();
+        ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
+        _currentLifeReactiveProperty.Value = rtInfo.GetHouseDurability(userData.GetLevel(ReinforceTarget.HouseDurability));
+
+        return;
+    }
+
     // 被ダメージ処理
     public void OnDamage(int damage)
     {

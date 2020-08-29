@@ -6,30 +6,77 @@ using System.IO;
 
 namespace DataBase
 {
+    // 強化対象
+    public enum ReinforceTarget
+    {
+        // 自機関連
+        ShotRapidity,      // みかん連射力
+        ShotPower,         // みかん威力
+        LaserOption,       // レーザー発射オプション数(0-2)
+        LaserPower,        // レーザー威力
+        FishPower,         // 魚威力(サイズも連動)
+        FishToughness,     // 魚品質保持期間
+        // 家関連
+        HouseDurability,   // 家の耐久力
+        HouseHealingPower, // 家の自然回復力
+        // その他
+        SpeedMagRange,     // 上昇速度の変化幅
+        ContinueCredit,    // コンティニュー可能回数
+
+        Target_Num
+    }
+
     // ハイスコア・所持金・各種強化レベルなどのプレーデータ
     [Serializable]
     public class UserData {
         [SerializeField] int highScore;     // ハイスコア
         [SerializeField] int pocketMoney;   // 所持金
-
-        // 各種強化情報
-        // 自機関連
-        [SerializeField] int shotRapidity;      // みかん連射力
-        [SerializeField] int shotPower;         // みかん威力
-        [SerializeField] int laserOption;       // レーザー発射オプション数(0-2)
-        [SerializeField] int laserPower;        // レーザー威力
-        [SerializeField] int fishPower;         // 魚威力(サイズも連動)
-        [SerializeField] int fishToughness;     // 魚品質保持期間
-        // 家関連
-        [SerializeField] int houseDurability;   // 家の耐久力
-        [SerializeField] int houseHealingPower; // 家の自然回復力
-        // その他
-        [SerializeField] int speedMagRange;     // 上昇速度の変化幅
-        [SerializeField] int continueCredit;    // コンティニュー可能回数
+        [SerializeField] int[] reinforcementLevel = new int[(int)ReinforceTarget.Target_Num];　 // 各種強化情報
 
         // 情報取得IF
+        public int GetLevel(ReinforceTarget target)
+        {
+            if (reinforcementLevel.Length > (int)target)
+            {
+                return reinforcementLevel[(int)target];
+            }
+            else
+            {
+                // 取得失敗時は-1が返る
+                Debug.Log("Target:" + target + " is out of range...");
+                return -1;
+            }
+        }
 
-        // 情報更新IF
+        public int GetHighScore() { return highScore; }
+        public int GetPocketMoney() { return pocketMoney; }
+
+        // ファイル更新
+        public bool UpdateData(UserData newData, string fileName)
+        {
+            bool ret = false;
+
+            try
+            {
+                StreamWriter writer;
+                string jsonStr = JsonUtility.ToJson(newData);
+                writer = new StreamWriter(fileName, false);
+                writer.Write(jsonStr);
+                writer.Flush();
+                writer.Close();
+
+                // 書き込み成功
+                ret = true;
+            }
+            catch (Exception e)
+            {
+                // 書き込み失敗orz
+                Debug.Log("Update UserData failed... Exception:" + e);
+                ret = false;
+            }
+
+            return ret;
+        }
 
         // 初期データ作成
         public void MakeInitialData(string fileName)
@@ -37,16 +84,16 @@ namespace DataBase
             // 初期値はこうする
             highScore = 0;
             pocketMoney = 0;
-            shotRapidity = 1;
-            shotPower = 1;
-            laserOption = 0;
-            laserPower = 0;
-            fishPower = 1;
-            fishToughness = 1;
-            houseDurability = 1;
-            houseHealingPower = 1;
-            speedMagRange = 1;
-            continueCredit = 3;
+            reinforcementLevel[(int)ReinforceTarget.ShotRapidity] = 1;
+            reinforcementLevel[(int)ReinforceTarget.ShotPower] = 1;
+            reinforcementLevel[(int)ReinforceTarget.LaserOption] = 0;
+            reinforcementLevel[(int)ReinforceTarget.LaserPower] = 1;
+            reinforcementLevel[(int)ReinforceTarget.FishPower] = 1;
+            reinforcementLevel[(int)ReinforceTarget.FishToughness] = 1;
+            reinforcementLevel[(int)ReinforceTarget.HouseDurability] = 1;
+            reinforcementLevel[(int)ReinforceTarget.HouseHealingPower] = 1;
+            reinforcementLevel[(int)ReinforceTarget.SpeedMagRange] = 1;
+            reinforcementLevel[(int)ReinforceTarget.ContinueCredit] = 3;
 
             StreamWriter writer;
             string jsonstr = JsonUtility.ToJson(this);

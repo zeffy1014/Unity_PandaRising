@@ -26,24 +26,20 @@ public class Player : MonoBehaviour
 
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
-    // ライフ
-    [SerializeField] int defaultLife = 3;
-    private ReactiveProperty<int> _lifeReactiveProperty = new ReactiveProperty<int>(default);
+    // ライフ　※シーンをまたいで引き継ぐ
+    [SerializeField] static int defaultLife = 3;
+    static ReactiveProperty<int> _lifeReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> LifeReactiveProperty { get { return _lifeReactiveProperty; } }
 
-    // ボム数
-    [SerializeField] int defaultBomb = 3;
-    ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
+    // ボム数　※シーンをまたいで引き継ぐ
+    [SerializeField] static int defaultBomb = 3;
+    static ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> BombReactiveProperty { get { return _bombReactiveProperty; } }
 
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
     {
-        // 初期化
-        // TODO:今はここで呼ぶが本来は読み込み完了のSignalを受けて呼ぶ
-        OnSettingInfoLoaded();
-
         // 移動範囲設定
         SetMoveArea();
 
@@ -51,21 +47,20 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // 操作入力を受け取ってもろもろ動作する
-        //InputAction();
 
     }
 
-    /***** Signal受信時処理 **************************************************/
-    // 設定読み込み完了
-    void OnSettingInfoLoaded()
+    /***** Playe個別処理 ****************************************************/
+    // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)
+    static public void InitStaticData()
     {
-        // TODO:ライフとボム数は前ステージの値を引き継ぐ 1面は初期値
+        Debug.Log("Player InitStaticData");
+
+        // デフォルトのライフとボム数設定
         _lifeReactiveProperty.Value = defaultLife;
         _bombReactiveProperty.Value = defaultBomb;
     }
 
-    /***** Playe個別処理 ****************************************************/
     // 移動範囲設定
     void SetMoveArea()
     {

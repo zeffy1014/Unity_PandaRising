@@ -67,6 +67,13 @@ namespace DataBase
             return;
         }
 
+        // UserDataファイル更新
+        public bool UpdateUserData(UserData newData)
+        {
+            bool ret = userData.UpdateData(newData, userDataPath);
+            return ret;
+        }
+
         /*****各種情報取得IF**********************************************/
         // ステージ構成情報取得
         public StageInfo GetStageInfo(StageNumber stage)
@@ -75,7 +82,18 @@ namespace DataBase
             return universalData.GetStageInfo(stage);
         }
 
-        // プレー情報取得
+        // 強化レベル対応パラメータテーブル取得
+        public ReinforcementTableInfo GetReinforcementTableInfo()
+        {
+            return universalData.GetReinforcementTableInfo();
+        }
+
+        // プレー情報(UserData)取得
+        public UserData GetUserData()
+        {
+            return this.userData;
+        }
+
 
         // 敵Prefab格納パス取得
         public string GetEnemyPrefabPath(Enemy.EnemyType type)

@@ -71,6 +71,128 @@ namespace DataBase
         [SerializeField] float[] speedMaxMagRangeTable; // 上昇速度上限
         [SerializeField] float[] speedMinMagRangeTable; // 上昇速度下限
 
+        // レベルに対するパラメータ取得IF 範囲外指定はレベル1の値を返す
+        public float GetShotRapidity(int level)
+        {
+            if (shotRapidityTable.Length >= level && 0 < level)
+            {
+                return shotRapidityTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetShotRapidity input level out of range... return as Level 1");
+                return shotRapidityTable[0];
+            }
+        }
+        public int GetShotPower(int level)
+        {
+            if (shotPowerTable.Length >= level && 0 < level)
+            {
+                return shotPowerTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetShotPower input level out of range... return as Level 1");
+                return shotPowerTable[0];
+            }
+        }
+        public float GetLaserPower(int level)
+        {
+            if (laserPowerTable.Length >= level && 0 < level)
+            {
+                return laserPowerTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetLaserPower input level out of range... return as Level 1");
+                return laserPowerTable[0];
+            }
+        }
+        public int GetFishPower(int level)
+        {
+            if (fishPowerTable.Length >= level && 0 < level)
+            {
+                return fishPowerTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetFishPower input level out of range... return as Level 1");
+                return fishPowerTable[0];
+            }
+        }
+        public float GetFishSize(int level)
+        {
+            if (fishSizeTable.Length >= level && 0 < level)
+            {
+                return fishSizeTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetFishSize input level out of range... return as Level 1");
+                return fishSizeTable[0];
+            }
+        }
+        public float GetFishToughness(int level)
+        {
+            if (fishToughnessTable.Length >= level && 0 < level)
+            {
+                return fishToughnessTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetFishToughness input level out of range... return as Level 1");
+                return fishToughnessTable[0];
+            }
+        }
+        public int GetHouseDurability(int level)
+        {
+            if (houseDurabilityTable.Length >= level && 0 < level)
+            {
+                return houseDurabilityTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetHouseDurability input level out of range... return as Level 1");
+                return houseDurabilityTable[0];
+            }
+        }
+        public int GetHouseHealingPower(int level)
+        {
+            if (houseHealingPowerTable.Length >= level && 0 < level)
+            {
+                return houseHealingPowerTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetHouseHealingPower input level out of range... return as Level 1");
+                return houseHealingPowerTable[0];
+            }
+        }
+        public float GetSpeedMaxMagRange(int level)
+        {
+            if (speedMaxMagRangeTable.Length >= level && 0 < level)
+            {
+                return speedMaxMagRangeTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetSpeedMaxMagRange input level out of range... return as Level 1");
+                return speedMaxMagRangeTable[0];
+            }
+        }
+        public float GetSpeedMinMagRange(int level)
+        {
+            if (speedMinMagRangeTable.Length >= level && 0 < level)
+            {
+                return speedMinMagRangeTable[level - 1];
+            }
+            else
+            {
+                Debug.Log("GetSpeedMinMagRange input level out of range... return as Level 1");
+                return speedMinMagRangeTable[0];
+            }
+        }
+
         // 初期データ作成
         public void MakeInitTable() {
             shotRapidityTable = new float[5] { 0.2f, 0.18f, 0.15f, 0.11f, 0.07f };
@@ -112,6 +234,12 @@ namespace DataBase
                 Debug.Log("stage number is out of range... Max:" + stageInfo.Length + ", Selected:" + (int)stage);
                 return null;
             }
+        }
+
+        // 強化レベル対応パラメータテーブル取得
+        public ReinforcementTableInfo GetReinforcementTableInfo()
+        {
+            return rtInfo;
         }
 
         // 敵のPrefab可能パス取得
