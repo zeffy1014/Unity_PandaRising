@@ -5,7 +5,6 @@ using UGUI;
 
 public class InputInstaller : MonoInstaller
 {
-    [SerializeField] Player player = default;
     [SerializeField] bool unityRemote = false;    // テスト用 UnityRemoteで動作確認するときはInspecter上でtrueにする
 
     public override void InstallBindings()
@@ -29,9 +28,5 @@ public class InputInstaller : MonoInstaller
         // 入力受け付けクラスのBind 参照されないのでNonLazyで生成
         Container.Bind<InputPresenter>().AsSingle().NonLazy();
 
-        // PlayerのBind Inspectorで指定したPlayerを使う
-        Container.Bind<Player>().FromInstance(player).AsCached();
-
-        // GameContollerは別のInstallerでBindするのでここには書かない
     }
 }

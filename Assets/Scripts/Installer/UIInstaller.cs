@@ -18,9 +18,6 @@ public class UIInstaller : MonoInstaller
     [SerializeField] Score score;
     [SerializeField] Money money;
 
-    [SerializeField] House house;
-    [SerializeField] GameController gameController;
-
     public override void InstallBindings()
     {
         // PresenterのBind 参照されないのでNonLazyで生成
@@ -38,12 +35,6 @@ public class UIInstaller : MonoInstaller
         Container.Bind<PlayTime>().FromInstance(time).AsCached();
         Container.Bind<Score>().FromInstance(score).AsCached();
         Container.Bind<Money>().FromInstance(money).AsCached();
-
-        // House, GameControllerもBind
-        Container.Bind<House>().FromInstance(house).AsCached();
-        Container.Bind<GameController>().FromInstance(gameController).AsCached();
-        
-        // Playerは別のInstallerでBindするのでここには書かない
 
     }
 }

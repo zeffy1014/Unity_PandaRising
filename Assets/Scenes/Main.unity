@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 1582861}
   - component: {fileID: 1582864}
   - component: {fileID: 1582865}
+  - component: {fileID: 1582866}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -334,6 +335,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1582866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1582861}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1 &49374021
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,6 +480,7 @@ GameObject:
   - component: {fileID: 96456964}
   - component: {fileID: 96456963}
   - component: {fileID: 96456965}
+  - component: {fileID: 96456966}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -590,6 +610,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &96456966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96456962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 96456963}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1 &131697494
 GameObject:
   m_ObjectHideFlags: 0
@@ -3152,6 +3190,7 @@ GameObject:
   - component: {fileID: 1008040776}
   - component: {fileID: 1008040775}
   - component: {fileID: 1008040777}
+  - component: {fileID: 1008040778}
   m_Layer: 0
   m_Name: House
   m_TagString: Untagged
@@ -3237,6 +3276,24 @@ MonoBehaviour:
   maxLife: 1000
   autoHealAmount: 1
   autoHealCycle: 0.05
+--- !u!114 &1008040778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008040774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1008040777}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1 &1016892823
 GameObject:
   m_ObjectHideFlags: 0
