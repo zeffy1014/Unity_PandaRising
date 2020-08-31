@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Enemy;
 
 
 namespace UGUI
@@ -26,6 +27,11 @@ namespace UGUI
         private GameController gameController;
         private Player player;
         private House house;
+        private EnemyGenerator enemyGenerator;
+        private BGScroller bgScroller;
+
+        // 各種読み込みを監視する対象
+        List<ILoadData> needLoadList = new List<ILoadData>(); 
 
         UIPresenter(
             ThrowButtonView tButtonViewIn,
@@ -41,7 +47,9 @@ namespace UGUI
             Money moneyIn,
             GameController gameControllerIn,
             Player playerIn,
-            House houseIn
+            House houseIn,
+            EnemyGenerator enemyGeneratorIn,
+            BGScroller bgScrollerIn
             )
         {
             // それぞれ代入
@@ -60,28 +68,64 @@ namespace UGUI
             gameController = gameControllerIn;
             player = playerIn;
             house = houseIn;
+            enemyGenerator = enemyGeneratorIn;
+            bgScroller = bgScrollerIn;
 
             // 各種情報の監視と表示更新はここでは行わない
 
-            // TODO:仮でここで呼ぶけれども後で消す
-            OnSettingInfoLoaded();
+            // 読み込み待ちの監視登録
+            CheckLoadData();
 
         }
 
-        // 各種設定・情報読み込み完了時の処理
+        // 設定・情報読み込みの監視設定
+        void CheckLoadData()
+        {
+            // 対象を決め打ちで入れていく
+            needLoadList.Add(gameController);
+            needLoadList.Add(enemyGenerator);
+            needLoadList.Add(bgScroller);
+
+            // 監視設定
+            foreach(ILoadData target in needLoadList)
+            {
+                // 読み込み完了時の関数を登録
+                target.OnLoadCompleteProperty.Subscribe(_ => OnSettingInfoLoaded());
+            }
+
+            return;
+        }
+
+        // ひとつの監視対象の各種設定・情報読み込み完了処理
         void OnSettingInfoLoaded()
         {
+            bool complete = true;
+            // 監視対象がすべて読み込み完了しているか確認する
+            foreach(ILoadData target in needLoadList)
+            {
+                // ひとつでも終わっていなかったら完了とはならない
+                if (false == target.LoadCompleted()) complete = false;
+            }
+
+            // すべて読み込み完了していたら完了時の処理へ
+            if (true == complete) OnSettingInfoLoadCompleted();
+
+            return;
+        }
+
+        // 各種設定・情報読み込みがすべて完了した際の処理
+        void OnSettingInfoLoadCompleted()
+        {
             /******各種設定反映*************************************************************************************/
-            // TODO:設定読み込み完了などのSignalを受けて各種設定
+            // GameController経由で取得・設定
             // ・上昇速度倍率上限下限
             // ・高度上限下限
             // ・ハイスコア
-            // 一旦決め打ちで設定しておく
-            sInfo.SetMinMagnification(0.7f);
-            sInfo.SetMaxMagnification(1.5f);
-            hInfo.SetStartHeight(0);
-            hInfo.SetGoalHeight(2000);
-            score.SetHiScore(50000);
+            sInfo.SetMinMagnification(gameController.SpeedMinMagnification);
+            sInfo.SetMaxMagnification(gameController.SpeedMaxMagnification);
+            hInfo.SetStartHeight(gameController.HeightMin);
+            hInfo.SetGoalHeight(gameController.HeightMax);
+            score.SetHiScore(gameController.HiScore);
             
             /******各種監視*************************************************************************************/
             // GameController監視(上昇速度倍率, 現在高度, コンボ数, ...)
@@ -101,7 +145,7 @@ namespace UGUI
             house.CurrentLifeReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(life => hLife.UpdateCurrentLife(life));
             house.MaxLifeReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(life => hLife.UpdateMaxLife(life));
 
-
+            return;
         }
 
     }

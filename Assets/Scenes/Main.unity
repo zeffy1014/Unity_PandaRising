@@ -158,8 +158,6 @@ MonoBehaviour:
   borderRatioH: 0.95
   moveSense: 1.2
   posInfo: {fileID: 1137957042}
-  defaultLife: 3
-  defaultBomb: 3
 --- !u!212 &1582862
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2015,6 +2013,7 @@ GameObject:
   - component: {fileID: 703263421}
   - component: {fileID: 703263422}
   - component: {fileID: 703263419}
+  - component: {fileID: 703263423}
   m_Layer: 0
   m_Name: GameBG
   m_TagString: Untagged
@@ -2079,6 +2078,24 @@ MonoBehaviour:
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
+--- !u!114 &703263423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703263418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 703263421}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 955889628}
+  _bindType: 0
 --- !u!1 &721147631
 GameObject:
   m_ObjectHideFlags: 0
@@ -3055,7 +3072,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b50c78aa08a19c94d94a3347aa7aeaba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1582861}
   unityRemote: 0
 --- !u!114 &955889628
 MonoBehaviour:
@@ -3128,8 +3144,6 @@ MonoBehaviour:
   time: {fileID: 1564729626}
   score: {fileID: 1016892825}
   money: {fileID: 187675827}
-  house: {fileID: 1008040777}
-  gameController: {fileID: 96456963}
 --- !u!114 &955889631
 MonoBehaviour:
   m_ObjectHideFlags: 0

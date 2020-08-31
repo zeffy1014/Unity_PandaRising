@@ -5,7 +5,7 @@ using Zenject;
 using DataBase;
 using UniRx;
 
-public class BGScroller : MonoBehaviour
+public class BGScroller : MonoBehaviour, ILoadData
 {
     GameController gameController;     // 現在高度監視用GameController
     SpriteRenderer spriteRenderer;     // 画像表示用SpriteRenderer
@@ -25,8 +25,33 @@ public class BGScroller : MonoBehaviour
         spriteRenderer = sr;
     }
 
+    /***** 読み込み完了監視 **********************************************************************/
+    ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
+    public IReadOnlyReactiveProperty<bool> OnLoadCompleteProperty => _onLoadCompleteProperty;
+    public bool LoadCompleted() { return _onLoadCompleteProperty.Value; }
+
+
     /***** MonoBehaviourイベント処理 **********************************************/
     void Start()
+    {
+        // 各種設定・情報を読み込む
+        bool loadResult = LoadData();
+        if (true == loadResult)
+        {
+            // 読み込み完了したらフラグを立てる
+            _onLoadCompleteProperty.Value = true;
+        }
+        else
+        {
+            // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
+            Debug.Log("EnemyGenerator load data failed...");
+        }
+
+    }
+
+    /***** BGScroller独自処理 *****************************************************/
+    // 読み込み
+    bool LoadData()
     {
         // ステージ構成情報から高度・画像読み込み
         var stageInfo = DataLibrarian.Instance.GetStageInfo(gameController.PlayingStage);
@@ -50,6 +75,7 @@ public class BGScroller : MonoBehaviour
         else
         {
             Debug.Log("BG Image cannot load...");
+            return false;
         }
 
         // 現在高度を監視
@@ -59,9 +85,10 @@ public class BGScroller : MonoBehaviour
                 ScrollImage(height);
             });
 
+        return true;
+
     }
 
-    /***** BGScroller独自処理 *****************************************************/
     // 初期設定
     void SetInitialInfo(Sprite image)
     {

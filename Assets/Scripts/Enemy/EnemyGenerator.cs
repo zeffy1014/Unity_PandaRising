@@ -79,7 +79,8 @@ namespace Enemy {
         public float ActivityTime { get; private set; }     // 活動時間
     }
 
-    public class EnemyGenerator {
+    public class EnemyGenerator: ILoadData
+    {
 
         GameController gameController;
         GameArea gameArea;
@@ -92,6 +93,11 @@ namespace Enemy {
         // 敵のPrefabリスト(生成時に使用、必要なものだけLoadしておく)
         GameObject[] enemyPrefabs = new GameObject[(int)EnemyType.EnemyType_Num];
 
+        /***** 読み込み完了監視 ************************************************************/
+        ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
+        public IReadOnlyReactiveProperty<bool> OnLoadCompleteProperty => _onLoadCompleteProperty;
+        public bool LoadCompleted() { return _onLoadCompleteProperty.Value; }
+
 
         /***** 読み込み・準備処理 **********************************************************/
         // コンストラクタ
@@ -101,17 +107,17 @@ namespace Enemy {
             gameArea = ga;
 
             // ステージ指定してDataLibrarianからステージ構成情報→敵生成テーブル読み込み
-            LoadTable(DataLibrarian.Instance.GetStageInfo(gc.PlayingStage).GetPathEnemyGenerateTable());
-
-            // 生成テーブルで指定された高度を監視
-            gameController.HeightReactiveProperty
-                .DistinctUntilChanged()
-                .Where(height => generateHeight.Contains(height))
-                .Subscribe(height =>
-                {
-                    Debug.Log("Generate Enemy! Height:" + height.ToString());
-                    GenerateEnemy(height);
-                });
+            bool loadResult = LoadTable(DataLibrarian.Instance.GetStageInfo(gc.PlayingStage).GetPathEnemyGenerateTable());
+            if (true == loadResult)
+            {
+                // 読み込み完了したらフラグを立てる
+                _onLoadCompleteProperty.Value = true;
+            }
+            else
+            {
+                // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
+                Debug.Log("EnemyGenerator load data failed...");
+            }
 
         }
 
@@ -129,6 +135,16 @@ namespace Enemy {
                 // 1行読んで生成情報に格納・リスト追加
                 SetString2EnemyGenerateInfo(sReader.ReadLine());
             }
+
+            // 生成テーブルで指定された高度を監視
+            gameController.HeightReactiveProperty
+                .DistinctUntilChanged()
+                .Where(height => generateHeight.Contains(height))
+                .Subscribe(height =>
+                {
+                    Debug.Log("Generate Enemy! Height:" + height.ToString());
+                    GenerateEnemy(height);
+                });
 
             return true;
         }

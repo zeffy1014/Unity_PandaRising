@@ -14,7 +14,7 @@ public enum EditMode
     Rate_Delta      // 現在値からの変化量で指定(全体に対する割合)
 }
 
-public class GameController : MonoBehaviour
+public class GameController : MonoBehaviour, ILoadData
 {
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
@@ -42,18 +42,17 @@ public class GameController : MonoBehaviour
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
     public IReadOnlyReactiveProperty<float> SpeedMagReactiveProperty { get { return _speedMagReactiveProperty; } }
 
-    // 読み込み完了
+    /***** 読み込み完了監視 **********************************************************************/
     ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
     public IReadOnlyReactiveProperty<bool> OnLoadCompleteProperty => _onLoadCompleteProperty;
+    public bool LoadCompleted() { return _onLoadCompleteProperty.Value; }
 
     /***** 設定値読み込みで保持するものたち ****************************************************/
-    float speedMaxMagnification = default;  // 速度倍率上限
-    float speedMinMagnification = default;  // 速度倍率下限
-    int heightMax = default;                // 高度上限
-    int heightMin = default;                // 高度下限
-    int hiScore = default;                  // ハイスコア(更新される可能性あり)
-    // それぞれ参照用に公開する
-
+    public float SpeedMaxMagnification { get; private set; } = default;  // 速度倍率上限
+    public float SpeedMinMagnification { get; private set; } = default;  // 速度倍率下限
+    public int HeightMax { get; private set; } = default;                // 高度上限
+    public int HeightMin { get; private set; } = default;                // 高度下限
+    public int HiScore { get; private set; } = default;                  // ハイスコア(更新される可能性あり)
 
     /***** その他プレー情報 ********************************************************************/
     // 現在のステージ
@@ -69,7 +68,17 @@ public class GameController : MonoBehaviour
     void Start()
     {
         // 各種設定・情報を読み込む
-        LoadData();
+        bool loadResult = LoadData();
+        if (true == loadResult)
+        {
+            // 読み込み完了したらフラグを立てる
+            _onLoadCompleteProperty.Value = true;
+        }
+        else
+        {
+            // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
+            Debug.Log("EnemyGenerator load data failed...");
+        }
     }
 
     void FixedUpdate()
@@ -79,16 +88,17 @@ public class GameController : MonoBehaviour
         // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
     }
 
+
     /***** GameController処理 ****************************************************/
     // 各種設定・情報読み込み
-    void LoadData()
+    bool LoadData()
     {
         // ステージ構成情報取得
         StageInfo stageInfo = DataLibrarian.Instance.GetStageInfo(playingStage);
         if (null == stageInfo)
         {
             Debug.Log("GameController LoadData failed... cannot get StageInfo");
-            return;
+            return false;
         }
 
         // プレーデータと各種強化テーブル取得
@@ -96,19 +106,23 @@ public class GameController : MonoBehaviour
         ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
 
         // 各種強化レベルと対応パラメータから上昇速度範囲を設定
-        speedMaxMagnification = rtInfo.GetSpeedMaxMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
-        speedMinMagnification = rtInfo.GetSpeedMinMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
+        SpeedMaxMagnification = rtInfo.GetSpeedMaxMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
+        SpeedMinMagnification = rtInfo.GetSpeedMinMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));
         // 現在設定値は固定とする
         _speedMagReactiveProperty.Value = 1.0f;
 
         // ステージ構成情報から現在ステージのスタートゴール高度取得
-        heightMax = stageInfo.GetHeightGoal();
-        heightMin = stageInfo.GetHeightStart();
+        HeightMax = stageInfo.GetHeightGoal();
+        HeightMin = stageInfo.GetHeightStart();
         // スタート高度に設定
-        _heightReactiveProperty.Value = heightMin;
+        _heightReactiveProperty.Value = HeightMin;
 
-        // ハイスコア設定
-        hiScore = userData.GetHighScore();
+        // ハイスコアと所持金設定
+        HiScore = userData.GetHighScore();
+        _moneyReactiveProperty.Value = userData.GetPocketMoney();
+
+        // 読み込み成功
+        return true;
 
     }
 
@@ -128,28 +142,28 @@ public class GameController : MonoBehaviour
         // 割合指定の場合は全体量にかけて値に変換する
         if (EditMode.Rate_Direct == mode || EditMode.Rate_Delta == mode)
         {
-            value *= speedMaxMagnification - speedMinMagnification;
+            value *= SpeedMaxMagnification - SpeedMaxMagnification;
         }
 
         // 直接指定 or 変化量で指定
         if (EditMode.Value_Direct == mode || EditMode.Rate_Direct == mode)
         {
             // 範囲限定
-            if (speedMaxMagnification < value) value = speedMaxMagnification;
-            if (speedMinMagnification > value) value = speedMinMagnification;
+            if (SpeedMaxMagnification < value) value = SpeedMaxMagnification;
+            if (SpeedMinMagnification > value) value = SpeedMinMagnification;
 
             _speedMagReactiveProperty.Value = value;
         }
         else if (EditMode.Value_Delta == mode || EditMode.Rate_Delta == mode)
         {
             // 範囲限定
-            if (speedMaxMagnification < _speedMagReactiveProperty.Value + value)
+            if (SpeedMaxMagnification < _speedMagReactiveProperty.Value + value)
             {
-                _speedMagReactiveProperty.Value = speedMaxMagnification;
+                _speedMagReactiveProperty.Value = SpeedMaxMagnification;
             }
-            else if (speedMinMagnification > _speedMagReactiveProperty.Value + value)
+            else if (SpeedMinMagnification > _speedMagReactiveProperty.Value + value)
             {
-                _speedMagReactiveProperty.Value = speedMinMagnification;
+                _speedMagReactiveProperty.Value = SpeedMinMagnification;
             }
             else
             {
