@@ -40,6 +40,13 @@ public class Player : MonoBehaviour
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
     {
+        // ライフ未設定の場合は初期化する(本来はシーンロード前にやっておく)
+        if (0 == _lifeReactiveProperty.Value)
+        {
+            Debug.Log("Player Life is Zero -> Init Data");
+            InitStaticData();
+        }
+
         // 移動範囲設定
         SetMoveArea();
 

@@ -44,7 +44,7 @@ public class BGScroller : MonoBehaviour, ILoadData
         else
         {
             // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
-            Debug.Log("EnemyGenerator load data failed...");
+            Debug.Log("BGScroller load data failed...");
         }
 
     }

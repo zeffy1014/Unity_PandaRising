@@ -85,6 +85,7 @@ namespace UGUI
             needLoadList.Add(gameController);
             needLoadList.Add(enemyGenerator);
             needLoadList.Add(bgScroller);
+            needLoadList.Add(house);
 
             // 監視設定
             foreach(ILoadData target in needLoadList)
@@ -137,13 +138,13 @@ namespace UGUI
             gameController.MoneyReactiveProperty.DistinctUntilChanged().Subscribe(x => money.UpdateMoney(x));
 
             // Player監視(ライフ・ボム数)
-            player.LifeReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(life => pLife.UpdateLife(life));
-            player.BombReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(stock => bButtonView.UpdateBombStock(stock));
+            player.LifeReactiveProperty.Subscribe(life => pLife.UpdateLife(life));
+            player.BombReactiveProperty.Subscribe(stock => bButtonView.UpdateBombStock(stock));
             // TODO:魚の状態監視も必要
 
             // House監視(最大/現在ライフ)
-            house.CurrentLifeReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(life => hLife.UpdateCurrentLife(life));
-            house.MaxLifeReactiveProperty.Skip(1).DistinctUntilChanged().Subscribe(life => hLife.UpdateMaxLife(life));
+            house.CurrentLifeReactiveProperty.Subscribe(life => hLife.UpdateCurrentLife(life));
+            house.MaxLifeReactiveProperty.Subscribe(life => hLife.UpdateMaxLife(life));
 
             return;
         }
