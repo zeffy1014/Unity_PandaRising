@@ -142,7 +142,7 @@ public class GameController : MonoBehaviour, ILoadData
         // 割合指定の場合は全体量にかけて値に変換する
         if (EditMode.Rate_Direct == mode || EditMode.Rate_Delta == mode)
         {
-            value *= SpeedMaxMagnification - SpeedMaxMagnification;
+            value *= SpeedMaxMagnification - SpeedMinMagnification;
         }
 
         // 直接指定 or 変化量で指定
