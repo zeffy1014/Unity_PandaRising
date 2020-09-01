@@ -126,14 +126,29 @@ namespace Enemy {
         {
             // 指定されたCSVファイルからの読み込み
             TextAsset tableFile = Resources.Load(filePath) as TextAsset;
-            StringReader sReader = new StringReader(tableFile.text);
-            // 1行目を読み飛ばす
-            sReader.ReadLine();
-            // 2行目以降を格納
-            while (sReader.Peek() != -1)
+            if (null == tableFile)
             {
-                // 1行読んで生成情報に格納・リスト追加
-                SetString2EnemyGenerateInfo(sReader.ReadLine());
+                // 読み込み失敗…
+                Debug.Log("EnemyGenerator LoadTable failed...cannot get table file path.");
+                return false;
+            }
+
+            try
+            {
+                StringReader sReader = new StringReader(tableFile.text);
+                // 1行目を読み飛ばす
+                sReader.ReadLine();
+                // 2行目以降を格納
+                while (sReader.Peek() != -1)
+                {
+                    // 1行読んで生成情報に格納・リスト追加
+                    SetString2EnemyGenerateInfo(sReader.ReadLine());
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("EnemyGenerator LoadTable failed...Exception:" + e);
+                return false;
             }
 
             // 生成テーブルで指定された高度を監視

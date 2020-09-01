@@ -258,7 +258,7 @@ namespace DataBase
 
 
         // for Make TestData
-        public void MakeTestJson(string filePath)
+        public bool MakeTestJson(string filePath)
         {
             // StageInfo初期データ
             stageInfo = new StageInfo[(int)StageNumber.Stage_Num];
@@ -276,13 +276,25 @@ namespace DataBase
             // 敵Prefabパス
             enemyPrefabPath = Enumerable.Repeat<string>("Prefabs/Enemy/EnemyPrefab_xxx", (int)Enemy.EnemyType.EnemyType_Num).ToArray();
 
-            StreamWriter writer;
-            string jsonstr = JsonUtility.ToJson(this);
-            //string filePath = Application.dataPath + "/" + fileName;
-            writer = new StreamWriter(filePath, false);
-            writer.Write(jsonstr);
-            writer.Flush();
-            writer.Close();
+            // ファイル保存
+            try
+            {
+                StreamWriter writer;
+                string jsonstr = JsonUtility.ToJson(this);
+                //string filePath = Application.dataPath + "/" + fileName;
+                using (writer = new StreamWriter(filePath, false))
+                {
+                    writer.Write(jsonstr);
+                    writer.Flush();
+                    writer.Close();
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Cannot make test UniversalData... Exception:" + e);
+                return false;
+            }
 
         }
 

@@ -67,6 +67,14 @@ public class House : MonoBehaviour, ILoadData
         UserData userData = DataLibrarian.Instance.GetUserData();
         ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
 
+        // 読み込み成否確認
+        if (null == userData || null == rtInfo)
+        {
+            // 駄目だった
+            Debug.Log("House LoadData failed...");
+            return false;
+        }
+
         // 各種強化レベルと対応パラメータから最大ライフと回復量を設定 ライフは最大回復
         _maxLifeReactiveProperty.Value = rtInfo.GetHouseDurability(userData.GetLevel(ReinforceTarget.HouseDurability));
         _currentLifeReactiveProperty.Value = _maxLifeReactiveProperty.Value;

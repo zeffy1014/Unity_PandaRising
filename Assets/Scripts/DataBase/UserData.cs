@@ -54,32 +54,30 @@ namespace DataBase
         // ファイル更新
         public bool UpdateData(UserData newData, string fileName)
         {
-            bool ret = false;
-
             try
             {
                 StreamWriter writer;
                 string jsonStr = JsonUtility.ToJson(newData);
-                writer = new StreamWriter(fileName, false);
-                writer.Write(jsonStr);
-                writer.Flush();
-                writer.Close();
-
+                using (writer = new StreamWriter(fileName, false))
+                {
+                    writer.Write(jsonStr);
+                    writer.Flush();
+                    writer.Close();
+                }
                 // 書き込み成功
-                ret = true;
+                return true;
             }
             catch (Exception e)
             {
                 // 書き込み失敗orz
                 Debug.Log("Update UserData failed... Exception:" + e);
-                ret = false;
+                return false;
             }
 
-            return ret;
         }
 
         // 初期データ作成
-        public void MakeInitialData(string fileName)
+        public bool MakeInitialData(string fileName)
         {
             // 初期値はこうする
             highScore = 0;
@@ -95,12 +93,23 @@ namespace DataBase
             reinforcementLevel[(int)ReinforceTarget.SpeedMagRange] = 1;
             reinforcementLevel[(int)ReinforceTarget.ContinueCredit] = 3;
 
-            StreamWriter writer;
-            string jsonstr = JsonUtility.ToJson(this);
-            writer = new StreamWriter(fileName, false);
-            writer.Write(jsonstr);
-            writer.Flush();
-            writer.Close();
+            try
+            {
+                StreamWriter writer;
+                string jsonstr = JsonUtility.ToJson(this);
+                using (writer = new StreamWriter(fileName, false))
+                {
+                    writer.Write(jsonstr);
+                    writer.Flush();
+                    writer.Close();
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Cannot make initial UserData... Exeption:" + e);
+                return false;
+            }
 
         }
 

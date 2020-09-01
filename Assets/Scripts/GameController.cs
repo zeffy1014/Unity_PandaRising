@@ -104,6 +104,12 @@ public class GameController : MonoBehaviour, ILoadData
         // プレーデータと各種強化テーブル取得
         UserData userData = DataLibrarian.Instance.GetUserData();
         ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
+        if (null == userData || null == rtInfo)
+        {
+            // 駄目だった
+            Debug.Log("GameController LoadData failed...");
+            return false;
+        }
 
         // 各種強化レベルと対応パラメータから上昇速度範囲を設定
         SpeedMaxMagnification = rtInfo.GetSpeedMaxMagRange(userData.GetLevel(ReinforceTarget.SpeedMagRange));

@@ -56,6 +56,14 @@ public class BGScroller : MonoBehaviour, ILoadData
         // ステージ構成情報から高度・画像読み込み
         var stageInfo = DataLibrarian.Instance.GetStageInfo(gameController.PlayingStage);
 
+        // 読み込み成否確認
+        if (null == stageInfo)
+        {
+            // 駄目だった
+            Debug.Log("BGScroller LoadData failed...cannot get StageInfo");
+            return false;
+        }
+
         Sprite image = Resources.Load<Sprite>(stageInfo.GetPathBackGroundImage());  // 画像
         heightStart = stageInfo.GetHeightStart();  // スタート地点高度
         heightGoal = stageInfo.GetHeightGoal();    // ゴール地点高度
