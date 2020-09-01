@@ -22,6 +22,7 @@ namespace UGUI
         private PlayTime time;
         private Score score;
         private Money money;
+        private LoadingView loadingView;
 
         // 監視対象
         private GameController gameController;
@@ -45,6 +46,7 @@ namespace UGUI
             PlayTime timeIn,
             Score scoreIn,
             Money moneyIn,
+            LoadingView loadingViewIn,
             GameController gameControllerIn,
             Player playerIn,
             House houseIn,
@@ -64,6 +66,7 @@ namespace UGUI
             time = timeIn;
             score = scoreIn;
             money = moneyIn;
+            loadingView = loadingViewIn;
 
             gameController = gameControllerIn;
             player = playerIn;
@@ -145,6 +148,9 @@ namespace UGUI
             // House監視(最大/現在ライフ)
             house.CurrentLifeReactiveProperty.Subscribe(life => hLife.UpdateCurrentLife(life));
             house.MaxLifeReactiveProperty.Subscribe(life => hLife.UpdateMaxLife(life));
+
+            // LoadingView除去
+            loadingView.RemoveLoadingPanel();
 
             return;
         }

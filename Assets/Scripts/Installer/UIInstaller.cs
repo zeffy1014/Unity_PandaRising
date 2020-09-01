@@ -17,6 +17,7 @@ public class UIInstaller : MonoInstaller
     [SerializeField] PlayTime time;
     [SerializeField] Score score;
     [SerializeField] Money money;
+    [SerializeField] LoadingView loadingView;
 
     public override void InstallBindings()
     {
@@ -35,6 +36,7 @@ public class UIInstaller : MonoInstaller
         Container.Bind<PlayTime>().FromInstance(time).AsCached();
         Container.Bind<Score>().FromInstance(score).AsCached();
         Container.Bind<Money>().FromInstance(money).AsCached();
+        Container.Bind<LoadingView>().FromInstance(loadingView).AsCached();
 
     }
 }
