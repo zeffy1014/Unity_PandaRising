@@ -28,5 +28,12 @@ public class InputInstaller : MonoInstaller
         // 入力受け付けクラスのBind 参照されないのでNonLazyで生成
         Container.Bind<InputPresenter>().AsSingle().NonLazy();
 
+        /***** Signal関連 **********************************************************************/
+        SignalBusInstaller.Install(Container);
+        // Signal定義
+        Container.DeclareSignal<GameStartSignal>();
+        // Signal受信時の処理
+        Container.BindSignal<GameStartSignal>().ToMethod<GameController>(gc => gc.OnGameStart).FromResolve();
+
     }
 }

@@ -14,6 +14,17 @@ public enum EditMode
     Rate_Delta      // 現在値からの変化量で指定(全体に対する割合)
 }
 
+// ゲーム中の状態
+public enum GameState
+{
+    Ready,          // プレー開始前
+    Playing,        // プレー中
+    GameOver,       // ゲームオーバー(リトライ確認なども)
+    Pause,          // ポーズ中
+
+    GameState_Num
+}
+
 public class GameController : MonoBehaviour, ILoadData
 {
     /***** ReactivePropertyで監視させるものたち ****************************************************/
@@ -41,6 +52,10 @@ public class GameController : MonoBehaviour, ILoadData
     // 上昇速度倍率
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
     public IReadOnlyReactiveProperty<float> SpeedMagReactiveProperty { get { return _speedMagReactiveProperty; } }
+
+    // ゲームの状態
+    ReactiveProperty<GameState> _gameStateReactiveProperty = new ReactiveProperty<GameState>(default);
+    public IReadOnlyReactiveProperty<GameState> GameStateReactiveProperty { get { return _gameStateReactiveProperty; } }
 
     /***** 読み込み完了監視 **********************************************************************/
     ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
@@ -79,15 +94,34 @@ public class GameController : MonoBehaviour, ILoadData
             // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
             Debug.Log("EnemyGenerator load data failed...");
         }
+
+        // 初期状態
+        _gameStateReactiveProperty.Value = GameState.Ready;
     }
 
     void FixedUpdate()
     {
-        // プレー時間
-        _playTimeReactiveProperty.Value += Time.deltaTime;
-        // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
+        if (GameState.Playing == _gameStateReactiveProperty.Value)
+        {
+            // プレー時間
+            _playTimeReactiveProperty.Value += Time.deltaTime;
+            // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
+        }
     }
 
+    /***** Zenject Signal受信 ****************************************************/
+    // ゲーム開始操作
+    public void OnGameStart(GameStartSignal signal)
+    {
+        // Ready状態→Playing状態への遷移トリガーとなる
+        if (GameState.Ready == _gameStateReactiveProperty.Value)
+        {
+            Debug.Log("Game Play Start!");
+            ChangeState(GameState.Playing);
+        }
+
+        return;
+    }
 
     /***** GameController処理 ****************************************************/
     // 各種設定・情報読み込み
@@ -130,6 +164,36 @@ public class GameController : MonoBehaviour, ILoadData
         // 読み込み成功
         return true;
 
+    }
+
+    // 状態遷移
+    void ChangeState(GameState newState)
+    {
+        // 何か遷移時にやることがあれば
+        switch(newState)
+        {
+            case GameState.Ready:
+                break;
+            case GameState.Playing:
+                if (GameState.Ready == _gameStateReactiveProperty.Value || GameState.GameOver == _gameStateReactiveProperty.Value)
+                {
+                    // 新規スタートまたはコンティニュー時にリセットするものたち TODO:このあたりは追って整理
+                    _playTimeReactiveProperty.Value = 0.0f;
+                }
+                break;
+            case GameState.GameOver:
+                break;
+            case GameState.Pause:
+                break;
+            default:
+                break;
+        }
+
+        // 最後に現在の状態を変更
+        Debug.Log("GameController Change State: " + _gameStateReactiveProperty.Value + "-->" + newState);
+        _gameStateReactiveProperty.Value = newState;
+
+        return;
     }
 
     // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)

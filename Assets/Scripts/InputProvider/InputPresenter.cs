@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using InputProvider;
 using UniRx;
+using Zenject;
+
+// ゲーム開始操作のSignal
+public class GameStartSignal { }
+
 
 // 各種操作を受けて最終的にPlayerやGameControllerに処理の指示を出すひと
 public class InputPresenter
@@ -11,14 +16,28 @@ public class InputPresenter
     private IInputProvider input;
     private GameController gameController;
 
-    InputPresenter(IInputProvider input, Player player, GameController gameController)
+    // Signal発行します
+    private SignalBus signalBus;
+    private bool gameStartSignalFired = false;   // シーン読み込みのたび1回だけ発行する想定
+
+    InputPresenter(IInputProvider input, Player player, GameController gameController, SignalBus signalBus)
     {
         this.player = player;
         this.input = input;
         this.gameController = gameController;
+        this.signalBus = signalBus;
 
         // 各種操作を監視してPlayerを動かす
-        this.input.OnShot.Subscribe(_ => this.player.Shot());
+        this.input.OnShot.Subscribe(_ => {
+            this.player.Shot();
+
+            // ゲーム開始操作を兼ねるためSignal発行(そのシーンで1回だけ)
+            if (!gameStartSignalFired)
+            {
+                signalBus.Fire<GameStartSignal>();
+                gameStartSignalFired = true;
+            }
+        });
         this.input.OnThrow.Subscribe(angle => this.player.Throw(angle));
         this.input.OnBomb.Subscribe(_ => this.player.Bomb());
 

@@ -44,12 +44,20 @@ package Bullet {
     Bullet -* BulletType
 }
 
+enum GameState {
+    Ready
+    Playing
+    GameOver
+    Pause
+}
+
 class GameController {
     + IReadOnlyReactiveProperty<int> Score
     + IReadOnlyReactiveProperty<int> Combo
     + IReadOnlyReactiveProperty<int> Hight
     + IReadOnlyReactiveProperty<int> Money
     + IReadOnlyReactiveProperty<float> RiseSpeed
+    + IReadOnlyReactiveProperty<GameState> GameState
     + IReadOnlyReactiveProperty<xxx> ...and more!
     + OnPauseMenu(bool)
 }
@@ -199,6 +207,10 @@ package UI {
         + PlayerLife
         + HouseLife
     }
+    class LoadingView {
+        + RemoveLoadingPanel(float sec)
+    }
+
     class UIPresenter {
 
     }
@@ -229,10 +241,12 @@ EnemyGenerator --> EnemyBase : 生成
 
 Player .> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
 
-UIPresenter ..> GameController : 各種表示情報参照
+UIPresenter ..> GameController : 各種表示情報参照, データ読み込み監視
+UIPresenter ..> EnemyGenerator : データ読み込み監視
+UIPresenter ..> BGScroller : データ読み込み監視
 note on link : 各種情報\n・コンボ\n・現在高度\n・上昇速度倍率\n・スコア\n・所持金\n・時間\n・etc...
 UIPresenter ..> Player : HP・ボム数・状態参照
-UIPresenter ..> House : HP参照
+UIPresenter ..> House : HP参照, データ読み込み監視
 
 GameController .> GameStateProperty : 状態参照
 Player .> GameStateProperty : 状態参照
@@ -249,6 +263,7 @@ UIPresenter --up> SpeedMetor : 上昇速度倍率表示
 UIPresenter --up> ScoreBoard : スコアと所持金表示
 UIPresenter --up> Combo : コンボ数表示
 UIPresenter --up> PlayTime : プレイ時間表示
+UIPresenter --up> LoadingView : データ読み込み完了で画面除去
 
 
 @enduml

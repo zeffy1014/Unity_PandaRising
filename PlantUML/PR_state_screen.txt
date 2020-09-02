@@ -38,7 +38,7 @@ state ゲーム画面 {
     Play --> Pause : ポーズ
     Pause --> Play : ポーズ解除
 
-    GameOver --> Ready : リトライ
+    GameOver --> Play : コンティニュー
     GameOver --> [*] : メニューに戻る
     StageClear --> [*] : [通しプレイ]Next
     StageClear --> Ready : [ステージ選択プレイ]リトライ
