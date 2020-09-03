@@ -498,6 +498,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dceb6e2e63af1f49bcf66fda1aae559, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugStage: 1
+  debugStageNumber: 0
 --- !u!4 &96456964
 Transform:
   m_ObjectHideFlags: 0
@@ -3913,14 +3915,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 922b805bc01c243e5853d9cbb544118c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_EffectMode: 2
+  m_EffectMode: 3
   m_EffectFactor: 1
   m_TransitionTexture: {fileID: 2800000, guid: 8dd45e1a194d0184999adbaa32571a18, type: 3}
   m_EffectArea: 0
   m_KeepAspectRatio: 0
   m_DissolveWidth: 0.5
   m_DissolveSoftness: 0.5
-  m_DissolveColor: {r: 0, g: 0.25, b: 1, a: 1}
+  m_DissolveColor: {r: 1, g: 1, b: 1, a: 1}
   m_PassRayOnHidden: 1
   m_Player:
     play: 0
@@ -3936,7 +3938,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1200937850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

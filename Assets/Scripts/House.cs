@@ -89,7 +89,7 @@ public class House : MonoBehaviour, ILoadData
         // 現在ライフを減らす(ただしゼロ未満にはしない)
         _currentLifeReactiveProperty.Value = (damage > _currentLifeReactiveProperty.Value)
             ? (0)
-            : (_currentLifeReactiveProperty.Value -= damage);
+            : (_currentLifeReactiveProperty.Value - damage);
 
     }
 

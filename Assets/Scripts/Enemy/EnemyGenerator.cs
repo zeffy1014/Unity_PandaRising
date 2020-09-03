@@ -90,6 +90,8 @@ namespace Enemy {
         List<EnemyGenerateInfo> generateTable = new List<EnemyGenerateInfo>();
         // 敵生成高度を抽出・重複排除したもの(監視対象のフィルタに使用する)
         List<int> generateHeight = new List<int>();
+        // 敵生成高度リストの監視対象番号 生成処理が終わるたびに進む
+        int watchHeightIndex = default;
         // 敵のPrefabリスト(生成時に使用、必要なものだけLoadしておく)
         GameObject[] enemyPrefabs = new GameObject[(int)EnemyType.EnemyType_Num];
 
@@ -154,12 +156,14 @@ namespace Enemy {
             // 生成テーブルで指定された高度を監視
             gameController.HeightReactiveProperty
                 .DistinctUntilChanged()
-                .Where(height => generateHeight.Contains(height))
+                //.Where(height => generateHeight.Contains(height))
                 .Subscribe(height =>
                 {
-                    Debug.Log("Generate Enemy! Height:" + height.ToString());
-                    GenerateEnemy(height);
+                    GenerateEnemy((int)height);
                 });
+
+            // 監視対象番号を初期化
+            watchHeightIndex = 0;
 
             return true;
         }
@@ -208,11 +212,25 @@ namespace Enemy {
         // 生成テーブルに従って敵を生成
         void GenerateEnemy(int height)
         {
-            // 指定された高度に一致しているものを一通り抽出して処理する
+            // 敵生成高度のリストを参照し、その高度に達していなかったら抜ける
+            if (generateHeight.Count <= watchHeightIndex)
+            {
+                // 最後まで参照済みの場合は即抜ける
+                return;
+            }
+            if (generateHeight[watchHeightIndex] > height)
+            {
+                // まだ敵生成高度に達していないので抜ける
+                return;
+            }
+
+            // 指定された高度に達しているものを一通り抽出して処理する
             // 生成したらTableから削除する
 
-            // 生成高度が一致するものを抽出
-            var generateList = generateTable.Where(info => info.GenerateHeight == height);
+            Debug.Log("Current height:" + height + ", Next generate enemy height:" + generateHeight[watchHeightIndex] + " -> generate enemy!!");
+
+            // 生成高度が達しているものを抽出
+            var generateList = generateTable.Where(info => info.GenerateHeight < height);
 
             // 抽出したものを順次処理
             foreach (var generateInfo in generateList)
@@ -243,6 +261,9 @@ namespace Enemy {
 
             // もともとのListから該当する敵の情報を抜く(ID一致する要素を削除)
             generateTable.RemoveAll(info => true == info.DeleteOK);
+
+            // 監視対象番号を進める
+            watchHeightIndex++;
 
             return;
         }

@@ -134,7 +134,7 @@ namespace UGUI
             /******各種監視*************************************************************************************/
             // GameController監視(上昇速度倍率, 現在高度, コンボ数, ...)
             gameController.SpeedMagReactiveProperty.DistinctUntilChanged().Subscribe(x => sInfo.UpdateCurrentSpeed(x));
-            gameController.HeightReactiveProperty.DistinctUntilChanged().Subscribe(x => hInfo.UpdateCurrentHeight(x));
+            gameController.HeightReactiveProperty.DistinctUntilChanged().Subscribe(x => hInfo.UpdateCurrentHeight((int)x));
             gameController.ComboReactiveProperty.DistinctUntilChanged().Subscribe(x => combo.UpdateCombo(x));
             gameController.PlayTimeReactiveProperty.DistinctUntilChanged().Subscribe(x => time.UpdatePlayTime(x));
             gameController.ScoreReactiveProperty.DistinctUntilChanged().Subscribe(x => score.UpdateScore(x));

@@ -46,8 +46,8 @@ public class GameController : MonoBehaviour, ILoadData
     public IReadOnlyReactiveProperty<int> MoneyReactiveProperty { get { return _moneyReactiveProperty; } }
 
     // 現在高度
-    ReactiveProperty<int> _heightReactiveProperty = new ReactiveProperty<int>(default);
-    public IReadOnlyReactiveProperty<int> HeightReactiveProperty { get { return _heightReactiveProperty; } }
+    ReactiveProperty<float> _heightReactiveProperty = new ReactiveProperty<float>(default);
+    public IReadOnlyReactiveProperty<float> HeightReactiveProperty { get { return _heightReactiveProperty; } }
 
     // 上昇速度倍率
     ReactiveProperty<float> _speedMagReactiveProperty = new ReactiveProperty<float>(default);
@@ -74,12 +74,25 @@ public class GameController : MonoBehaviour, ILoadData
     static StageNumber playingStage = default;       // シーンをまたいで保持する
     public StageNumber PlayingStage => playingStage; // 参照用
 
+    // デバッグ用にインスペクターからステージ指定できるようにする
+    [SerializeField] bool debugStage = false;
+    [SerializeField] StageNumber debugStageNumber = default;
+
     // 現在のコンティニュー回数
     static int continueTimes = default;              // シーンをまたいで保持する
     public int ContinueTimes => continueTimes;       // 参照用
 
+    // 現在の上昇速度
+    float risingSpeed = default;
 
     /***** MonoBehaviourイベント処理 ****************************************************/
+    void Awake()
+    {
+        // デバッグ設定の場合は強制的にステージ設定
+        if (debugStage) InitStaticData(debugStageNumber);
+
+    }
+
     void Start()
     {
         // 各種設定・情報を読み込む
@@ -97,15 +110,24 @@ public class GameController : MonoBehaviour, ILoadData
 
         // 初期状態
         _gameStateReactiveProperty.Value = GameState.Ready;
+
+        // 上昇速度を設定
+        risingSpeed = GetRisingSpeed(_speedMagReactiveProperty.Value);
     }
 
     void FixedUpdate()
     {
         if (GameState.Playing == _gameStateReactiveProperty.Value)
         {
-            // プレー時間
+            // プレー時間加算
             _playTimeReactiveProperty.Value += Time.deltaTime;
             // Debug.Log("Fixed Updated.playTime:" + _playTimeReactiveProperty);
+
+            // 現在高度上昇
+            _heightReactiveProperty.Value = (_heightReactiveProperty.Value + risingSpeed * Time.deltaTime > HeightMax)
+                ? (HeightMax)
+                : (_heightReactiveProperty.Value + risingSpeed * Time.deltaTime);
+
         }
     }
 
@@ -244,6 +266,47 @@ public class GameController : MonoBehaviour, ILoadData
         {
             // Do nothing
         }
+
+        // 上昇速度を更新
+        risingSpeed = GetRisingSpeed(_speedMagReactiveProperty.Value);
+
         return;
+    }
+
+    // 上昇速度(m/s)を計算
+    float GetRisingSpeed(float mag)
+    {
+        // 速度倍率1.0の場合にスタート→ゴールにかかる時間を決め打ち…
+        // Stage1: 2.0min
+        // Stage2: 2.5min
+        // Stage3～: 3.0min
+        // Tutorial: 2.0min
+
+        float basicTimeRequired = default;
+        switch (PlayingStage)
+        {
+            case StageNumber.Stage1:
+                basicTimeRequired = 2.0f * 60.0f;
+                break;
+            case StageNumber.Stage2:
+                basicTimeRequired = 2.5f * 60.0f;
+                break;
+            case StageNumber.Stage3:
+            case StageNumber.Stage4:
+            case StageNumber.Stage5:
+                basicTimeRequired = 3.0f * 60.0f;
+                break;
+            case StageNumber.Tutorial:
+                basicTimeRequired = 2.0f * 60.0f;
+                break;
+            default:
+                basicTimeRequired = 2.0f * 60.0f;
+                break;
+        }
+
+        float basicSpeed = (HeightMax - HeightMin) / basicTimeRequired;
+
+        // 倍率をかける
+        return basicSpeed * mag;
     }
 }

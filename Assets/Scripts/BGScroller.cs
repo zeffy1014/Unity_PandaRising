@@ -122,7 +122,7 @@ public class BGScroller : MonoBehaviour, ILoadData
     }
 
     // 現在高度に合わせて背景画像を移動
-    void ScrollImage(int height)
+    void ScrollImage(float height)
     {
         // 現在高度が全体の何割の進み具合か計算
         float heightRate = (height - heightStart) / (heightGoal - heightStart);
