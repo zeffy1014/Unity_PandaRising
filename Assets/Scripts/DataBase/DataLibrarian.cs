@@ -15,7 +15,7 @@ namespace DataBase
         UniversalData universalData;
         string universalDataPath = "UniversalData";  // Resource/UniversalData.json
         UserData userData;
-        string userDataPath = CommonUtils.GetExecDirectory() + "/user.json";  // TODO:暗号化
+        string userDataPath = CommonUtils.GetLocalDataDirectory() + "/user.json";  // TODO:暗号化
 
         // Singletonにする
         private static DataLibrarian librarianInstance;

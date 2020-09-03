@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 // 動作プラットフォーム判断
 public class PlatformInfo
@@ -36,8 +37,32 @@ public class CommonUtils
 #else
         dirPath = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\');
 #endif
-        // Debug.Log(dirPath);
+        Debug.Log("Exec Directory:" + dirPath);
         return dirPath;
+    }
+
+    // ローカルに保存するデータ置き場
+    static string localDataDirectory = null;
+    public static string GetLocalDataDirectory()
+    {
+        if (null == localDataDirectory)
+        {
+#if UNITY_EDITOR
+            localDataDirectory = GetExecDirectory();
+#elif UNITY_ANDROID
+            using (var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+            using (var currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+            using (var getFilesDir = currentActivity.Call<AndroidJavaObject>("getFilesDir"))
+            {
+                // getAbsolutePathまたはgetCanonicalPathで絶対パスを取得
+                localDataDirectory = getFilesDir.Call<string>("getCanonicalPath");
+            }
+#else
+            localDataDirectory = GetExecDirectory();
+#endif
+        }
+        Debug.Log("Local Data Directory:" + localDataDirectory);
+        return localDataDirectory;
     }
 }
 
