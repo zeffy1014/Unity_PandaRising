@@ -31,14 +31,16 @@ state メニュー {
 
 state ゲーム画面 {
     [*] -> Ready
-    Ready -> Play : Game Start
-    Play --> GameOver : Player撃破
-    Play --> GameOver : 家破壊
-    Play --> StageClear : ボス撃破
-    Play --> Pause : ポーズ
-    Pause --> Play : ポーズ解除
+    Ready -> Playing : Game Start
+    Ready --> Pause : ポーズ
+    Pause --> Ready : ポーズ解除
+    Playing --> GameOver : Player撃破
+    Playing --> GameOver : 家破壊
+    Playing --> StageClear : ボス撃破
+    Playing --> Pause : ポーズ
+    Pause --> Playing : ポーズ解除
 
-    GameOver --> Play : コンティニュー
+    GameOver --> Playing : コンティニュー
     GameOver --> [*] : メニューに戻る
     StageClear --> [*] : [通しプレイ]Next
     StageClear --> Ready : [ステージ選択プレイ]リトライ

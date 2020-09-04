@@ -20,6 +20,7 @@ public enum GameState
     Ready,          // プレー開始前
     Playing,        // プレー中
     GameOver,       // ゲームオーバー(リトライ確認なども)
+    StageClear,     // ステージクリア(リザルト表示やメニューなども)
     Pause,          // ポーズ中
 
     GameState_Num

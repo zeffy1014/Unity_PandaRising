@@ -2,31 +2,6 @@
 title ゲーム画面(ざっくり)
 skinparam classAttributeIconSize 0
 
-package GameState {
-    interface IStateEventReceiver {
-        + OnStart()
-        + OnPlayerDefeated()
-        + OnHouseDestroyed()
-        + OnBossDefeated()
-        + OnRetry()
-    }
-    note top of IStateEventReceiver : 状態遷移トリガー\nこれを受けて状態遷移し\nその変化をReactivePropertyで参照させる
-
-    enum GameState {
-        Ready
-        Play
-        Pause
-        GameOver
-        StageClear
-    }
-    class GameStateProperty {
-        + {static} IReadOnlyReactiveProperty<GameState> state
-    }
-
-    GameStateProperty --* GameState
-    GameStateProperty -up-|> IStateEventReceiver
-}
-
 package Bullet {
     class Bullet {
         - int size
@@ -48,6 +23,7 @@ enum GameState {
     Ready
     Playing
     GameOver
+    StageClear
     Pause
 }
 
@@ -248,10 +224,9 @@ note on link : 各種情報\n・コンボ\n・現在高度\n・上昇速度倍�
 UIPresenter ..> Player : HP・ボム数・状態参照
 UIPresenter ..> House : HP参照, データ読み込み監視
 
-GameController .> GameStateProperty : 状態参照
-Player .> GameStateProperty : 状態参照
-House .> GameStateProperty : 状態参照
-InputPresenter .> GameStateProperty : 状態参照
+Player .> GameController : 状態参照
+House .> GameController : 状態参照
+InputPresenter .> GameController : 状態参照
 EnemyGenerator ..> GameController : 現在高度参照
 BGScroller .> GameController : 現在高度参照
 
@@ -293,3 +268,31 @@ OperationButtonではボタンの押され表現も自前で行う
 　OperationButtonを利用するPlayer側から情報を伝えて表現変えてもらう
 
 ◆情報参照・受け渡しの依存関係対応
+・MV(R)Pパターンを意識し
+　表示部(View) + 制御部(Model) + 受け渡し部？(Presenter)でやり取りする
+　ViewとModelは直接互いを参照しない
+　Viewの入力操作やModelの変化をPresenterで取得・処理し、View/Modelへ反映する
+　PresenterがViewやModelを参照するが、ここでDependency Injection で参照する
+
+・DIにはZenject(Extenject)を使う
+・入力操作や状態変化はUniRxのPublish/Subscribeの仕組みで監視する
+
+◆データ読み込み
+・DataBase::DataLibrarianという管理人(Singleton)を経由して取得する
+　取得する情報は以下の内容で、いずれもJSONファイルで管理する
+　- UniversalData
+　　　背景画像やBGM, EnemyやBulletのPrefab, 各種強化レベルに対するパラメータなど
+　　　ゲームに埋め込まれている各種設定
+　　　画像などはパスの情報を保持しており、そのパスから更に使う人がLoadする
+　- UserData
+　　　所持金やハイスコア, 各種強化レベルなどプレー中に変わる所謂セーブデータ
+　何のデータにどんなフィールドがあるか詳細は別ファイルにまとめる
+
+・データ読み込みするモジュールはプレー画面のシーン読み込み時に各自読み込む
+　読み込み中はLoading画面を表示する
+　データ読み込みするモジュールはILoadDataというIFで読み込み完了監視用ReactivePropertyを持ち監視される
+　すべて読み込み完了したらLoading画面が除去されてプレー画面表示、操作可能となる
+
+
+
+
