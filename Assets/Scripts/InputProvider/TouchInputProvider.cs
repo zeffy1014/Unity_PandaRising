@@ -157,6 +157,8 @@ namespace InputProvider
                             case TouchPhase.Moved:
                             case TouchPhase.Stationary:
                                 // 移動用タッチがタッチされたまま→MoveInfo情報保存
+                                if (0.0f == touch.deltaTime) return false;  // 計算不能な場合は抜ける
+
                                 Vector2 speed = new Vector2(touch.deltaPosition.x / touch.deltaTime, touch.deltaPosition.y / touch.deltaTime);
                                 Vector2 position = touch.position;
                                 MoveInfo newInfo = new MoveInfo(speed, position);
