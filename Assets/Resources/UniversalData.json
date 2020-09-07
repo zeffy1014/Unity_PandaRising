@@ -71,5 +71,14 @@
 		"Prefabs/Enemy/EnemyPrefab_xxx",
 		"Prefabs/Enemy/EnemyPrefab_xxx",
 		"Prefabs/Enemy/EnemyPrefab_xxx"
+	],
+	"bulletPrefabPath":[
+		"Prefabs/Bullet/BulletPrefab_Player_Mikan",
+		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_xxx"
 	]
 }

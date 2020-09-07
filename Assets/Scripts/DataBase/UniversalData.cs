@@ -220,6 +220,7 @@ namespace DataBase
         [SerializeField] StageInfo[] stageInfo;           // ステージ構成情報
         [SerializeField] ReinforcementTableInfo rtInfo;   // 強化レベルに対するパラメータ
         [SerializeField] string[] enemyPrefabPath;        // 敵のPrefab格納パス
+        [SerializeField] string[] bulletPrefabPath;       // 弾のPrefab格納パス
 
         /***** 情報取得IF ****************************************************************/
         // ステージ構成情報取得
@@ -242,7 +243,7 @@ namespace DataBase
             return rtInfo;
         }
 
-        // 敵のPrefab可能パス取得
+        // 敵のPrefab格納パス取得
         public string GetEnemyPrefabPath(Enemy.EnemyType type)
         {
             if (enemyPrefabPath.Length > (int)type)
@@ -256,6 +257,19 @@ namespace DataBase
             }
         }
 
+        // 弾のPrefab格納パス取得
+        public string GetBulletPrefabPath(Bullet.BulletType type)
+        {
+            if (bulletPrefabPath.Length > (int)type)
+            {
+                return bulletPrefabPath[(int)type];
+            }
+            else
+            {
+                Debug.Log("bullet type is out of range... Max:" + bulletPrefabPath.Length + ", Selected:" + (int)type);
+                return null;
+            }
+        }
 
         // for Make TestData
         public bool MakeTestJson(string filePath)
@@ -275,6 +289,8 @@ namespace DataBase
 
             // 敵Prefabパス
             enemyPrefabPath = Enumerable.Repeat<string>("Prefabs/Enemy/EnemyPrefab_xxx", (int)Enemy.EnemyType.EnemyType_Num).ToArray();
+            // 弾Prefabパス
+            bulletPrefabPath = Enumerable.Repeat<string>("Prefabs/Bullet/BulletPrefab_xxx", (int)Bullet.BulletType.BulletType_Num).ToArray();
 
             // ファイル保存
             try

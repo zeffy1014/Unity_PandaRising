@@ -4,6 +4,7 @@ using UnityEngine;
 using Zenject;
 using DataBase;
 using Enemy;
+using Bullet;
 
 public class GeneralInstaller : MonoInstaller
 {
@@ -11,7 +12,8 @@ public class GeneralInstaller : MonoInstaller
     {
         //Container.Bind<DataLibrarian>().AsCached(); Singletonにした
 
-        // EnemyGenerator 参照されないのでNonLazyで生成
+        // 参照されないのでNonLazyで生成する
         Container.Bind<EnemyGenerator>().AsSingle().NonLazy();
+        Container.Bind<BulletGenerator>().AsSingle().NonLazy();
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UniRx;
 using Zenject;
 using InputProvider;
+using Bullet;
 
 public class Player : MonoBehaviour
 {
@@ -23,6 +24,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] Text posInfo = default;
 
+    // 弾生成用
+    [Inject] BulletGenerator bulletGenerator;
 
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
@@ -93,7 +96,13 @@ public class Player : MonoBehaviour
     // ショット操作
     public void Shot()
     {
+        // 発射位置と向き
+        Vector3 genPos = transform.position;
+        genPos.y += 1.0f;
+        Vector3 genRot = transform.rotation.eulerAngles;
+
         // Debug.Log("Shot from InputPresenter!!");
+        bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
         return;
     }
 
@@ -190,5 +199,11 @@ public class Player : MonoBehaviour
         if (0.0f > dispPos.y - posInfo.GetComponent<RectTransform>().rect.height / 2) dispPos.y = posInfo.GetComponent<RectTransform>().rect.height / 2;
 
         posInfo.transform.position = dispPos;
+    }
+
+    // 現在の角度取得(頭が向いている方向)
+    protected float GetNowAngle()
+    {
+        return ANGLE_GAP + transform.eulerAngles.z;
     }
 }

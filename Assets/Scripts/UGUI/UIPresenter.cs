@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using Enemy;
+using Bullet;
 
 
 namespace UGUI
@@ -30,6 +31,7 @@ namespace UGUI
         private House house;
         private EnemyGenerator enemyGenerator;
         private BGScroller bgScroller;
+        private BulletGenerator bulletGenerator;
 
         // 各種読み込みを監視する対象
         List<ILoadData> needLoadList = new List<ILoadData>(); 
@@ -51,7 +53,8 @@ namespace UGUI
             Player playerIn,
             House houseIn,
             EnemyGenerator enemyGeneratorIn,
-            BGScroller bgScrollerIn
+            BGScroller bgScrollerIn,
+            BulletGenerator bulletGeneratorIn
             )
         {
             // それぞれ代入
@@ -73,6 +76,7 @@ namespace UGUI
             house = houseIn;
             enemyGenerator = enemyGeneratorIn;
             bgScroller = bgScrollerIn;
+            bulletGenerator = bulletGeneratorIn;
 
             // 各種情報の監視と表示更新はここでは行わない
 
@@ -89,6 +93,7 @@ namespace UGUI
             needLoadList.Add(enemyGenerator);
             needLoadList.Add(bgScroller);
             needLoadList.Add(house);
+            needLoadList.Add(bulletGenerator);
 
             // 監視設定
             foreach(ILoadData target in needLoadList)

@@ -3,14 +3,19 @@ title ゲーム画面(ざっくり)
 skinparam classAttributeIconSize 0
 
 package Bullet {
+    class BulletGenerator {
+        - GameObject[] BulletPrefabs : BulletのPrefabリスト
+        - GetBulletPrefab(BulletType type)
+        + ShotBullet(BulletType type, float angle) : 弾と角度指定して発射
+    }
     class Bullet {
         - int size
         - float speed
     }
     enum BulletType {
         Player_Mikan : メインショット
-        Player_Sakana : サブウェポン(魚)
-        Player_Block : サブウェポン(岩)
+        Player_Sakana : サブウェポン魚
+        Player_Block : サブウェポン岩
         Player_Kaju : 果汁レーザー
         Enemy_Point
         Enemy_Needle
@@ -211,8 +216,9 @@ TouchOperation --> Input
 InputPresenter --> Player : 状態に応じた操作入力
 InputPresenter --> GameController : 状態に応じた操作入力
 
-Player --> Bullet
-EnemyBase --> Bullet
+Player --> BulletGenerator
+EnemyBase --> BulletGenerator
+BulletGenerator --> Bullet : 生成
 EnemyGenerator --> EnemyBase : 生成
 
 Player .> GameArea : (移動範囲として)ゲームウィンドウ範囲参照
@@ -223,6 +229,7 @@ UIPresenter ..> BGScroller : データ読み込み監視
 note on link : 各種情報\n・コンボ\n・現在高度\n・上昇速度倍率\n・スコア\n・所持金\n・時間\n・etc...
 UIPresenter ..> Player : HP・ボム数・状態参照
 UIPresenter ..> House : HP参照, データ読み込み監視
+UIPresenter ..> BulletGenerator : データ読み込み監視
 
 Player .> GameController : 状態参照
 House .> GameController : 状態参照

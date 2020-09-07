@@ -72,6 +72,19 @@ digraph g {
                 }
             }"
         ];
+
+        BulletPrefabPathList [
+            label="{
+                BulletPrefabPath\nList|
+                {
+                    BulletA:\"/Prefabs/Bullet/BulletXXX\" |
+                    BulletB:\"/Prefabs/Bullet/BulletXXX\" |
+                    BulletC:\"/Prefabs/Bullet/BulletXXX\" |
+                    ... |
+                    BulletXXX:\"/Prefabs/Bullet/BulletXXX\" |
+                }
+            }"
+        ];
     };
 
     subgraph cluster_user_data {
@@ -101,6 +114,7 @@ digraph g {
     UniversalData -> StageInfoList
     UniversalData -> ReinforcementInfo
     UniversalData -> EnemyPrefabPathList
+    UniversalData -> BulletPrefabPathList
     StageInfoList:top -> StageInfo
 
     ReinforcementInfo -> ShotRapidityTable

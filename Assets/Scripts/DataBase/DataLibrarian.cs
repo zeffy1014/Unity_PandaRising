@@ -168,5 +168,22 @@ namespace DataBase
                 return null;
             }
         }
+
+        // 弾Prefab格納パス取得
+        public string GetBulletPrefabPath(Bullet.BulletType type)
+        {
+            string retStr = universalData.GetBulletPrefabPath(type);
+            Debug.Log("Get GetBulletPrefabPath Type:" + type + ", Path:" + retStr);
+
+            if (loadOK)
+            {
+                return retStr;
+            }
+            else
+            {
+                Debug.Log("DataLibrarian Load Data NG -> cannot get BulletPrefabPath...");
+                return null;
+            }
+        }
     }
 }

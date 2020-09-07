@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4061107315494808526}
   - component: {fileID: 4061107315494808527}
   - component: {fileID: -5020966952757782419}
-  - component: {fileID: 3258776464465187045}
   - component: {fileID: 550378323156604716}
   m_Layer: 0
   m_Name: BulletPrefab
@@ -104,25 +103,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3258776464465187045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4061107315494808525}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e63af126e8d204c40986b4ae459dfd9b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletKind: 3
-  movSpeed: 15
-  rotateSpeed: 0
-  attack: 1
-  reflect: 0
-  lifeTime: 0
-  elaspedTime: 0
 --- !u!70 &550378323156604716
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
