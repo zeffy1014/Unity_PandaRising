@@ -6,6 +6,7 @@ using UniRx;
 using Zenject;
 using InputProvider;
 using Bullet;
+using DataBase;
 
 public class Player : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class Player : MonoBehaviour
 
     // 弾生成用
     [Inject] BulletGenerator bulletGenerator;
+    [SerializeField] float shotInterval = default; // 連射間隔(sec)
+    float shotWait = default;                      // 次の弾が撃てるまでの待ち時間(sec)
 
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
@@ -39,7 +42,6 @@ public class Player : MonoBehaviour
     static ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> BombReactiveProperty { get { return _bombReactiveProperty; } }
 
-
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
     {
@@ -50,6 +52,14 @@ public class Player : MonoBehaviour
             InitStaticData();
         }
 
+        // 設定読み込み
+        bool loadResult = LoadData();
+        if (!loadResult)
+        {
+            // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
+            Debug.Log("Player load data failed...");
+        }
+
         // 移動範囲設定
         SetMoveArea();
 
@@ -57,7 +67,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
+        // 連射待ち時間を減らす
+        shotWait = (shotWait > Time.deltaTime)
+            ? shotWait - Time.deltaTime
+            : 0.0f;
     }
 
     /***** Playe個別処理 ****************************************************/
@@ -69,6 +82,28 @@ public class Player : MonoBehaviour
         // デフォルトのライフとボム数設定
         _lifeReactiveProperty.Value = defaultLife;
         _bombReactiveProperty.Value = defaultBomb;
+    }
+
+    // 各種設定・情報読み込み
+    bool LoadData()
+    {
+        // プレーデータと各種強化テーブル取得
+        UserData userData = DataLibrarian.Instance.GetUserData();
+        ReinforcementTableInfo rtInfo = DataLibrarian.Instance.GetReinforcementTableInfo();
+
+        // 読み込み成否確認
+        if (null == userData || null == rtInfo)
+        {
+            // 駄目だった
+            Debug.Log("Player LoadData failed...");
+            return false;
+        }
+
+        // 各種強化レベルと対応パラメータから弾の連射間隔設定
+        shotInterval= rtInfo.GetShotRapidity(userData.GetLevel(ReinforceTarget.ShotRapidity));
+        shotWait = 0.0f;
+
+        return true;
     }
 
     // 移動範囲設定
@@ -96,13 +131,20 @@ public class Player : MonoBehaviour
     // ショット操作
     public void Shot()
     {
-        // 発射位置と向き
-        Vector3 genPos = transform.position;
-        genPos.y += 1.0f;
-        Vector3 genRot = transform.rotation.eulerAngles;
+        // 連射間隔が既に経過していれば発射
+        if (0.0f >= shotWait)
+        {
+            // 発射位置と向き
+            Vector3 genPos = transform.position;
+            genPos.y += 1.0f;
+            Vector3 genRot = transform.rotation.eulerAngles;
 
-        // Debug.Log("Shot from InputPresenter!!");
-        bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
+            // Debug.Log("Shot from InputPresenter!!");
+            bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
+
+            shotWait = shotInterval;
+        }
+
         return;
     }
 
