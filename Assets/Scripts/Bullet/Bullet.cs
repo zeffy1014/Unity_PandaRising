@@ -50,6 +50,10 @@ namespace Bullet
         public virtual void OnTriggerEnter2D(Collider2D other)
         {
             // 基本動作:壁に接触したら消える
+            if ("Wall" == other.tag)
+            {
+                Destroy(this.gameObject);
+            }
 
         }
     }

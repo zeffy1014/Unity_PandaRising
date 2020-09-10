@@ -300,6 +300,33 @@ OperationButtonではボタンの押され表現も自前で行う
 　データ読み込みするモジュールはILoadDataというIFで読み込み完了監視用ReactivePropertyを持ち監視される
 　すべて読み込み完了したらLoading画面が除去されてプレー画面表示、操作可能となる
 
+◆接触判定検討
+接触は常に判定されてよい　接触対象のタグなどで処理を判断する
+その上で消えたりダメージ与えたりというOnTriggerEnter2D的処理と
+物理的に影響しあうものどうし
 
+                │ PBM  PBF  PBB  PBL  EB    Pl       En      Bl      Wa
+----------------│------------------------------------------------------------
+Player Bullet M │  -    -    -    -   -     -     PB消/Enダ  PB消   PB消
+Player Bullet F |       -    -    -   -     -     PB消/Enダ  押合   PB反
+Player Bullet B |            -    -  EB消   -     PB消/Enダ  爆発   PB消
+Player Bullet L |                 -   -     -     PB貫/Enダ  PB切    -
+Enemy Bullet    │                     -  EB消/Plダ    -       -     EB消
+Player          │         (省略)            -     Plダ/En消  押合    -
+Enemy           │                                     -       -    En消(家ダ)
+Block           │                                            押合  Bl消(家ダ)
 
+メモ書き
+　基本的に弾どうしは接触しないがPlayer-Bullet-BはEnemyの弾も消せるといい？
+　Enemy, Blockどうしは接触しない
+　物理的な挙動をするのは弾全般とBlock、Player？
+　弾はIsTriggerで壁をすり抜けるが魚だけはIsTriggerなしのColliderもつけて壁やBlockに跳ね返る
+　壁は動かないのでIsKinematic
+　Blockは動くが質量が非常に大きいのであまり押し返せない(試してみないとわからん)
+　Blockどうしも押し合いなので生成配置に注意
+　LaserはBlockで止まるがEnemyを貫通すべきかは要検討
+　Playerの体当たりでEnemyは基本的に消えるが、一部は消えない
 
+Unityメモ
+　接触するColliderどうしのどちらかにIsTriggerが入っていると物理的な当たり判定が発生しない
+　Trrigerも物理的当たり判定も欲しい場合はCollider2つつける　イベント多重発生注意
