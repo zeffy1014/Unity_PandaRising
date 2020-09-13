@@ -152,6 +152,13 @@ public class Player : MonoBehaviour
     public void Throw(float angle)
     {
         Debug.Log("Throw from InputPresenter!! " + angle + " deg");
+
+        // 位置と向きを指定して発射
+        Vector3 genPos = transform.position;
+        genPos.y += 1.0f;
+        Vector3 genRot = transform.rotation.eulerAngles;
+
+        bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
         return;
     }
 

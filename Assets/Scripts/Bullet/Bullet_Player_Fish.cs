@@ -5,11 +5,13 @@ using DataBase;
 
 namespace Bullet
 {
-    public class Bullet_Player_Mikan : Bullet
+    public class Bullet_Player_Fish : Bullet
     {
         // static変数として威力を取得・保持しておく
         static float power = default;
-        static Bullet_Player_Mikan()
+        new static float size = default;
+        static float toughness = default;  // 場に出ていられる時間
+        static Bullet_Player_Fish()
         {
             // SetPower();　ここでは呼べないのでBulletGeneratorから呼ぶことにする
         }
@@ -23,13 +25,16 @@ namespace Bullet
             if (null == userData || null == rtInfo)
             {
                 // 駄目だった
-                Debug.Log("Bullet_Player_Mikan LoadData failed... use default power...");
+                Debug.Log("Bullet_Player_Fish LoadData failed... use default power...");
                 power = default;
             }
             else
             {
-                // Shotの威力を設定
-                power = rtInfo.GetShotPower(userData.GetLevel(ReinforceTarget.ShotPower));
+                // Fishのサイズや威力を設定
+                power = rtInfo.GetFishPower(userData.GetLevel(ReinforceTarget.FishPower));
+                size = rtInfo.GetFishSize(userData.GetLevel(ReinforceTarget.FishPower));
+                toughness = rtInfo.GetFishToughness(userData.GetLevel(ReinforceTarget.FishToughness));
+
             }
         }
 
@@ -42,17 +47,13 @@ namespace Bullet
 
             // 発射
             body.AddForce(moveSpeed2D, ForceMode2D.Impulse);
-            // body.AddTorque(this.rotateSpeed);  回転はしない
+            body.AddTorque(this.rotateSpeed, ForceMode2D.Impulse);
 
         }
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
-            // 壁に接触したら消える
-            if ("Wall" == other.tag)
-            {
-                Destroy(this.gameObject);
-            }
+            // 壁にあたっても消えない
 
         }
     }

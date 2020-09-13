@@ -9,13 +9,30 @@ CircleCollider2D:
   m_GameObject: {fileID: 8422224765345354692}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e44a709d663bf704088e6cb7200473fa, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.58
+--- !u!114 &7689473220429890849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8422224765345354692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5cf72563be20cf448ba1d7337d57ae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 15
+  rotateSpeed: 5
+  accel: 0
+  size: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &5528787959192926217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36,12 +53,17 @@ PrefabInstance:
     - target: {fileID: -5020966952757782419, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_AngularDrag
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: -5020966952757782419, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_CollisionDetection
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5020966952757782419, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 550378323156604716, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
@@ -106,7 +128,7 @@ PrefabInstance:
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Name
-      value: BulletPrefab Player_Shot1a
+      value: BulletPrefab_Player_Fish
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}

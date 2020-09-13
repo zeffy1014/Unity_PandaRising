@@ -20,9 +20,9 @@ namespace Bullet
         protected Vector2 moveSpeed2D;    // 角度を加味した最終的な移動速度
         protected Rigidbody2D body;
 
-        // パラメータ指定して発射 基底動作
+        // パラメータ上書きがあれば実施
         // default引数はNullable<T>を使ってnull扱いとする
-        public virtual void Shot(float angle, float? moveSpeed = null, float? rotateSpeed = null, float? accel = null, float? size = null, Color? color = null)
+        public virtual void SetParam(float? moveSpeed = null, float? rotateSpeed = null, float? accel = null, float? size = null, Color? color = null)
         {
             // パラメータ変更がある場合は反映
             if (null != moveSpeed) this.moveSpeed = (float)moveSpeed;
@@ -31,6 +31,13 @@ namespace Bullet
             if (null != size) this.size = (float)size;
             if (null != color) this.color = (Color)color;
 
+            return;
+        }
+
+        // パラメータ指定して発射 基底動作
+        // default引数はNullable<T>を使ってnull扱いとする
+        public virtual void Shot(float angle)
+        {
             // 発射角度から初期速度を出す
             this.angle = angle;
             float speedX = this.moveSpeed * Mathf.Cos(this.angle * Mathf.Deg2Rad);
@@ -49,12 +56,7 @@ namespace Bullet
 
         public virtual void OnTriggerEnter2D(Collider2D other)
         {
-            // 基本動作:壁に接触したら消える
-            if ("Wall" == other.tag)
-            {
-                Destroy(this.gameObject);
-            }
-
+            // 派生先で処理
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Bullet
 
             // 強化レベルによる威力など反映しなおす
             Bullet_Player_Mikan.SetPower();
-            // TODO:魚も
+            Bullet_Player_Fish.SetPower();
 
             // 読み込み成否確認
             if (!loadPrefabNull) loadResult = true;
@@ -75,7 +75,22 @@ namespace Bullet
             return bulletPrefabs[(int)type];
         }
 
-        // 弾を発射(単発)
+        // 弾を発射(単発)  種別と生成位置と角度は必須　通常はこちらを使えばよい
+        public void ShotBullet(
+            Vector2 genPos,
+            Vector2 genRot,
+            BulletType type,
+            float angle)
+        {
+            // Prefab取得して生成
+            GameObject bullet = Object.Instantiate<GameObject>(GetBulletPrefab(type), genPos, Quaternion.Euler(genRot));
+
+            // 角度指定して発射
+            bullet.GetComponent<Bullet>().Shot(angle);
+
+        }
+
+        // 弾を発射(単発・デフォルトから変えたいパラメータあり)
         public void ShotBullet(
             Vector2 genPos, 
             Vector2 genRot, 
@@ -85,8 +100,12 @@ namespace Bullet
         {
             // Prefab取得して生成
             GameObject bullet = Object.Instantiate<GameObject>(GetBulletPrefab(type), genPos, Quaternion.Euler(genRot));
-            // 各種値をセットして発射
-            bullet.GetComponent<Bullet>().Shot(angle, moveSpeed, rotateSpeed, accel, size, color);
+
+            // パラメータ上書きがあれば行う
+            bullet.GetComponent<Bullet>().SetParam(moveSpeed, rotateSpeed, accel, size, color);
+
+            // 角度指定して発射
+            bullet.GetComponent<Bullet>().Shot(angle);
 
         }
     }

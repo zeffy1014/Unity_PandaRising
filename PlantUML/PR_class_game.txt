@@ -305,16 +305,16 @@ OperationButtonではボタンの押され表現も自前で行う
 その上で消えたりダメージ与えたりというOnTriggerEnter2D的処理と
 物理的に影響しあうものどうし
 
-                │ PBM  PBF  PBB  PBL  EB    Pl       En      Bl      Wa
+                │ PBM  PBF  PBB  PBL  EB    Pl       En      Bl        Wa
 ----------------│------------------------------------------------------------
-Player Bullet M │  -    -    -    -   -     -     PB消/Enダ  PB消   PB消
-Player Bullet F |       -    -    -   -     -     PB消/Enダ  押合   PB反
-Player Bullet B |            -    -  EB消   -     PB消/Enダ  爆発   PB消
-Player Bullet L |                 -   -     -     PB貫/Enダ  PB切    -
-Enemy Bullet    │                     -  EB消/Plダ    -       -     EB消
-Player          │         (省略)            -     Plダ/En消  押合    -
-Enemy           │                                     -       -    En消(家ダ)
-Block           │                                            押合  Bl消(家ダ)
+Player Bullet M │  -    -    -    -   -     -     PB消/Enダ  PB消      PB消
+Player Bullet F |       -    -    -   -     -     PB消/Enダ  押合      PB反
+Player Bullet B |            -    -  EB消   -     PB消/Enダ PB貫/爆発  PB消
+Player Bullet L |                 -   -     -     PB貫/Enダ  PB切       -
+Enemy Bullet    │                     -  EB消/Plダ    -       -        EB消
+Player          │         (省略)            -     Plダ/En消  押合       -
+Enemy           │                                     -       -      En消(家ダ)
+Block           │                                            押合    Bl消(家ダ)
 
 メモ書き
 　基本的に弾どうしは接触しないがPlayer-Bullet-BはEnemyの弾も消せるといい？
