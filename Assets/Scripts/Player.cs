@@ -30,6 +30,9 @@ public class Player : MonoBehaviour
     [SerializeField] float shotInterval = default; // 連射間隔(sec)
     float shotWait = default;                      // 次の弾が撃てるまでの待ち時間(sec)
 
+    // 魚生成用
+    bool hasFish = true;                           // 魚は１つだけ投げられるので所持判定
+
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
     // ライフ　※シーンをまたいで引き継ぐ
@@ -72,6 +75,17 @@ public class Player : MonoBehaviour
             ? shotWait - Time.deltaTime
             : 0.0f;
     }
+
+
+    /***** Zenject Signal受信 ****************************************************/
+    // 操作
+    public void OnFishLost(FishLostSignal signal)
+    {
+        // TODO:魚復活のカウント開始
+        Debug.Log("Fish has lost...");
+        return;
+    }
+
 
     /***** Playe個別処理 ****************************************************/
     // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)
@@ -159,6 +173,8 @@ public class Player : MonoBehaviour
         Vector3 genRot = transform.rotation.eulerAngles;
 
         bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
+        hasFish = false;
+
         return;
     }
 

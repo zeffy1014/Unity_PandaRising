@@ -308,7 +308,7 @@ OperationButtonではボタンの押され表現も自前で行う
                 │ PBM  PBF  PBB  PBL  EB    Pl       En      Bl        Wa
 ----------------│------------------------------------------------------------
 Player Bullet M │  -    -    -    -   -     -     PB消/Enダ  PB消      PB消
-Player Bullet F |       -    -    -   -     -     PB消/Enダ  押合      PB反
+Player Bullet F |       -    -    -   -   PB回収  PB消/Enダ  押合      PB反
 Player Bullet B |            -    -  EB消   -     PB消/Enダ PB貫/爆発  PB消
 Player Bullet L |                 -   -     -     PB貫/Enダ  PB切       -
 Enemy Bullet    │                     -  EB消/Plダ    -       -        EB消

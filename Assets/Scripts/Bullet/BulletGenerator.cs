@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using DataBase;
+using Zenject;
 
 namespace Bullet
 {
@@ -23,13 +24,18 @@ namespace Bullet
     {
         GameObject[] bulletPrefabs = new GameObject[(int)BulletType.BulletType_Num];
 
+        // Zenject Signal送信用(生成したBullet側に必要に応じて渡す)
+        SignalBus signalBus;
+
         /***** 読み込み完了監視 ************************************************************/
         ReactiveProperty<bool> _onLoadCompleteProperty = new ReactiveProperty<bool>(false);
         public IReadOnlyReactiveProperty<bool> OnLoadCompleteProperty => _onLoadCompleteProperty;
         public bool LoadCompleted() { return _onLoadCompleteProperty.Value; }
 
-        BulletGenerator()
+        BulletGenerator(SignalBus sb)
         {
+            signalBus = sb;
+
             bool loadResult = false;
             bool loadPrefabNull = false;
 
@@ -47,6 +53,9 @@ namespace Bullet
             // 強化レベルによる威力など反映しなおす
             Bullet_Player_Mikan.SetPower();
             Bullet_Player_Fish.SetPower();
+
+            // Signalを渡すものに渡す
+            Bullet_Player_Fish.SetSignalBus(signalBus);
 
             // 読み込み成否確認
             if (!loadPrefabNull) loadResult = true;
