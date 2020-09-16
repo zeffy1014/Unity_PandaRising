@@ -148,7 +148,7 @@ namespace UGUI
             // Player監視(ライフ・ボム数)
             player.LifeReactiveProperty.Subscribe(life => pLife.UpdateLife(life));
             player.BombReactiveProperty.Subscribe(stock => bButtonView.UpdateBombStock(stock));
-            // TODO:魚の状態監視も必要
+            player.FishStateReactiveProperty.DistinctUntilChanged().Subscribe(state => OnThrowStatusChanged(state));
 
             // House監視(最大/現在ライフ)
             house.CurrentLifeReactiveProperty.Subscribe(life => hLife.UpdateCurrentLife(life));
@@ -158,6 +158,25 @@ namespace UGUI
             loadingView.RemoveLoadingPanel();
 
             return;
+        }
+
+        // 魚の保持状態変化に応じた処理
+        void OnThrowStatusChanged(FishState state)
+        {
+            switch(state)
+            {
+                case FishState.Holding:
+                    tButtonView.HideGauge();  // 魚復活or回収 ゲージ不要となる
+                    break;
+                case FishState.Throwing:
+                    tButtonView.ShowGauge(false, player.FishLifeTime); // 魚発射 減少ゲージスタート
+                    break;
+                case FishState.Lost:
+                    tButtonView.ShowGauge(true, player.FishRevivalTime); // 魚紛失 増加ゲージスタート
+                    break;
+                default:
+                    break;
+            }
         }
 
     }
