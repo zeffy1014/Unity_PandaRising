@@ -6,6 +6,9 @@ namespace Bullet
 {
     public class Bullet : MonoBehaviour
     {
+        // 弾の種別を持つ
+        public BulletType Type = default;
+
         // 各種パラメータ デフォルト値を持っている
         [SerializeField] protected float moveSpeed = default;   // 移動速度
         [SerializeField] protected float rotateSpeed = default; // 回転速度

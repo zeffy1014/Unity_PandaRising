@@ -8,6 +8,14 @@ using InputProvider;
 using Bullet;
 using DataBase;
 
+// Playerの魚の所持状態
+public enum FishState
+{
+    Holding,   // 所持している
+    Throwing,  // 投げている途中
+    Lost       // 失った状態
+}
+
 public class Player : MonoBehaviour
 {
     // 固定値
@@ -30,8 +38,12 @@ public class Player : MonoBehaviour
     [SerializeField] float shotInterval = default; // 連射間隔(sec)
     float shotWait = default;                      // 次の弾が撃てるまでの待ち時間(sec)
 
-    // 魚生成用
-    bool hasFish = true;                           // 魚は１つだけ投げられるので所持判定
+    // 魚関連
+    public float FishLifeTime { get; private set; } = default;   // 魚の生存時間(DBから取得)
+    public float FishRevivalTime { get; private set; } = 3.0f;   // 魚の復活時間(固定値)
+    float fishRevivalWait = default;
+    float fishCatchTime = 0.5f;                                  // 魚を回収できるまでの待ち時間(発射時に回収されないように)
+    float fishCatchWait = default;
 
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
@@ -44,6 +56,10 @@ public class Player : MonoBehaviour
     [SerializeField] static int defaultBomb = 3;
     static ReactiveProperty<int> _bombReactiveProperty = new ReactiveProperty<int>(default);
     public IReadOnlyReactiveProperty<int> BombReactiveProperty { get { return _bombReactiveProperty; } }
+
+    // 魚所持状態
+    ReactiveProperty<FishState> _fishStateReactiveProperty = new ReactiveProperty<FishState>(FishState.Holding);
+    public IReadOnlyReactiveProperty<FishState> FishStateReactiveProperty => _fishStateReactiveProperty;
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
@@ -74,18 +90,49 @@ public class Player : MonoBehaviour
         shotWait = (shotWait > Time.deltaTime)
             ? shotWait - Time.deltaTime
             : 0.0f;
-    }
 
+        // 魚関連
+        if (FishState.Lost == FishStateReactiveProperty.Value)
+        {
+            fishRevivalWait -= Time.deltaTime;
+            if (0.0f >= fishRevivalWait)
+            {
+                // 魚復活
+                _fishStateReactiveProperty.Value = FishState.Holding;
+            }
+        }
+        else if (FishState.Throwing == FishStateReactiveProperty.Value)
+        {
+            // 回収できる状態になるための待ち時間を減らす
+            fishCatchWait -= Time.deltaTime;
+        }
+    }
 
     /***** Zenject Signal受信 ****************************************************/
     // 操作
     public void OnFishLost(FishLostSignal signal)
     {
-        // TODO:魚復活のカウント開始
         Debug.Log("Fish has lost...");
+        _fishStateReactiveProperty.Value = FishState.Lost;
+        fishRevivalWait = FishRevivalTime;
         return;
     }
 
+    /***** Collider2Dイベント処理 ****************************************************/
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 魚を回収
+        if ("Bullet" == other.gameObject.tag && BulletType.Player_Fish == other.GetComponent<Bullet.Bullet>().Type)
+        {
+            // 一定時間経過していたら回収
+            if (0.0f >= fishCatchWait)
+            {
+                Destroy(other.gameObject);
+                _fishStateReactiveProperty.Value = FishState.Holding;
+
+            }
+        }
+    }
 
     /***** Playe個別処理 ****************************************************/
     // データ初期化(新規ゲーム開始時 シーンロード前に呼ぶこと！)
@@ -113,9 +160,12 @@ public class Player : MonoBehaviour
             return false;
         }
 
-        // 各種強化レベルと対応パラメータから弾の連射間隔設定
+        // 各種強化レベルと対応パラメータから設定
+        // 弾の連射間隔設定 + 待ち時間初期化
         shotInterval= rtInfo.GetShotRapidity(userData.GetLevel(ReinforceTarget.ShotRapidity));
         shotWait = 0.0f;
+        // 魚の生存時間設定 復活時間は固定値なので設定不要
+        FishLifeTime = rtInfo.GetFishToughness(userData.GetLevel(ReinforceTarget.FishToughness));
 
         return true;
     }
@@ -167,14 +217,21 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Throw from InputPresenter!! " + angle + " deg");
 
-        // 位置と向きを指定して発射
-        Vector3 genPos = transform.position;
-        genPos.y += 1.0f;
-        Vector3 genRot = transform.rotation.eulerAngles;
+        // 魚を持っていたら投げる
+        if (FishState.Holding == FishStateReactiveProperty.Value)
+        {
+            // 位置と向きを指定して発射
+            Vector3 genPos = transform.position;
+            genPos.y += 1.0f;
+            Vector3 genRot = transform.rotation.eulerAngles;
 
-        bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
-        hasFish = false;
+            // angleが負の場合は正面に投げる
+            if (0.0f > angle) angle = GetNowAngle();
 
+            bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
+            _fishStateReactiveProperty.Value = FishState.Throwing;
+            fishCatchWait = fishCatchTime;
+        }
         return;
     }
 

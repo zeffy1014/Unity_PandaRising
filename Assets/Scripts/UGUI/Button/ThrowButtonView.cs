@@ -31,6 +31,12 @@ public class ThrowButtonView : MonoBehaviour
         return;
     }
 
+    // ゲージ消去
+    public void HideGauge()
+    {
+        circleGauge.gameObject.SetActive(false);
+    }
+
     // Update関数 ゲージ表示更新
     private void Update()
     {
