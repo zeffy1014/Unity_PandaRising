@@ -68,7 +68,7 @@
 		"speedMinMagRangeTable":[0.699999988079071,0.5,0.30000001192092898]
 	},
 	"enemyPrefabPath":[
-		"Prefabs/Enemy/EnemyPrefab_xxx",
+		"Prefabs/Enemy/EnemyPrefab_Fly",
 		"Prefabs/Enemy/EnemyPrefab_xxx",
 		"Prefabs/Enemy/EnemyPrefab_xxx"
 	],

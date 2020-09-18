@@ -8,6 +8,17 @@ using System.Linq;
 using DataBase;
 
 namespace Enemy {
+
+    public enum EnemyType
+    {
+        // TODO:敵の種類を決めて明記
+        Enemy_Fly,
+        EnemyB,
+        EnemyC,
+
+        EnemyType_Num
+    }
+
     /*** 敵を生成する際の各種情報 ***/
     public class EnemyGenerateInfo
     {
@@ -43,7 +54,7 @@ namespace Enemy {
                 EnemyType type;
                 if(!Enum.TryParse<EnemyType>(input[1], out type))
                 {
-                    type = EnemyType.EnemyA;
+                    type = EnemyType.Enemy_Fly;
                     Debug.Log("EnemyGenerateInfo Parse type error -> set default type:" + type);
                 }
                 this.Type = type;
@@ -84,6 +95,7 @@ namespace Enemy {
 
         GameController gameController;
         GameArea gameArea;
+        Player player;
         bool loadTable = false;        // テーブル読み込み完了チェック
 
         // 敵生成テーブル
@@ -103,10 +115,11 @@ namespace Enemy {
 
         /***** 読み込み・準備処理 **********************************************************/
         // コンストラクタ
-        EnemyGenerator(GameController gc, GameArea ga)
+        EnemyGenerator(GameController gc, GameArea ga, Player pl)
         {
             gameController = gc;
             gameArea = ga;
+            player = pl;
 
             // ステージ指定してDataLibrarianからステージ構成情報→敵生成テーブル読み込み
             bool loadResult = LoadTable(DataLibrarian.Instance.GetStageInfo(gc.PlayingStage).GetPathEnemyGenerateTable());
@@ -120,6 +133,10 @@ namespace Enemy {
                 // TODO:読み込み失敗したらエラー通知してメインメニューに戻る？
                 Debug.Log("EnemyGenerator load data failed...");
             }
+
+            // Enemyに情報受け渡し
+            EnemyBase.SetPlayer(player);
+            EnemyBase.SetGameArea(gameArea);
 
         }
 
@@ -239,7 +256,7 @@ namespace Enemy {
                 GameObject enemy = UnityEngine.Object.Instantiate(
                     GetEnemyPrefab(generateInfo.Type),
                     gameArea.GetPosFromRate(new Vector2(generateInfo.GeneratePosition, 1.0f)),
-                    Quaternion.Euler(0.0f, 0.0f, 180.0f)  // TODO:とりあえず下向きで生成 実際はangleを使う
+                    Quaternion.Euler(0.0f, 0.0f, generateInfo.GenerateAngle -180.0f)
                     );
 
 
