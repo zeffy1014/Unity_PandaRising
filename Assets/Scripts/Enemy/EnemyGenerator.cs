@@ -23,7 +23,7 @@ namespace Enemy {
     public class EnemyGenerateInfo
     {
         // 入力されるべき値の数をとりあえず固定値で持っておく
-        static readonly int infoNum = 6;
+        static readonly int infoNum = 7;
 
         // カンマ区切りの文字列を順にメンバに格納する
         public EnemyGenerateInfo(string str)
@@ -45,6 +45,7 @@ namespace Enemy {
              * [3]position_x:画面上部の出現位置(float)
              * [4]angle:生成角度(float)
              * [5]active_time:活動時間(float)
+             * [6]undefeatable_time:出現後の無敵時間(float)
              */
             try
             {
@@ -63,6 +64,7 @@ namespace Enemy {
                 this.GeneratePosition = float.Parse(input[3]);
                 this.GenerateAngle = float.Parse(input[4]);
                 this.ActivityTime = float.Parse(input[5]);
+                this.UndefeatableTime = float.Parse(input[6]);
 
                 // ここまで入力できたら情報セット成功とする
                 SuccessInput = true;
@@ -88,6 +90,7 @@ namespace Enemy {
         public float GeneratePosition { get; private set; } // 生成位置
         public float GenerateAngle { get; private set; }    // 生成角度
         public float ActivityTime { get; private set; }     // 活動時間
+        public float UndefeatableTime { get; private set; } // 出現後の無敵時間
     }
 
     public class EnemyGenerator: ILoadData
@@ -259,17 +262,12 @@ namespace Enemy {
                     Quaternion.Euler(0.0f, 0.0f, generateInfo.GenerateAngle -180.0f)
                     );
 
-
                 // 各種情報を渡してあげる
-                /* このあたりはまだ未確定
-                enemy.GetComponent<EnemyController>().SetGameArea(gameArea.GetGameAreaRect());
-                enemy.GetComponent<EnemyController>().SetGenerateInfo(
-                    id: generateInfo.Id,
-                    appearPoint: gameArea.GetPosFromRate(generateInfo.AppearPoint),
-                    activityTime: generateInfo.ActivityTime,
-                    exitType: generateInfo.ExitType
+                enemy.GetComponent<EnemyBase>().SetGenerateInfo(
+                    idIn: generateInfo.Id,
+                    activityTimeIn: generateInfo.ActivityTime,
+                    undefeatableTimeIn: generateInfo.UndefeatableTime
                     );
-                 */
 
                 // あとでまとめて削除する対象にする
                 generateInfo.DeleteOK = true;

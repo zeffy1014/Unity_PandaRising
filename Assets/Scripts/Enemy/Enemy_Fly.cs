@@ -10,6 +10,8 @@ namespace Enemy
         // Update is called once per frame
         public override void Update()
         {
+            base.Update();
+
             // ハエはまっすぐ進む
             GoStraight(moveSpeed);
 
