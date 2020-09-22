@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DataBase;
 using Zenject;
+using Enemy;
 
 // 魚を失ったSignal
 public class FishLostSignal { }
@@ -78,7 +79,11 @@ namespace Bullet
         public override void OnTriggerEnter2D(Collider2D other)
         {
             // 壁にあたっても消えない
-
+            // 敵に接触したらダメージを与える(消えない)
+            if ("Enemy" == other.tag)
+            {
+                other.GetComponent<EnemyBase>().OnDamage(power);
+            }
         }
     }
 }

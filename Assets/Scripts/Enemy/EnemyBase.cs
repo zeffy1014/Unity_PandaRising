@@ -18,11 +18,11 @@ namespace Enemy
         [SerializeField] protected EnemyType enemyType;
         [SerializeField] protected float moveSpeed;
         [SerializeField] protected float rotateSpeed;
-        [SerializeField] protected int maxHp;
+        [SerializeField] protected float maxHp;
 
         // 動的に変わるもの
         float elaspedActionTime = 0.0f;        // 出現からの経過時間
-        int nowHp;                             // 現在のHP
+        float nowHp;                             // 現在のHP
 
         // Generatorから渡される情報
         int id;                 // ユニークなID
@@ -52,6 +52,17 @@ namespace Enemy
             // 派生先で実装
         }
 
+        /***** Collider2Dイベント処理 ****************************************************/
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            // Playerに接触したら消える
+            if ("Player" == other.tag)
+            {
+                Destroy(this.gameObject);
+            }
+
+        }
+
         /***** 移動・回転処理 ****************************************************/
         // まっすぐ進む
         protected void GoStraight(float speed)
@@ -74,6 +85,29 @@ namespace Enemy
             transform.eulerAngles = setAngle;
 
             return;
+        }
+
+
+        /***** その他処理 ****************************************************/
+        // ダメージ
+        public void OnDamage(float damage)
+        {
+            nowHp -= damage;
+
+            if (0.0f >= nowHp)
+            {
+                // 撃破
+                // TODO:撃破演出
+                //audioSource.PlayOneShot(defeatSE);
+                //Instantiate<GameObject>(defeatEffect, transform.position, Quaternion.identity);
+                Destroy(this.gameObject);
+            }
+            else
+            {
+                // TODO:ダメージ表現
+                //audioSource.PlayOneShot(damageSE);
+                //StartCoroutine(Flash(flashTime));
+            }
         }
     }
 }

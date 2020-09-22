@@ -59,7 +59,20 @@ namespace Bullet
 
         public virtual void OnTriggerEnter2D(Collider2D other)
         {
-            // 派生先で処理
+            // 基底動作
+            if ("Bullet_Enemy" == this.tag)
+            {
+                if ("Player" == other.tag || "Wall" == other.tag)
+                {
+                    // 敵弾はPlayerか壁にあたったら消える そうでないものがあったら派生先で実装
+                    Destroy(this.gameObject);
+                }
+            }
+            if ("Bullet" == this.tag)
+            {
+                // Playerの弾は派生先で処理を実装
+            }
         }
+
     }
 }

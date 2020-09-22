@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DataBase;
+using Enemy;
 
 namespace Bullet
 {
@@ -51,6 +52,12 @@ namespace Bullet
             // 壁に接触したら消える
             if ("Wall" == other.tag)
             {
+                Destroy(this.gameObject);
+            }
+            // 敵に接触したらダメージを与えて消える
+            if ("Enemy" == other.tag)
+            {
+                other.GetComponent<EnemyBase>().OnDamage(power);
                 Destroy(this.gameObject);
             }
 

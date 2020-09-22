@@ -132,6 +132,24 @@ public class Player : MonoBehaviour
 
             }
         }
+        // 敵または敵弾と接触
+        if ("Enemy" == other.gameObject.tag || "Bullet_Enemy" == other.gameObject.tag)
+        {
+            // TODO:エフェクトつける
+            //Instantiate(damageEffect, transform.position, Quaternion.identity);
+            // TODO:音も鳴らす
+            //audioSource.PlayOneShot(damageSE);
+
+            _lifeReactiveProperty.Value--;
+
+            if (0 == _lifeReactiveProperty.Value)
+            {
+                // TODO:ライフゼロの処理 Signal発行など
+            }
+
+            // TODO:被弾のSignal発行(コンボ切れなどに使う)
+        }
+
     }
 
     /***** Playe個別処理 ****************************************************/
