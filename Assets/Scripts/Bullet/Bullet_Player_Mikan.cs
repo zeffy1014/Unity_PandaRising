@@ -34,19 +34,6 @@ namespace Bullet
             }
         }
 
-
-        // パラメータ指定して発射 派生動作
-        public override void Shot(float angle)
-        {
-            // 基底動作で速度設定・RigidBody2D取得など
-            base.Shot(angle);
-
-            // 発射
-            body.AddForce(moveSpeed2D, ForceMode2D.Impulse);
-            // body.AddTorque(this.rotateSpeed);  回転はしない
-
-        }
-
         public override void OnTriggerEnter2D(Collider2D other)
         {
             // 壁に接触したら消える

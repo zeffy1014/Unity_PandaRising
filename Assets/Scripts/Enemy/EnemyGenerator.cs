@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Linq;
 using DataBase;
+using Bullet;
 
 namespace Enemy {
 
@@ -99,6 +100,8 @@ namespace Enemy {
         GameController gameController;
         GameArea gameArea;
         Player player;
+        BulletGenerator bulletGenerator;
+
         bool loadTable = false;        // テーブル読み込み完了チェック
 
         // 敵生成テーブル
@@ -118,11 +121,12 @@ namespace Enemy {
 
         /***** 読み込み・準備処理 **********************************************************/
         // コンストラクタ
-        EnemyGenerator(GameController gc, GameArea ga, Player pl)
+        EnemyGenerator(GameController gc, GameArea ga, Player pl, BulletGenerator bg)
         {
             gameController = gc;
             gameArea = ga;
             player = pl;
+            bulletGenerator = bg;
 
             // ステージ指定してDataLibrarianからステージ構成情報→敵生成テーブル読み込み
             bool loadResult = LoadTable(DataLibrarian.Instance.GetStageInfo(gc.PlayingStage).GetPathEnemyGenerateTable());
@@ -140,6 +144,7 @@ namespace Enemy {
             // Enemyに情報受け渡し
             EnemyBase.SetPlayer(player);
             EnemyBase.SetGameArea(gameArea);
+            EnemyBase.SetBulletGenerator(bulletGenerator);
 
         }
 

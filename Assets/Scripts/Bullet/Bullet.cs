@@ -17,7 +17,7 @@ namespace Bullet
         [SerializeField] protected Color color = default;       // 色
 
         // 必ず外部指定するもの
-        float angle = default;  // 角度
+        protected float angle = default;  // 角度
 
         // その他
         protected Vector2 moveSpeed2D;    // 角度を加味した最終的な移動速度
@@ -49,7 +49,8 @@ namespace Bullet
 
             body = this.GetComponent<Rigidbody2D>();
 
-            // 以降は派生先で処理(AddForceしたり色やサイズを変えたり)
+            // 発射
+            body.AddForce(moveSpeed2D, ForceMode2D.Impulse);
         }
 
         public virtual void FixedUpdate()

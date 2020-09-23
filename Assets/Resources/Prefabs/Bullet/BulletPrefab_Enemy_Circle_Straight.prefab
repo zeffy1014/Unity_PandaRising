@@ -80,6 +80,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-6683403618015721958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8883316905250894713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48c6829ae8959540b9fc36ccf8932ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 4
+  moveSpeed: 5
+  rotateSpeed: 0
+  accel: 0
+  size: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &4835760161186207924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105,7 +123,7 @@ PrefabInstance:
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Name
-      value: BulletPrefab Enemy_Shot0
+      value: BulletPrefab_Enemy_Circle
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
@@ -195,6 +213,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
+--- !u!1 &8883316905250894713 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4835760161186207924}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8883316905250894714 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,

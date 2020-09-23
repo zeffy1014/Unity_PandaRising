@@ -54,8 +54,13 @@ namespace Bullet
         // パラメータ指定して発射 派生動作
         public override void Shot(float angle)
         {
-            // 基底動作で速度設定・RigidBody2D取得など
-            base.Shot(angle);
+            // 発射角度から初期速度を出す
+            this.angle = angle;
+            float speedX = this.moveSpeed * Mathf.Cos(this.angle * Mathf.Deg2Rad);
+            float speedY = this.moveSpeed * Mathf.Sin(this.angle * Mathf.Deg2Rad);
+            moveSpeed2D = new Vector2(speedX, speedY);
+
+            body = this.GetComponent<Rigidbody2D>();
 
             // 発射
             body.AddForce(moveSpeed2D, ForceMode2D.Impulse);

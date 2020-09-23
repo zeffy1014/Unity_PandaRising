@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Bullet;
 
 namespace Enemy
 {
@@ -13,8 +14,11 @@ namespace Enemy
         static Player player;
         static GameArea gameArea;
         static float damageFlashTime = 0.1f;  // ダメージ表示する時間
+        static BulletGenerator bulletGenerator;
+
         public static void SetPlayer(Player playerIn) { player = playerIn; }
         public static void SetGameArea(GameArea area) { gameArea = area; }
+        public static void SetBulletGenerator(BulletGenerator bgIn) { bulletGenerator = bgIn; }
 
         // 敵の種類に応じて決まるもの
         [SerializeField] protected EnemyData enemyData;
@@ -98,6 +102,58 @@ namespace Enemy
             return;
         }
 
+        /***** 弾を出す処理 ****************************************************/
+        // 指定された角度で弾を撃つ
+        protected void ShotBullet(BulletType type, float deg, float? speed = null)
+        {
+            // 発射位置と向き
+            Vector3 genPos = this.transform.position;
+            Vector3 genRot = this.transform.eulerAngles;
+
+            bulletGenerator.ShotBullet(genPos, genRot, type, deg, moveSpeed:speed);
+        }
+
+        // 自機に向かって弾を撃つ
+        protected void ShotBullet2Player(BulletType type = BulletType.Enemy_Circle_Straight, float? speed = null)
+        {
+            // 自機に対する角度を算出
+            Vector2 posDiff = player.transform.position - this.transform.position;
+            float targetAngle = Mathf.Atan2(posDiff.y, posDiff.x) * Mathf.Rad2Deg;
+
+            ShotBullet(type, targetAngle, speed);
+
+            return;
+        }
+
+        // 複数弾(奇数弾・偶数弾)を撃つ
+        // 弾の数と1つ1つの角度(デフォルト:30度だが弾数が多い場合は重ならないように調整が入る)を指定
+        protected void ShotMultipleBullet(int bulletNum, float angle = 30.0f, BulletType type = BulletType.Enemy_Circle_Straight, float? speed = null)
+        {
+            // 自機がいないなら撃たない
+            if (null == player) return;
+
+            // 自機に対する角度を算出
+            Vector2 posDiff = player.transform.position - this.transform.position;
+            float targetAngle = Mathf.Atan2(posDiff.y, posDiff.x) * Mathf.Rad2Deg;
+
+            // 必要ならば角度調整
+            if (360.0f < bulletNum * angle) angle = 360.0f / bulletNum;
+
+            // 最初の弾の角度
+            float startAngle = targetAngle - angle * (bulletNum / 2);
+            if (0 == bulletNum % 2)
+            {
+                // 偶数弾だったら半分ずらす
+                startAngle -= (angle / 2);
+            }
+
+            for (int i = 0; i < bulletNum; i++)
+            {
+                ShotBullet(type, startAngle + (angle * i), speed);
+            }
+
+            return;
+        }
 
         /***** その他処理 ****************************************************/
         // ダメージ
