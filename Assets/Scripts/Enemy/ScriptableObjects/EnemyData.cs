@@ -7,7 +7,8 @@ using Enemy;
 public class EnemyData : ScriptableObject
 {
     // 敵の種類によって決まるものたち
-    public EnemyType type;      // 敵の種類
-    public float life;          // ライフ
-    public float moveSpeed;     // 移動速度
+    public EnemyType enemyType;     // 敵の種類
+    public float maxHp;             // 最大ライフ
+    public float moveSpeed;         // 移動速度
+    public float rotateSpeed;       // 旋回速度
 }

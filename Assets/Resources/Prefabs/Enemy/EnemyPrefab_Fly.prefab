@@ -12,10 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2db8d08aa7057a940ab1a26040c52e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 0
-  moveSpeed: 2.5
-  rotateSpeed: 5
-  maxHp: 10
+  enemyData: {fileID: 11400000, guid: 483c9280e840dd044815f25038da9692, type: 2}
   damageMaterial: {fileID: 0}
   normalMaterial: {fileID: 0}
 --- !u!1001 &8643926742968069466

@@ -16,11 +16,8 @@ namespace Enemy
         public static void SetPlayer(Player playerIn) { player = playerIn; }
         public static void SetGameArea(GameArea area) { gameArea = area; }
 
-        // 敵の種類に応じて決まるもの TODO:ScriptableObject参照させる
-        [SerializeField] protected EnemyType enemyType;
-        [SerializeField] protected float moveSpeed;
-        [SerializeField] protected float rotateSpeed;
-        [SerializeField] protected float maxHp;
+        // 敵の種類に応じて決まるもの
+        [SerializeField] protected EnemyData enemyData;
 
         // 動的に変わるもの
         float elaspedActionTime = 0.0f;        // 出現からの経過時間
@@ -46,7 +43,7 @@ namespace Enemy
         public void Start()
         {
             // HP初期化
-            nowHp = maxHp;
+            nowHp = enemyData.maxHp;
 
             // 生成から一定時間は無敵にする
             this.GetComponent<CapsuleCollider2D>().enabled = false;

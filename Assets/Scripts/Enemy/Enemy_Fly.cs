@@ -13,7 +13,7 @@ namespace Enemy
             base.Update();
 
             // ハエはまっすぐ進む
-            GoStraight(moveSpeed);
+            GoStraight(enemyData.moveSpeed);
 
         }
     }
