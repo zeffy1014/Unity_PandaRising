@@ -104,30 +104,44 @@ namespace Enemy
 
         /***** 弾を出す処理 ****************************************************/
         // 指定された角度で弾を撃つ
-        protected void ShotBullet(BulletType type, float deg, float? speed = null)
+        protected void ShotBullet(
+            BulletType type,
+            float deg,
+            float? speed = null, float? accel = null, float? size = null, Color? color = null)
         {
             // 発射位置と向き
             Vector3 genPos = this.transform.position;
             Vector3 genRot = this.transform.eulerAngles;
 
-            bulletGenerator.ShotBullet(genPos, genRot, type, deg, moveSpeed:speed);
+            bulletGenerator.ShotBullet(
+                genPos, genRot, type, deg,
+                moveSpeed:speed,
+                accel:accel,
+                size:size,
+                color:color);
         }
 
         // 自機に向かって弾を撃つ
-        protected void ShotBullet2Player(BulletType type = BulletType.Enemy_Circle_Straight, float? speed = null)
+        protected void ShotBullet2Player(
+            BulletType type = BulletType.Enemy_Circle_Straight, 
+            float? speed = null, float? accel = null, float? size = null, Color? color = null)
         {
             // 自機に対する角度を算出
             Vector2 posDiff = player.transform.position - this.transform.position;
             float targetAngle = Mathf.Atan2(posDiff.y, posDiff.x) * Mathf.Rad2Deg;
 
-            ShotBullet(type, targetAngle, speed);
+            ShotBullet(type, targetAngle, speed, accel, size, color);
 
             return;
         }
 
         // 複数弾(奇数弾・偶数弾)を撃つ
         // 弾の数と1つ1つの角度(デフォルト:30度だが弾数が多い場合は重ならないように調整が入る)を指定
-        protected void ShotMultipleBullet(int bulletNum, float angle = 30.0f, BulletType type = BulletType.Enemy_Circle_Straight, float? speed = null)
+        protected void ShotMultipleBullet(
+            int bulletNum,
+            float angle = 30.0f,
+            BulletType type = BulletType.Enemy_Circle_Straight, 
+            float? speed = null, float? accel = null, float? size = null, Color? color = null)
         {
             // 自機がいないなら撃たない
             if (null == player) return;

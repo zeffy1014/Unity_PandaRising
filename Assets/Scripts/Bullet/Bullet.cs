@@ -13,8 +13,6 @@ namespace Bullet
         [SerializeField] protected float moveSpeed = default;   // 移動速度
         [SerializeField] protected float rotateSpeed = default; // 回転速度
         [SerializeField] protected float accel = default;       // 加速度
-        [SerializeField] protected float size = default;        // サイズ
-        [SerializeField] protected Color color = default;       // 色
 
         // 必ず外部指定するもの
         protected float angle = default;  // 角度
@@ -31,8 +29,16 @@ namespace Bullet
             if (null != moveSpeed) this.moveSpeed = (float)moveSpeed;
             if (null != rotateSpeed) this.rotateSpeed = (float)rotateSpeed;
             if (null != accel) this.accel = (float)accel;
-            if (null != size) this.size = (float)size;
-            if (null != color) this.color = (Color)color;
+
+            if (null != size)
+            {
+                this.transform.localScale = new Vector2((float)size, (float)size);
+            }
+
+            if (null != color)
+            {
+                this.GetComponent<SpriteRenderer>().color = (Color)color;
+            }
 
             return;
         }
@@ -55,7 +61,9 @@ namespace Bullet
 
         public virtual void FixedUpdate()
         {
-            // 派生先で処理
+            // 基底動作:accelありの場合は加速
+            Vector2 accel2D = body.velocity.normalized * accel;
+            body.AddForce(accel2D);
         }
 
         public virtual void OnTriggerEnter2D(Collider2D other)

@@ -93,11 +93,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Type: 4
-  moveSpeed: 5
+  moveSpeed: 3
   rotateSpeed: 0
   accel: 0
-  size: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &4835760161186207924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,7 +121,7 @@ PrefabInstance:
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Name
-      value: BulletPrefab_Enemy_Circle
+      value: BulletPrefab_Enemy_Circle_Straight
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
