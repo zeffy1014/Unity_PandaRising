@@ -145,6 +145,7 @@ namespace Enemy {
             EnemyBase.SetPlayer(player);
             EnemyBase.SetGameArea(gameArea);
             EnemyBase.SetBulletGenerator(bulletGenerator);
+            gameController.SpeedMagReactiveProperty.DistinctUntilChanged().Subscribe(mag => EnemyBase.UpdateSpeedMagnification(mag));
 
         }
 

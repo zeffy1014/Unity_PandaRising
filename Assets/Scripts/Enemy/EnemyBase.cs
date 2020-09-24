@@ -13,15 +13,21 @@ namespace Enemy
         // 共通で必要に応じて参照するもの
         static Player player;
         static GameArea gameArea;
-        static float damageFlashTime = 0.1f;  // ダメージ表示する時間
+        static float damageFlashTime = 0.1f;      // ダメージ表示する時間
         static BulletGenerator bulletGenerator;
+        static float speedMagnification = 1.0f;   // 速度倍率(上昇速度による影響)
 
         public static void SetPlayer(Player playerIn) { player = playerIn; }
         public static void SetGameArea(GameArea area) { gameArea = area; }
         public static void SetBulletGenerator(BulletGenerator bgIn) { bulletGenerator = bgIn; }
+        public static void UpdateSpeedMagnification(float mag) { speedMagnification = mag; }
 
         // 敵の種類に応じて決まるもの
         [SerializeField] protected EnemyData enemyData;
+
+        // 上昇速度の倍率を受ける速度
+        public float GetMoveSpeed() { return enemyData.moveSpeed * speedMagnification; }
+        public float GetRotateSpeed() { return enemyData.rotateSpeed * speedMagnification; }
 
         // 動的に変わるもの
         float elaspedActionTime = 0.0f;        // 出現からの経過時間
@@ -56,7 +62,7 @@ namespace Enemy
 
         public virtual void Update()
         {
-            elaspedActionTime += Time.deltaTime;
+            elaspedActionTime += (Time.deltaTime * speedMagnification); // 上昇速度倍率の影響を受ける
 
             // 無敵時間終了
             if (undefeatableTime <= elaspedActionTime)

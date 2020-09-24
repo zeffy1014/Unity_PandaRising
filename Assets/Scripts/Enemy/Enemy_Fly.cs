@@ -17,7 +17,7 @@ namespace Enemy
             base.Update();
 
             // ハエはまっすぐ進む
-            GoStraight(enemyData.moveSpeed);
+            GoStraight(GetMoveSpeed());
 
             // 一定時間経過のたびに発射
             shotElaspedTime += Time.deltaTime;
