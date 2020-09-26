@@ -100,6 +100,7 @@ namespace Enemy {
         GameController gameController;
         GameArea gameArea;
         Player player;
+        House house;
         BulletGenerator bulletGenerator;
 
         bool loadTable = false;        // テーブル読み込み完了チェック
@@ -121,11 +122,12 @@ namespace Enemy {
 
         /***** 読み込み・準備処理 **********************************************************/
         // コンストラクタ
-        EnemyGenerator(GameController gc, GameArea ga, Player pl, BulletGenerator bg)
+        EnemyGenerator(GameController gc, GameArea ga, Player pl, House hs, BulletGenerator bg)
         {
             gameController = gc;
             gameArea = ga;
             player = pl;
+            house = hs;
             bulletGenerator = bg;
 
             // ステージ指定してDataLibrarianからステージ構成情報→敵生成テーブル読み込み
@@ -143,6 +145,7 @@ namespace Enemy {
 
             // Enemyに情報受け渡し
             EnemyBase.SetPlayer(player);
+            EnemyBase.SetHouse(house);
             EnemyBase.SetGameArea(gameArea);
             EnemyBase.SetBulletGenerator(bulletGenerator);
             gameController.SpeedMagReactiveProperty.DistinctUntilChanged().Subscribe(mag => EnemyBase.UpdateSpeedMagnification(mag));

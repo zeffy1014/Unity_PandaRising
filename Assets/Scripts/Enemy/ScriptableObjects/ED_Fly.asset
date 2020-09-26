@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ED_Fly
   m_EditorClassIdentifier: 
   enemyType: 0
-  maxHp: 0
-  moveSpeed: 0
+  maxHp: 10
+  moveSpeed: 2.5
   rotateSpeed: 0

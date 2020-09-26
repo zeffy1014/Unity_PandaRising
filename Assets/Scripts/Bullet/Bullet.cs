@@ -13,6 +13,7 @@ namespace Bullet
         [SerializeField] protected float moveSpeed = default;   // 移動速度
         [SerializeField] protected float rotateSpeed = default; // 回転速度
         [SerializeField] protected float accel = default;       // 加速度
+        [SerializeField] protected float attack = default;      // 攻撃力
 
         // 必ず外部指定するもの
         protected float angle = default;  // 角度
@@ -23,12 +24,19 @@ namespace Bullet
 
         // パラメータ上書きがあれば実施
         // default引数はNullable<T>を使ってnull扱いとする
-        public virtual void SetParam(float? moveSpeed = null, float? rotateSpeed = null, float? accel = null, float? size = null, Color? color = null)
+        public virtual void SetParam(
+            float? moveSpeed = null, 
+            float? rotateSpeed = null, 
+            float? accel = null, 
+            float? attack = null, 
+            float? size = null, 
+            Color? color = null)
         {
             // パラメータ変更がある場合は反映
             if (null != moveSpeed) this.moveSpeed = (float)moveSpeed;
             if (null != rotateSpeed) this.rotateSpeed = (float)rotateSpeed;
             if (null != accel) this.accel = (float)accel;
+            if (null != attack) this.attack = (float)attack;
 
             if (null != size)
             {
@@ -74,6 +82,12 @@ namespace Bullet
                 if ("Player" == other.tag || "Wall" == other.tag)
                 {
                     // 敵弾はPlayerか壁にあたったら消える そうでないものがあったら派生先で実装
+                    Destroy(this.gameObject);
+                }
+                if ("House" == other.tag)
+                {
+                    // 家に着弾したらダメージを与えて消える
+                    other.GetComponent<House>().OnDamage((int)attack);
                     Destroy(this.gameObject);
                 }
             }

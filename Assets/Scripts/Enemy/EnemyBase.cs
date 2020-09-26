@@ -12,12 +12,14 @@ namespace Enemy
 
         // 共通で必要に応じて参照するもの
         static Player player;
+        static House house;
         static GameArea gameArea;
         static float damageFlashTime = 0.1f;      // ダメージ表示する時間
         static BulletGenerator bulletGenerator;
         static float speedMagnification = 1.0f;   // 速度倍率(上昇速度による影響)
 
         public static void SetPlayer(Player playerIn) { player = playerIn; }
+        public static void SetHouse(House houseIn) { house = houseIn; }
         public static void SetGameArea(GameArea area) { gameArea = area; }
         public static void SetBulletGenerator(BulletGenerator bgIn) { bulletGenerator = bgIn; }
         public static void UpdateSpeedMagnification(float mag) { speedMagnification = mag; }
@@ -82,6 +84,13 @@ namespace Enemy
                 Destroy(this.gameObject);
             }
 
+            // 後逸検出したらHouseに弾を出して消える
+            if ("WallMiss" == other.tag)
+            {
+                ShotBullet2House(300); //TODO:とりあえず固定ダメージ
+                Destroy(this.gameObject);
+            }
+
         }
 
         /***** 移動・回転処理 ****************************************************/
@@ -137,6 +146,23 @@ namespace Enemy
             float targetAngle = Mathf.Atan2(posDiff.y, posDiff.x) * Mathf.Rad2Deg;
 
             ShotBullet(type, targetAngle, speed, accel, size, color);
+
+            return;
+        }
+
+        // 家に向かって弾を撃つ(Enemy後逸時処理)
+        protected void ShotBullet2House(float attack)
+        {
+            // 画面上部の固定位置から発射
+            Vector3 genPos = gameArea.GetPosFromRate(new Vector2(1.2f, 1.1f));
+            Vector3 genRot = Vector3.zero;
+
+            // Houseに対する角度を算出
+            Vector2 posDiff = house.transform.position - genPos;
+            float targetAngle = Mathf.Atan2(posDiff.y, posDiff.x) * Mathf.Rad2Deg;
+
+            // 攻撃力指定して発射
+            bulletGenerator.ShotBullet(genPos, genRot, BulletType.FallDown, targetAngle, attack:attack);
 
             return;
         }

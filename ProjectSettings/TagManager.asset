@@ -10,6 +10,7 @@ TagManager:
   - House
   - Wall
   - Bullet_Enemy
+  - WallMiss
   layers:
   - Default
   - TransparentFX

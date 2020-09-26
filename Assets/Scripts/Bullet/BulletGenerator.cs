@@ -17,6 +17,8 @@ namespace Bullet
         Enemy_Circle_Homing,
         Enemy_Needle_Street,
 
+        FallDown,
+
         BulletType_Num
     }
 
@@ -105,13 +107,13 @@ namespace Bullet
             Vector2 genRot, 
             BulletType type, 
             float angle, 
-            float? moveSpeed = null, float? rotateSpeed = null, float? accel = null, float? size = null, Color? color = null) // default引数はNullable<T>を使ってnull扱いとする
+            float? moveSpeed = null, float? rotateSpeed = null, float? accel = null, float? attack = null, float? size = null, Color? color = null) // default引数はNullable<T>を使ってnull扱いとする
         {
             // Prefab取得して生成
             GameObject bullet = Object.Instantiate<GameObject>(GetBulletPrefab(type), genPos, Quaternion.Euler(genRot));
 
             // パラメータ上書きがあれば行う
-            bullet.GetComponent<Bullet>().SetParam(moveSpeed, rotateSpeed, accel, size, color);
+            bullet.GetComponent<Bullet>().SetParam(moveSpeed, rotateSpeed, accel, attack, size, color);
 
             // 角度指定して発射
             bullet.GetComponent<Bullet>().Shot(angle);
