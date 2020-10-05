@@ -4,6 +4,7 @@ using UnityEngine;
 using UniRx;
 using DataBase;
 using Zenject;
+using System;
 
 // 各種設定値変更の方法
 public enum EditMode
@@ -184,6 +185,15 @@ public class GameController : MonoBehaviour, ILoadData
         HiScore = userData.GetHighScore();
         _moneyReactiveProperty.Value = userData.GetPocketMoney();
 
+        // Audio読み込み
+        // BGM(ステージとボス戦のみ)
+        AudioController.Instance.LoadBGM(BGMList.Game_Stage, stageInfo.GetPathBackGroundMusicStage());
+        AudioController.Instance.LoadBGM(BGMList.Game_Boss, stageInfo.GetPathBackGroundMusicBoss());
+        // SE全体 TODO:SEやステージ以外のBGMはもっと大本となる部分で読み込む
+        foreach (SEList index in Enum.GetValues(typeof(SEList)))
+        {
+            AudioController.Instance.LoadSE(index, DataLibrarian.Instance.GetSoundResource(index));
+        }
         // 読み込み成功
         return true;
 

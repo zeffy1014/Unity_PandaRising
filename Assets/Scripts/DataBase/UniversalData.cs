@@ -50,7 +50,7 @@ namespace DataBase
         public string GetPathEnemyGenerateTable() { return pathEnemyGenerateTable; }
         public string GetPathBackGroundImage() { return pathBackGroundImage; }
         public string GetPathBackGroundMusicStage() { return pathBackGroundMusicStage; }
-        public string GetPathBackGroundMusicBoll() { return pathBackGroundMusicBoss; }
+        public string GetPathBackGroundMusicBoss() { return pathBackGroundMusicBoss; }
         public int GetHeightStart() { return heightStart; }
         public int GetHeightGoal() { return heightGoal; }
 
@@ -212,15 +212,16 @@ namespace DataBase
 
     // 敵のPrefab格納パスのリスト -> ただの文字列リストのためClass化する必要はない
 
-
     // ゲーム全体を通じて不変となる情報 JSONで読み込む
     [Serializable]
     public class UniversalData
     {
-        [SerializeField] StageInfo[] stageInfo;           // ステージ構成情報
-        [SerializeField] ReinforcementTableInfo rtInfo;   // 強化レベルに対するパラメータ
-        [SerializeField] string[] enemyPrefabPath;        // 敵のPrefab格納パス
-        [SerializeField] string[] bulletPrefabPath;       // 弾のPrefab格納パス
+        [SerializeField] StageInfo[] stageInfo;             // ステージ構成情報
+        [SerializeField] ReinforcementTableInfo rtInfo;     // 強化レベルに対するパラメータ
+        [SerializeField] string[] enemyPrefabPath;          // 敵のPrefab格納パス
+        [SerializeField] string[] bulletPrefabPath;         // 弾のPrefab格納パス
+        [SerializeField] string[] bgmResources;             // BGMの参照先
+        [SerializeField] string[] seResources;              // SEの参照先
 
         /***** 情報取得IF ****************************************************************/
         // ステージ構成情報取得
@@ -270,6 +271,32 @@ namespace DataBase
                 return null;
             }
         }
+        // BGMのResource取得
+        public string GetBGMResource(BGMList key)
+        {
+            if (bgmResources.Length > (int)key)
+            {
+                return bgmResources[(int)key];
+            }
+            else
+            {
+                Debug.Log("BGM list key is out of range... Max:" + bgmResources.Length + ", Selected:" + key);
+                return null;
+            }
+        }
+        // SEのResource取得
+        public string GetSEResource(SEList key)
+        {
+            if (seResources.Length > (int)key)
+            {
+                return seResources[(int)key];
+            }
+            else
+            {
+                Debug.Log("SE list key is out of range... Max:" + seResources.Length + ", Selected:" + key);
+                return null;
+            }
+        }
 
         // for Make TestData
         public bool MakeTestJson(string filePath)
@@ -291,6 +318,9 @@ namespace DataBase
             enemyPrefabPath = Enumerable.Repeat<string>("Prefabs/Enemy/EnemyPrefab_xxx", (int)Enemy.EnemyType.EnemyType_Num).ToArray();
             // 弾Prefabパス
             bulletPrefabPath = Enumerable.Repeat<string>("Prefabs/Bullet/BulletPrefab_xxx", (int)Bullet.BulletType.BulletType_Num).ToArray();
+            // Audio参照リソース
+            bgmResources = Enumerable.Repeat<string>("Audio/xxx", (int)BGMList.BGM_TotalNumber).ToArray();
+            seResources = Enumerable.Repeat<string>("Audio/xxx", (int)SEList.SE_TotalNumber).ToArray();
 
             // ファイル保存
             try

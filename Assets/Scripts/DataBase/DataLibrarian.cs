@@ -8,6 +8,9 @@ namespace DataBase
 {
     public class DataLibrarian
     {
+        // テスト用 初期ファイルだけ作成するモード
+        static bool makeInitData = false;
+
         // データ読み込みできているかどうか
         bool loadOK = false;
 
@@ -23,18 +26,23 @@ namespace DataBase
         {
             get
             {
-                if (librarianInstance == null)
-                {
-                    librarianInstance = new DataLibrarian(); // 生成およびデータ読み込み
-                }
-                return librarianInstance;
+                return librarianInstance ?? (librarianInstance = new DataLibrarian());
             }
         }
 
         private DataLibrarian()
         {
-            // データを読み込む 成功なら読み込みOKとして以降のデータ取得が可能
-            loadOK = Load();
+            if (!makeInitData)
+            {
+                // データを読み込む 成功なら読み込みOKとして以降のデータ取得が可能
+                loadOK = Load();
+            }
+            else
+            {
+                // 初期ファイル作成のみ
+                makeInitData = false;
+                MakeInitUniversalData();
+            }
 
         }
 
@@ -173,7 +181,7 @@ namespace DataBase
         public string GetBulletPrefabPath(Bullet.BulletType type)
         {
             string retStr = universalData.GetBulletPrefabPath(type);
-            Debug.Log("Get GetBulletPrefabPath Type:" + type + ", Path:" + retStr);
+            Debug.Log("Get BulletPrefabPath Type:" + type + ", Path:" + retStr);
 
             if (loadOK)
             {
@@ -182,6 +190,39 @@ namespace DataBase
             else
             {
                 Debug.Log("DataLibrarian Load Data NG -> cannot get BulletPrefabPath...");
+                return null;
+            }
+        }
+
+        // BGMリソース取得
+        public string GetBGMResource(BGMList key)
+        {
+            string retStr = universalData.GetBGMResource(key);
+            Debug.Log("Get BGMResource Key:" + key + ", Resource:" + retStr);
+
+            if (loadOK)
+            {
+                return retStr;
+            }
+            else
+            {
+                Debug.Log("DataLibrarian Load Data NG -> cannot get BGMResource...");
+                return null;
+            }
+        }
+        // SEリソース取得
+        public string GetSoundResource(SEList key)
+        {
+            string retStr = universalData.GetSEResource(key);
+            Debug.Log("Get SoundResource Key:" + key + ", Resource:" + retStr);
+
+            if (loadOK)
+            {
+                return retStr;
+            }
+            else
+            {
+                Debug.Log("DataLibrarian Load Data NG -> cannot get SoundResource...");
                 return null;
             }
         }

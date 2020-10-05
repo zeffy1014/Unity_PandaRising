@@ -85,6 +85,29 @@ digraph g {
                 }
             }"
         ];
+
+        BGMResource [
+            label="{
+                BGM\nResources|
+                {
+                    001:\"/Audio/bgm_001\" |
+                    002:\"/Audio/bgm_002\" |
+                    ... |
+                    xxx:\"/Audio/bgm_xxx\" |
+                }
+            }"
+        ];      
+        SEResource [
+            label="{
+                SE\nResources|
+                {
+                    001:\"/Audio/se_001\" |
+                    002:\"/Audio/se_002\" |
+                    ... |
+                    xxx:\"/Audio/se_xxx\" |
+                }
+            }"
+        ];
     };
 
     subgraph cluster_user_data {
@@ -115,6 +138,8 @@ digraph g {
     UniversalData -> ReinforcementInfo
     UniversalData -> EnemyPrefabPathList
     UniversalData -> BulletPrefabPathList
+    UniversalData -> BGMResource
+    UniversalData -> SEResource
     StageInfoList:top -> StageInfo
 
     ReinforcementInfo -> ShotRapidityTable

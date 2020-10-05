@@ -81,5 +81,34 @@
 		"Prefabs/Bullet/BulletPrefab_xxx",
 		"Prefabs/Bullet/BulletPrefab_xxx",
 		"Prefabs/Bullet/BulletPrefab_FallDown"
+	],
+	"bgmResources":[
+		"Audio/bgm_xxx",
+		"Audio/bgm_xxx",
+		"Audio/stage_stage1",
+		"Audio/boss_stage1"
+	],
+	"seResources":[
+		"Audio/swish1_1",
+		"Audio/swish1_1",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/damage6",
+		"Audio/pyo2",
+		"Audio/launcher1",
+		"Audio/swish1_1",
+		"Audio/swish1_1",
+		"Audio/swish1_1",
+		"Audio/xxx",
+		"Audio/cracker2",
+		"Audio/cracker2",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx",
+		"Audio/xxx"
 	]
 }
