@@ -130,6 +130,9 @@ public class Player : MonoBehaviour
                 Destroy(other.gameObject);
                 _fishStateReactiveProperty.Value = FishState.Holding;
 
+                // キャッチ音
+                AudioController.Instance.PlaySE(SEList.Player_Catch);
+
             }
         }
         // 敵または敵弾と接触
@@ -137,8 +140,8 @@ public class Player : MonoBehaviour
         {
             // TODO:エフェクトつける
             //Instantiate(damageEffect, transform.position, Quaternion.identity);
-            // TODO:音も鳴らす
-            //audioSource.PlayOneShot(damageSE);
+            // 被弾音
+            AudioController.Instance.PlaySE(SEList.Player_Damage);
 
             _lifeReactiveProperty.Value--;
 
@@ -225,6 +228,9 @@ public class Player : MonoBehaviour
             bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
 
             shotWait = shotInterval;
+
+            // 発射音
+            AudioController.Instance.PlaySE(SEList.Player_Shot);
         }
 
         return;
@@ -249,6 +255,9 @@ public class Player : MonoBehaviour
             bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
             _fishStateReactiveProperty.Value = FishState.Throwing;
             fishCatchWait = fishCatchTime;
+
+            // 投げた音
+            AudioController.Instance.PlaySE(SEList.Player_Throw);
         }
         return;
     }

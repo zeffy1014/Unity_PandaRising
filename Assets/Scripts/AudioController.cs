@@ -20,6 +20,7 @@ public enum SEList
     // Player関連
     Player_Shot,        // 通常ショット
     Player_Throw,       // 投げ
+    Player_Catch,       // 投げたもの回収・ブロック取得など
     Player_Laser,       // レーザー
     Player_Bomb,        // ボム
     Player_Damage,      // 被弾
@@ -35,7 +36,8 @@ public enum SEList
     Enemy_Defeated_02,
 
     // その他
-    Stage_Fall,         // 敵後逸で何か降ってくる音
+    House_Fall,         // 敵後逸で何か降ってくる音
+    House_Damage,
     Stage_Clear,
     Stage_Warning,
 

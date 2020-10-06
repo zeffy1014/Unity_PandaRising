@@ -211,16 +211,24 @@ namespace Enemy
             {
                 // 撃破
                 // TODO:撃破演出
-                //audioSource.PlayOneShot(defeatSE);
                 //Instantiate<GameObject>(defeatEffect, transform.position, Quaternion.identity);
+                AudioController.Instance.PlaySE(SEList.Enemy_Defeated_01);
                 Destroy(this.gameObject);
             }
             else
             {
-                // TODO:ダメージ表現
-                //audioSource.PlayOneShot(damageSE);
-                //StartCoroutine(Flash(flashTime));
+                // TODO:ダメージ演出
+                StartCoroutine(Flash(0.1f));
+                AudioController.Instance.PlaySE(SEList.Enemy_Damage);
             }
+        }
+
+        // ちょっと光る
+        IEnumerator Flash(float time)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().material = damageMaterial;
+            yield return new WaitForSeconds(time);
+            this.gameObject.GetComponent<SpriteRenderer>().material = normalMaterial;
         }
     }
 }

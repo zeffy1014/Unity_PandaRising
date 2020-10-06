@@ -23,7 +23,8 @@ namespace Enemy
             shotElaspedTime += Time.deltaTime;
             if (shotInterval < shotElaspedTime)
             {
-                //ShotBullet2Player(accel:5.0f, size:1.5f, color:Color.blue);  // 加速度あり・サイズと色をデフォルトから変えて放つ
+                ShotBullet2Player(accel:5.0f, size:1.5f, color:Color.blue);  // 加速度あり・サイズと色をデフォルトから変えて放つ
+                AudioController.Instance.PlaySE(SEList.Enemy_Shot_01, 1);    // 発射音 大量に発生するかもしれないのでチャンネル指定
                 shotElaspedTime = 0.0f;
             }
         }
