@@ -9,6 +9,7 @@ namespace Enemy
     {
         // 固定値
         const float ANGLE_GAP = 90.0f;
+        const float FALLDOWN_SPEED = -20.0f;       // 撃破して落下する際の速度に使う
 
         // 共通で必要に応じて参照するもの
         static Player player;
@@ -26,6 +27,8 @@ namespace Enemy
 
         // 敵の種類に応じて決まるもの
         [SerializeField] protected EnemyData enemyData;
+        [SerializeField] protected GameObject defeatedEffect;   // 撃破時のエフェクト
+        [SerializeField] protected SEList defeatedSound;        // 撃破時の音
 
         // 上昇速度の倍率を受ける速度
         public float GetMoveSpeed() { return enemyData.moveSpeed * speedMagnification; }
@@ -210,9 +213,11 @@ namespace Enemy
             if (0.0f >= nowHp)
             {
                 // 撃破
-                // TODO:撃破演出
-                //Instantiate<GameObject>(defeatEffect, transform.position, Quaternion.identity);
-                AudioController.Instance.PlaySE(SEList.Enemy_Defeated_01);
+                Vector2 fallSpeed = new Vector2(0.0f, FALLDOWN_SPEED * speedMagnification);
+                var effect = Instantiate(defeatedEffect, transform.position, Quaternion.identity);
+                effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
+                AudioController.Instance.PlaySE(defeatedSound);
+
                 Destroy(this.gameObject);
             }
             else

@@ -12,6 +12,9 @@ public class House : MonoBehaviour, ILoadData
 
     private float waitHeal;                       // 回復待ち時間
 
+    // 演出
+    [SerializeField] GameObject damageEffect;
+
     /***** ReactivePropertyで監視させるもの ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
     // 現在ライフ
@@ -84,12 +87,15 @@ public class House : MonoBehaviour, ILoadData
     }
 
     // 被ダメージ処理
-    public void OnDamage(int damage)
+    public void OnDamage(int damage, Vector2 pos)
     {
         // 現在ライフを減らす(ただしゼロ未満にはしない)
         _currentLifeReactiveProperty.Value = (damage > _currentLifeReactiveProperty.Value)
             ? (0)
             : (_currentLifeReactiveProperty.Value - damage);
+
+        // 被弾位置にエフェクト
+        Instantiate(damageEffect, pos, Quaternion.identity);
 
     }
 

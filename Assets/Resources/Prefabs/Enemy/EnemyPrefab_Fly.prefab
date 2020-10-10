@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyData: {fileID: 11400000, guid: 483c9280e840dd044815f25038da9692, type: 2}
+  defeatedEffect: {fileID: 5624615425837636476, guid: 800173f2e81036e4cbeb8f28aa6547ce,
+    type: 3}
+  defeatedSound: 0
   damageMaterial: {fileID: 2100000, guid: 3c710dedb4f45614fbf8073b3c965640, type: 2}
   normalMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   shotInterval: 1

@@ -86,8 +86,8 @@ namespace Bullet
                 }
                 if ("House" == other.tag)
                 {
-                    // 家に着弾したらダメージを与えて消える
-                    other.GetComponent<House>().OnDamage((int)attack);
+                    // 家に着弾したらダメージを与えて消える 演出のため着弾点の座標も与える
+                    other.GetComponent<House>().OnDamage((int)attack, this.transform.position);
                     Destroy(this.gameObject);
                 }
             }

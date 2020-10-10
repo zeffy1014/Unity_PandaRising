@@ -45,6 +45,16 @@ public class Player : MonoBehaviour
     float fishCatchTime = 0.5f;                                  // 魚を回収できるまでの待ち時間(発射時に回収されないように)
     float fishCatchWait = default;
 
+    // 音関連
+    [SerializeField] SEList shotSound = SEList.Player_Shot;
+    [SerializeField] SEList throwSound = SEList.Player_Throw;
+    [SerializeField] SEList catchSound = SEList.Player_Catch;
+    [SerializeField] SEList damageSound = SEList.Player_Damage;
+    [SerializeField] SEList defeatedSound = SEList.Player_Defeated;
+
+    // 演出
+    [SerializeField] GameObject damageEffect;
+
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
     // ライフ　※シーンをまたいで引き継ぐ
@@ -131,17 +141,16 @@ public class Player : MonoBehaviour
                 _fishStateReactiveProperty.Value = FishState.Holding;
 
                 // キャッチ音
-                AudioController.Instance.PlaySE(SEList.Player_Catch);
+                AudioController.Instance.PlaySE(catchSound);
 
             }
         }
         // 敵または敵弾と接触
         if ("Enemy" == other.gameObject.tag || "Bullet_Enemy" == other.gameObject.tag)
         {
-            // TODO:エフェクトつける
-            //Instantiate(damageEffect, transform.position, Quaternion.identity);
-            // 被弾音
-            AudioController.Instance.PlaySE(SEList.Player_Damage);
+            // 被弾エフェクトと音
+            Instantiate(damageEffect, transform.position, Quaternion.identity);
+            AudioController.Instance.PlaySE(damageSound);
 
             _lifeReactiveProperty.Value--;
 
@@ -230,7 +239,7 @@ public class Player : MonoBehaviour
             shotWait = shotInterval;
 
             // 発射音
-            AudioController.Instance.PlaySE(SEList.Player_Shot);
+            AudioController.Instance.PlaySE(shotSound);
         }
 
         return;
@@ -257,7 +266,7 @@ public class Player : MonoBehaviour
             fishCatchWait = fishCatchTime;
 
             // 投げた音
-            AudioController.Instance.PlaySE(SEList.Player_Throw);
+            AudioController.Instance.PlaySE(throwSound);
         }
         return;
     }

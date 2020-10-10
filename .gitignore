@@ -14,6 +14,9 @@
 !/[Aa]ssets/**/*.meta
 [Aa]ssets/Plugins/UniRx*
 [Aa]ssets/Plugins/Zenject*
+[Aa]ssets/Effects*
+[Aa]ssets/Resources/Audio*
+[Aa]ssets/Resources/Image*
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
