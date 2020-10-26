@@ -7,6 +7,7 @@ using Zenject;
 using InputProvider;
 using Bullet;
 using DataBase;
+using TMPro;
 
 // Playerの魚の所持状態
 public enum FishState
@@ -31,7 +32,7 @@ public class Player : MonoBehaviour
     [Inject] IInputProvider input;                // DIで紐づけ
     [SerializeField] float moveSense = 1.0f;      // 移動量に対する実際の移動距離調整用感度
 
-    [SerializeField] Text posInfo = default;
+    [SerializeField] TextMeshProUGUI posInfo = default;
 
     // 弾生成用
     [Inject] BulletGenerator bulletGenerator;

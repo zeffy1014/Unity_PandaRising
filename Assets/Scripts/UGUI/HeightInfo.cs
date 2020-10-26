@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UGUI
 {
@@ -13,9 +14,9 @@ namespace UGUI
         [SerializeField] float dispPosMin = default;  // 現在高度表示枠 どこから
         [SerializeField] float dispPosMax = default;  // 現在高度表示枠 どこまでの高さで表示するか
 
-        [SerializeField] Text startHeightText;
-        [SerializeField] Text goalHeightText;
-        [SerializeField] Text currentHeightText;
+        [SerializeField] TextMeshProUGUI startHeightText;
+        [SerializeField] TextMeshProUGUI goalHeightText;
+        [SerializeField] TextMeshProUGUI currentHeightText;
         [SerializeField] RectTransform currentHeightDisp;
 
         // 現在高度更新

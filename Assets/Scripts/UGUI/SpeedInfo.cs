@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SpeedInfo : MonoBehaviour
 {
     [SerializeField] float minMagnification = 0.5f;         // 上昇速度倍率 最小値
     [SerializeField] float maxMagnification = 2.0f;         // 上昇速度倍率 最大値
 
-    [SerializeField] Text currentSpeedText;
+    [SerializeField] TextMeshProUGUI currentSpeedText;
     [SerializeField] Image speedNeedle;
 
     // 現在上昇速度倍率更新

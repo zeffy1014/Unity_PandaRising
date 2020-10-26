@@ -17,6 +17,10 @@
 [Aa]ssets/Effects*
 [Aa]ssets/Resources/Audio*
 [Aa]ssets/Resources/Image*
+[Aa]ssets/Coffee*
+[Aa]ssets/TextMesh Pro*
+[Aa]ssets/Font*
+[Aa]ssets/TextMeshProReplacer*
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*

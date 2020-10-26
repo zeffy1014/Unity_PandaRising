@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using TMPro;
 
 public class YesNoDialog : MonoBehaviour
 {
-    private Text title = default;
-    private Text description = default;
+    private TextMeshProUGUI title = default;
+    private TextMeshProUGUI description = default;
     private Button yesButton = default;
     private Button noButton = default;
 

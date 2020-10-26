@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UGUI
 {
     public class PlayTime : MonoBehaviour
     {
-        [SerializeField] Text playTimeText; // 表示テキスト
+        [SerializeField] TextMeshProUGUI playTimeText; // 表示テキスト
 
         // 表示用時間更新
         public void UpdatePlayTime(float time)

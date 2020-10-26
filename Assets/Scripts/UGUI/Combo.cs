@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace UGUI
 {
     public class Combo : MonoBehaviour
     {
-        [SerializeField] Text comboText;            // 表示テキスト
-        [SerializeField] int showThrethold = 10;   // このコンボ数以上なら表示
+        [SerializeField] TextMeshProUGUI comboText;         // 表示テキスト
+        [SerializeField] int showThrethold = 10;            // このコンボ数以上なら表示
 
         // 最初は非表示
         void Awake()

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class BombButtonView : MonoBehaviour
 {
-    [SerializeField] Text stockText;
+    [SerializeField] TextMeshProUGUI stockText;
 
     // ボムのストック数更新
     public void UpdateBombStock(int stock)
