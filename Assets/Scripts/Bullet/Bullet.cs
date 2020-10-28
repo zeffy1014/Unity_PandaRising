@@ -79,16 +79,23 @@ namespace Bullet
             // 基底動作
             if ("Bullet_Enemy" == this.tag)
             {
-                if ("Player" == other.tag || "Wall" == other.tag)
+                switch (other.tag)
                 {
-                    // 敵弾はPlayerか壁にあたったら消える そうでないものがあったら派生先で実装
-                    Destroy(this.gameObject);
-                }
-                if ("House" == other.tag)
-                {
-                    // 家に着弾したらダメージを与えて消える 演出のため着弾点の座標も与える
-                    other.GetComponent<House>().OnDamage((int)attack, this.transform.position);
-                    Destroy(this.gameObject);
+                    case "Player":
+                        // 敵弾はPlayerにあたったら消える(無敵時間でなければ)　そうでないものがあったら派生先で実装
+                        if (!other.GetComponent<Player>().BeingDamaged) Destroy(this.gameObject);
+                        break;
+                    case "Wall":
+                        // 敵弾は壁にあたったら消える そうでないものがあったら派生先で実装
+                        Destroy(this.gameObject);
+                        break;
+                    case "House":
+                        // 家に着弾したらダメージを与えて消える 演出のため着弾点の座標も与える
+                        other.GetComponent<House>().OnDamage((int)attack, this.transform.position);
+                        Destroy(this.gameObject);
+                        break;
+                    default:
+                        break;
                 }
             }
             if ("Bullet" == this.tag)

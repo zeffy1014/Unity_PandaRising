@@ -84,7 +84,8 @@ namespace Enemy
             // Playerに接触したら消える
             if ("Player" == other.tag)
             {
-                Destroy(this.gameObject);
+                // Playerが無敵時間でなければ
+                if (!other.GetComponent<Player>().BeingDamaged) Destroy(this.gameObject);
             }
 
             // 後逸検出したらHouseに弾を出して消える
