@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
     public bool BeingDamaged { get; private set; } = false;     // 被弾状態かどうか
     [SerializeField] float returnInterval = 3.0f;               // 被弾状態から戻るまでの時間(sec)    
     float returnWait = default;                                 // 被弾状態の経過時間(sec)
-    float blinkSpan = 0.2f;                                     // 点滅周期(sec)
+    float blinkSpan = 0.1f;                                     // 点滅周期(sec)
 
     /***** ReactivePropertyで監視させるものたち ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする

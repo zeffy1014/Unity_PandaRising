@@ -15,6 +15,12 @@ public class House : MonoBehaviour, ILoadData
     // 演出
     [SerializeField] GameObject damageEffect;
 
+    // 被弾時処理用
+    public bool BeingDamaged { get; private set; } = false;     // 被弾状態かどうか
+    [SerializeField] float returnInterval = 3.0f;               // 被弾状態から戻るまでの時間(sec)    
+    float returnWait = default;                                 // 被弾状態の経過時間(sec)
+    float blinkSpan = 0.1f;                                     // 点滅周期(sec)
+
     /***** ReactivePropertyで監視させるもの ****************************************************/
     // IReadOnlyReactivePropertyで公開してValueは変更できないようにする
     // 現在ライフ
@@ -89,12 +95,29 @@ public class House : MonoBehaviour, ILoadData
     // 被ダメージ処理
     public void OnDamage(int damage, Vector2 pos)
     {
-        // 現在ライフを減らす(ただしゼロ未満にはしない)
-        _currentLifeReactiveProperty.Value = (damage > _currentLifeReactiveProperty.Value)
+        // 点滅無敵でなければ被弾
+        if (!BeingDamaged)
+        {
+            // 現在ライフを減らす(ただしゼロ未満にはしない)
+            _currentLifeReactiveProperty.Value = (damage > _currentLifeReactiveProperty.Value)
             ? (0)
             : (_currentLifeReactiveProperty.Value - damage);
 
-        // 被弾位置にエフェクト
+            if (0 == _currentLifeReactiveProperty.Value)
+            {
+                // TODO:ライフゼロの処理 Signal発行など
+            }
+            else
+            {
+                // TODO:被弾のSignal発行(コンボ切れなどに使う)
+
+                // しばらく点滅無敵状態
+                BeingDamaged = true;
+                StartCoroutine(DamageBlink());
+            }
+        }
+
+        // 被弾位置にエフェクト これは無敵状態でも見た目の関係で出しておく
         Instantiate(damageEffect, pos, Quaternion.identity);
 
     }
@@ -107,5 +130,31 @@ public class House : MonoBehaviour, ILoadData
             ? (_maxLifeReactiveProperty.Value)
             : (_currentLifeReactiveProperty.Value + heal);
 
+    }
+
+    // 被弾時の点滅処理
+    IEnumerator DamageBlink()
+    {
+        returnWait = 0.0f;
+
+        // 一定期間処理を続ける
+        while (BeingDamaged)
+        {
+            yield return null;
+
+            returnWait += Time.deltaTime;
+            Color color = this.gameObject.GetComponent<SpriteRenderer>().material.color;
+            // 経過時間に2*PIをかけると1秒で1回点滅する→更に点滅周期で割る
+            color.a = Mathf.Sin((returnWait * (2 * Mathf.PI)) / blinkSpan) * 0.5f + 0.5f;
+            this.gameObject.GetComponent<SpriteRenderer>().material.color = color;
+
+            if (returnInterval < returnWait)
+            {
+                // 無敵時間終了 Alphaも通常に戻る
+                BeingDamaged = false;
+                color.a = 1.0f;
+                this.gameObject.GetComponent<SpriteRenderer>().material.color = color;
+            }
+        }
     }
 }
