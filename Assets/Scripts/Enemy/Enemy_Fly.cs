@@ -11,7 +11,6 @@ namespace Enemy
         float shotElaspedTime = 0.0f;                // 前回発射からの経過時間
 
         /***** MonoBehaviourイベント処理 ****************************************************/
-        // Update is called once per frame
         public override void Update()
         {
             base.Update();

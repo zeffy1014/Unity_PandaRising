@@ -11,6 +11,8 @@ TagManager:
   - Wall
   - Bullet_Enemy
   - WallMiss
+  - Block
+  - Player_Mantle
   layers:
   - Default
   - TransparentFX

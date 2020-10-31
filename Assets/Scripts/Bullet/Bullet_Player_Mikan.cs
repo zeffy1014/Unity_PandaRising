@@ -47,6 +47,11 @@ namespace Bullet
                 other.GetComponent<EnemyBase>().OnDamage(power);
                 Destroy(this.gameObject);
             }
+            // 障害物に接触したら消える
+            if ("Block" == other.tag)
+            {
+                Destroy(this.gameObject);
+            }
 
         }
     }

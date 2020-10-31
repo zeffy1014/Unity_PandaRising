@@ -70,6 +70,9 @@
 	"enemyPrefabPath":[
 		"Prefabs/Enemy/EnemyPrefab_Fly",
 		"Prefabs/Enemy/EnemyPrefab_xxx",
+		"Prefabs/Enemy/EnemyPrefab_xxx",
+		"Prefabs/Enemy/EnemyPrefab_Rock",
+		"Prefabs/Enemy/EnemyPrefab_xxx",
 		"Prefabs/Enemy/EnemyPrefab_xxx"
 	],
 	"bulletPrefabPath":[

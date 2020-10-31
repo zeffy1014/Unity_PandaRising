@@ -8,7 +8,7 @@ namespace Enemy
     public class EnemyBase : MonoBehaviour
     {
         // 固定値
-        const float ANGLE_GAP = 90.0f;
+        protected const float ANGLE_GAP = 90.0f;
         const float FALLDOWN_SPEED = -20.0f;       // 撃破して落下する際の速度に使う
 
         // 共通で必要に応じて参照するもの
@@ -30,9 +30,9 @@ namespace Enemy
         [SerializeField] protected GameObject defeatedEffect;   // 撃破時のエフェクト
         [SerializeField] protected SEList defeatedSound;        // 撃破時の音
 
-        // 上昇速度の倍率を受ける速度
-        public float GetMoveSpeed() { return enemyData.moveSpeed * speedMagnification; }
-        public float GetRotateSpeed() { return enemyData.rotateSpeed * speedMagnification; }
+        // 速度取得
+        public float GetMoveSpeed() { return enemyData.moveSpeed * speedMagnification; }  // 上昇速度の影響を受ける
+        public float GetRotateSpeed() { return enemyData.rotateSpeed; }
 
         // 動的に変わるもの
         float elaspedActionTime = 0.0f;        // 出現からの経過時間
@@ -55,7 +55,7 @@ namespace Enemy
 
 
         /***** MonoBehaviourイベント処理 ****************************************************/
-        public void Start()
+        public virtual void Start()
         {
             // HP初期化
             nowHp = enemyData.maxHp;
@@ -79,13 +79,20 @@ namespace Enemy
         }
 
         /***** Collider2Dイベント処理 ****************************************************/
-        private void OnTriggerEnter2D(Collider2D other)
+        public virtual void OnTriggerEnter2D(Collider2D other)
         {
             // Playerに接触したら消える
             if ("Player" == other.tag)
             {
                 // Playerが無敵時間でなければ
-                if (!other.GetComponent<Player>().BeingDamaged) Destroy(this.gameObject);
+                if (!other.GetComponent<Player>().BeingDamaged)
+                {
+                    // 撃破されて消える
+                    Vector2 fallSpeed = new Vector2(0.0f, FALLDOWN_SPEED * speedMagnification);
+                    var effect = Instantiate(defeatedEffect, transform.position, Quaternion.identity);
+                    effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
+                    Destroy(this.gameObject);
+                }
             }
 
             // 後逸検出したらHouseに弾を出して消える

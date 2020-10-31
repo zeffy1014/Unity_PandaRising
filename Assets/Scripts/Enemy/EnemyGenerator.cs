@@ -17,6 +17,10 @@ namespace Enemy {
         EnemyB,
         EnemyC,
 
+        Block_Rock,
+        BlockB,
+        BlockC,
+
         EnemyType_Num
     }
 
