@@ -29,7 +29,6 @@ public class Player : MonoBehaviour
     Rect borderRect = new Rect();                 // 移動範囲用の矩形
 
     // 入力操作受け付け
-    [Inject] IInputProvider input;                // DIで紐づけ
     [SerializeField] float moveSense = 1.0f;      // 移動量に対する実際の移動距離調整用感度
 
     [SerializeField] TextMeshProUGUI posInfo = default;
