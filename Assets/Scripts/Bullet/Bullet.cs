@@ -65,6 +65,7 @@ namespace Bullet
 
             // 発射
             body.AddForce(moveSpeed2D, ForceMode2D.Impulse);
+            body.AddTorque(this.rotateSpeed, ForceMode2D.Impulse);
         }
 
         public virtual void FixedUpdate()
@@ -92,6 +93,10 @@ namespace Bullet
                     case "House":
                         // 家に着弾したらダメージを与えて消える 演出のため着弾点の座標も与える
                         other.GetComponent<House>().OnDamage((int)attack, this.transform.position);
+                        Destroy(this.gameObject);
+                        break;
+                    case "Bullet_Player_Block":
+                        // Block弾に触れるとかき消される
                         Destroy(this.gameObject);
                         break;
                     default:

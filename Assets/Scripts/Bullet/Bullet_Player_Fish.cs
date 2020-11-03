@@ -14,7 +14,7 @@ namespace Bullet
     {
         // static変数として威力を取得・保持しておく
         static float power = default;
-        new static float size = default;
+        static float size = default;
         static float toughness = default;  // 場に出ていられる時間
         float elapsedTime = 0.0f;   // 放たれてから・消滅してからの経過時間
 

@@ -56,6 +56,9 @@ namespace Enemy
             // 弾が当たったら上に弾かれる タイマー開始
             if ("Bullet" == other.tag) boundRemainTime = boundTime;
 
+            // Block弾に当たったら破壊される TODO:衝撃波発生
+            if ("Bullet_Player_Block" == other.tag) Destroy(this.gameObject);
+
         }
         public virtual void OnTriggerStay2D(Collider2D other)
         {

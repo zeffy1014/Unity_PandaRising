@@ -29,6 +29,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1700938438480683869, guid: 8a49af0751cca084aa3918d9f2e57a7a,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3637039732630382399, guid: 8a49af0751cca084aa3918d9f2e57a7a,
         type: 3}
       propertyPath: m_Size.y
