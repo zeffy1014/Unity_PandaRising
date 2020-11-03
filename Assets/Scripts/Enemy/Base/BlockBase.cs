@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Bullet;
 
 namespace Enemy
 {
@@ -14,6 +15,9 @@ namespace Enemy
         [SerializeField] float boundSpeed = 10.0f;    // 弾が当たった際に上に弾かれる速度(強さ)
         [SerializeField] float boundTime = 1.0f;      // 弾かれる時間
         float boundRemainTime = 0.0f;                 // 弾かれ時間残り
+
+        // 種別で決まるもの
+        [SerializeField] protected BulletType bulletType = default;
 
         /***** MonoBehaviourイベント処理 ****************************************************/
         public virtual new void Start()
@@ -60,6 +64,12 @@ namespace Enemy
             {
                 // 基本的には動かなくする そうでない種別のBlockは派生先で実装
                 speedRateInFrame = speedRateInTouch;
+
+                // Player側でBlock弾入手するかも
+                if (true == other.GetComponentInParent<Player>().OnTouchBlock(bulletType))
+                {
+                    Destroy(this.gameObject);
+                }
             }
         }
         public virtual void OnTriggerExit2D(Collider2D other)

@@ -12,8 +12,8 @@ namespace InputProvider
     public class TouchInputProvider : IInputProvider
     {
         // Shot操作監視
-        private Subject<Unit> onShotSubject = new Subject<Unit>();
-        public IObservable<Unit> OnShot => onShotSubject;
+        private Subject<bool> onShotSubject = new Subject<bool>();
+        public IObservable<bool> OnShot => onShotSubject;
 
         // Throw操作監視
         private Vector2 throwBegin = Vector2.zero;
@@ -64,7 +64,13 @@ namespace InputProvider
             // ShotはuGUIボタン操作 押しっぱなし中操作を発行
             this.shotButton.OnButton
                 .Where(info => true == info.Down)
-                .Subscribe(push => onShotSubject.OnNext(Unit.Default));
+                .Subscribe(push => onShotSubject.OnNext(true));
+
+            // Shotの離され操作も監視
+            this.shotButton.OnButton
+                .DistinctUntilChanged(info => info.Down)
+                .Where(info => false == info.Down)
+                .Subscribe(_ => onShotSubject.OnNext(false));
 
             // ThrowはuGUIボタン操作 押され→離されを検出して操作を発行
             this.throwButton.OnButton

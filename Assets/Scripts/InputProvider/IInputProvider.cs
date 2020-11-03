@@ -21,7 +21,7 @@ namespace InputProvider
 
     public interface IInputProvider
     {
-        IObservable<Unit> OnShot { get; }
+        IObservable<bool> OnShot { get; }
         IObservable<float> OnThrow { get; }
         IObservable<Unit> OnBomb { get; }
         IObservable<Unit> OnMenu { get; }

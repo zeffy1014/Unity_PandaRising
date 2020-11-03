@@ -1,12 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Bullet;
 
 namespace Enemy
 {
     public class Block_Rock : BlockBase
     {
-        // Baseと特に変わりなし
+        void Initialize()
+        {
+            bulletType = BulletType.Player_Block_Rock;
+        }
 
     }
 }

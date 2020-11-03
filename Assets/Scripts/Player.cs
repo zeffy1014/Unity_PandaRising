@@ -17,6 +17,14 @@ public enum FishState
     Lost       // 失った状態
 }
 
+// Playerの岩掴み関連状態
+public enum BlockState
+{
+    EmptyHanded,    // 手ぶら状態(通常, Block入手可)
+    Shot,           // ショット操作中(Block入手不可)
+    Holding         // Block保持中
+}
+
 public class Player : MonoBehaviour
 {
     // 固定値
@@ -76,6 +84,12 @@ public class Player : MonoBehaviour
     // 魚所持状態
     ReactiveProperty<FishState> _fishStateReactiveProperty = new ReactiveProperty<FishState>(FishState.Holding);
     public IReadOnlyReactiveProperty<FishState> FishStateReactiveProperty => _fishStateReactiveProperty;
+
+    // 岩掴み関連状態
+    ReactiveProperty<BlockState> _blockStateReactiveProperty = new ReactiveProperty<BlockState>(BlockState.EmptyHanded);
+    public IReadOnlyReactiveProperty<BlockState> BlockStateReactiveProperty => _blockStateReactiveProperty;
+    public BulletType blockType = default;      // 現在保持しているBlock弾の種別
+    public GameObject block = default;          // 現在保持しているBlock弾のPrefab
 
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Start()
@@ -239,23 +253,36 @@ public class Player : MonoBehaviour
     }
 
     // ショット操作
-    public void Shot()
+    // 引数 true:操作中, false:操作やめ中
+    public void Shot(bool action)
     {
-        // 連射間隔が既に経過していれば発射
-        if (0.0f >= shotWait)
+        if (action)
         {
-            // 発射位置と向き
-            Vector3 genPos = transform.position;
-            genPos.y += 1.0f;
-            Vector3 genRot = transform.rotation.eulerAngles;
+            // 手ぶら状態ならショット中にする
+            if (BlockState.EmptyHanded == BlockStateReactiveProperty.Value) _blockStateReactiveProperty.Value = BlockState.Shot;
 
-            // Debug.Log("Shot from InputPresenter!!");
-            bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
+            // 連射間隔が既に経過していれば発射
+            if (0.0f >= shotWait)
+            {
+                // 発射位置と向き
+                Vector3 genPos = transform.position;
+                genPos.y += 1.0f;
+                Vector3 genRot = transform.rotation.eulerAngles;
 
-            shotWait = shotInterval;
+                // Debug.Log("Shot from InputPresenter!!");
+                bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Mikan, GetNowAngle());
 
-            // 発射音
-            AudioController.Instance.PlaySE(shotSound);
+                shotWait = shotInterval;
+
+                // 発射音
+                AudioController.Instance.PlaySE(shotSound);
+            }
+        }
+        else
+        {
+            // ショット中なら手ぶら状態にする
+            if (BlockState.Shot == BlockStateReactiveProperty.Value) _blockStateReactiveProperty.Value = BlockState.EmptyHanded;
+
         }
 
         return;
@@ -266,17 +293,27 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Throw from InputPresenter!! " + angle + " deg");
 
-        // 魚を持っていたら投げる
-        if (FishState.Holding == FishStateReactiveProperty.Value)
+        // 位置と向きを指定
+        Vector3 genPos = transform.position;
+        genPos.y += 1.0f;
+        Vector3 genRot = transform.rotation.eulerAngles;
+
+        // angleが負の場合は正面に投げる
+        if (0.0f > angle) angle = GetNowAngle();
+
+        // Block保持中はBlockを投げる
+        if (BlockState.Holding == BlockStateReactiveProperty.Value)
         {
-            // 位置と向きを指定して発射
-            Vector3 genPos = transform.position;
-            genPos.y += 1.0f;
-            Vector3 genRot = transform.rotation.eulerAngles;
+            bulletGenerator.ShotBullet(genPos, genRot, blockType, angle);
+            _blockStateReactiveProperty.Value = BlockState.EmptyHanded;
 
-            // angleが負の場合は正面に投げる
-            if (0.0f > angle) angle = GetNowAngle();
+            // 投げた音
+            AudioController.Instance.PlaySE(throwSound);
 
+        }
+        // Blockなしで魚があったら魚を投げる
+        else if (FishState.Holding == FishStateReactiveProperty.Value)
+        {
             bulletGenerator.ShotBullet(genPos, genRot, BulletType.Player_Fish, angle);
             _fishStateReactiveProperty.Value = FishState.Throwing;
             fishCatchWait = fishCatchTime;
@@ -405,5 +442,29 @@ public class Player : MonoBehaviour
                 this.gameObject.GetComponent<SpriteRenderer>().material.color = color;
             }
         }
+    }
+
+    // Block接触
+    // 戻り値 true:掴み状態遷移した, false:遷移しなかった
+    public bool OnTouchBlock(BulletType type)
+    {
+        bool ret = false;
+
+        // 手ぶらだったら岩掴み状態になる
+        if (BlockState.EmptyHanded == BlockStateReactiveProperty.Value)
+        {
+            // 取得したBlock弾の情報を保持
+            blockType = type;
+            block = (GameObject)Resources.Load(DataLibrarian.Instance.GetBulletPrefabPath(type));
+
+            _blockStateReactiveProperty.Value = BlockState.Holding;
+
+            // キャッチ音
+            AudioController.Instance.PlaySE(catchSound);
+
+            ret = true;
+        }
+
+        return ret;
     }
 }

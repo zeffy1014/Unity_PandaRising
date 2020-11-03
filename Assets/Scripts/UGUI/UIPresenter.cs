@@ -145,10 +145,11 @@ namespace UGUI
             gameController.ScoreReactiveProperty.DistinctUntilChanged().Subscribe(x => score.UpdateScore(x));
             gameController.MoneyReactiveProperty.DistinctUntilChanged().Subscribe(x => money.UpdateMoney(x));
 
-            // Player監視(ライフ・ボム数)
+            // Player監視(ライフ・ボム数・魚やBlockの状態)
             player.LifeReactiveProperty.Subscribe(life => pLife.UpdateLife(life));
             player.BombReactiveProperty.Subscribe(stock => bButtonView.UpdateBombStock(stock));
             player.FishStateReactiveProperty.DistinctUntilChanged().Subscribe(state => OnThrowStatusChanged(state));
+            player.BlockStateReactiveProperty.DistinctUntilChanged().Subscribe(state => OnBlockStatusChanged(state));
 
             // House監視(最大/現在ライフ)
             house.CurrentLifeReactiveProperty.Subscribe(life => hLife.UpdateCurrentLife(life));
@@ -179,5 +180,22 @@ namespace UGUI
             }
         }
 
+        // Blockの保持状態変化に応じた処理
+        void OnBlockStatusChanged(BlockState state)
+        {
+            switch(state)
+            {
+                case BlockState.Holding:   // Block取得 ゲージを無くして画像を変える
+                    tButtonView.HideGauge();
+                    tButtonView.GetComponent<Image>().sprite = player.block.GetComponent<SpriteRenderer>().sprite;
+                    break;
+                case BlockState.EmptyHanded:  //Blockなし 元の画像(魚)に戻す
+                    tButtonView.RestoreImage();
+                    break;
+                case BlockState.Shot:
+                default:
+                    break;
+            }
+        }
     }
 }

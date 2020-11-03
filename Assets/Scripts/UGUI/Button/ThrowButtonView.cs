@@ -12,6 +12,9 @@ public class ThrowButtonView : MonoBehaviour
     Color throwingColor = new Color(0.5f, 0.5f, 0.5f);  // 投げている途中は薄暗く
     Color lostColor = new Color(0.5f, 0.2f, 0.2f);      // 失って復活待ちは赤暗く
 
+    // デフォルト画像を持つ
+    [SerializeField] Sprite defaultImage = null;
+
     // ゲージ表示情報
     bool increase = default;   // 増加or減少方向
     float duration = default;  // 所要時間
@@ -46,6 +49,12 @@ public class ThrowButtonView : MonoBehaviour
         // ゲージを消しつつボタンの色も戻す
         circleGauge.gameObject.SetActive(false);
         GetComponent<Image>().color = defaultColor;
+    }
+
+    // 変わっていた画像をもとに戻す
+    public void RestoreImage()
+    {
+        GetComponent<Image>().sprite = defaultImage;
     }
 
     // Update関数 ゲージ表示更新

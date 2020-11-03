@@ -28,8 +28,8 @@ public class InputPresenter
         this.signalBus = signalBus;
 
         // 各種操作を監視してPlayerを動かす
-        this.input.OnShot.Subscribe(_ => {
-            this.player.Shot();
+        this.input.OnShot.Subscribe(push => {
+            this.player.Shot(push);
 
             // ゲーム開始操作を兼ねるためSignal発行(そのシーンで1回だけ)
             if (!gameStartSignalFired)

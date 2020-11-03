@@ -13,6 +13,10 @@ namespace InputProvider
         private Subject<Unit> onLeftClickSubject = new Subject<Unit>();
         public IObservable<Unit> OnLeftClick => onLeftClickSubject;
 
+        // 左クリック離され監視
+        private Subject<Unit> onLeftClickUpSubject = new Subject<Unit>();
+        public IObservable<Unit> OnLeftClickUp => onLeftClickUpSubject;
+
         // 右クリック押され監視
         private Subject<Vector2> onRightClickDownSubject = new Subject<Vector2>();
         public IObservable<Vector2> OnRightClickDown => onRightClickDownSubject;
@@ -40,7 +44,10 @@ namespace InputProvider
                     if (Input.GetMouseButton(0))
                     {
                         onLeftClickSubject.OnNext(Unit.Default);
-                        //Debug.Log("Left Click!");
+                    }
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        onLeftClickUpSubject.OnNext(Unit.Default);
                     }
                     if (Input.GetMouseButtonDown(1))
                     {

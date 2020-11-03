@@ -10,8 +10,8 @@ namespace InputProvider
     public class PCInputProvider : IInputProvider
     {
         // Shot操作監視
-        private Subject<Unit> onShotSubject = new Subject<Unit>();
-        public IObservable<Unit> OnShot => onShotSubject;
+        private Subject<bool> onShotSubject = new Subject<bool>();
+        public IObservable<bool> OnShot => onShotSubject;
 
         // Throw操作監視
         private Vector2 throwBegin = Vector2.zero;
@@ -44,7 +44,10 @@ namespace InputProvider
 
             /***** MouseOperationの操作を監視 *****/
             // 左クリック(押しっぱなしあり)でShot操作発行
-            this.mouse.OnLeftClick.Subscribe(_ => onShotSubject.OnNext(Unit.Default));
+            this.mouse.OnLeftClick.Subscribe(_ => onShotSubject.OnNext(true));
+
+            // 左クリック離されも監視
+            this.mouse.OnLeftClickUp.Subscribe(_ => onShotSubject.OnNext(false));
 
             // 右クリック押し→離しで投げ操作発行
             this.mouse.OnRightClickDown.Subscribe(pos => throwBegin = pos);  // 右クリック開始位置を保持
