@@ -22,6 +22,12 @@ namespace Bullet
         protected Vector2 moveSpeed2D;    // 角度を加味した最終的な移動速度
         protected Rigidbody2D body;
 
+        // 被弾側がダメージ計算するために攻撃力は直接取得できる
+        public float GetAttack()
+        {
+            return attack;
+        }
+
         // パラメータ上書きがあれば実施
         // default引数はNullable<T>を使ってnull扱いとする
         public virtual void SetParam(

@@ -102,6 +102,17 @@ namespace Enemy
                 Destroy(this.gameObject);
             }
 
+            // Block接触したら削る
+            if ("Bullet_Player_Block" == other.tag)
+            {
+                var bullet = other.GetComponent<Bullet_Player_Block>();
+                float damage = bullet.GetAttack();
+
+                // Blockを削ってから己にダメージ
+                bullet.OnShaved(this.nowHp);
+                OnDamage(damage);
+            }
+
         }
 
         /***** 移動・回転処理 ****************************************************/
