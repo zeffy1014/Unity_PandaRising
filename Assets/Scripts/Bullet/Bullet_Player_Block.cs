@@ -10,10 +10,14 @@ namespace Bullet
     {
         float currentAttack = default;
 
+        // 爆発時の設定
+        [SerializeField] BulletType explosionType = default;
+        public BulletType GetExplosionType() { return explosionType; }
+
         void Start()
         {
             currentAttack = attack;
-        }
+         }
 
         public override void OnTriggerEnter2D(Collider2D other)
         {
@@ -27,7 +31,7 @@ namespace Bullet
             {
                 // do nothing
             }
-            // 障害物に接触したら消える
+            // 障害物に接触したら消える(爆発は障害物側で処理します)
             if ("Block" == other.tag)
             {
                 Destroy(this.gameObject);
@@ -36,7 +40,7 @@ namespace Bullet
         }
 
         // 敵に接触して削れる
-        public void OnShaved(float damage)
+        public virtual void OnShaved(float damage)
         {
             currentAttack -= damage;
 
@@ -52,5 +56,6 @@ namespace Bullet
                 transform.localScale = new Vector3(scale, scale);
             }
         }
+
     }
 }

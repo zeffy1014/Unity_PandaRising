@@ -130,6 +130,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BulletPrefab_Player_Fish
       objectReference: {fileID: 0}
+    - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -211,6 +216,21 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4466249072700621737, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Enabled
@@ -223,6 +243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4466249072700621737, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
+    - {fileID: -7451408950662466442, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
 --- !u!1 &8422224765345354692 stripped
 GameObject:

@@ -13,6 +13,8 @@ TagManager:
   - WallMiss
   - Block
   - Player_Mantle
+  - Bullet_Player_Block
+  - Bullet_Player_Explosion
   layers:
   - Default
   - TransparentFX

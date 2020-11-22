@@ -9,15 +9,23 @@ namespace Bullet
 {
     public enum BulletType
     {
+        /*** Playerが放つ弾 ***/
         Player_Mikan,
         Player_Kaju,
         Player_Fish,
         Player_Block_Rock,
         Player_Block_xxx,
+        
+        /*** Enemyが放つ弾 ***/
         Enemy_Circle_Straight,
         Enemy_Circle_Homing,
         Enemy_Needle_Street,
+        
+        /*** 爆発 ***/
+        Explosion_Rock,
+        Explosion_Dynamite,
 
+        /*** その他 ***/
         FallDown,
 
         BulletType_Num

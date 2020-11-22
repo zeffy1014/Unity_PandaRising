@@ -18,7 +18,7 @@ MonoBehaviour:
   defeatedSound: 0
   damageMaterial: {fileID: 2100000, guid: 3c710dedb4f45614fbf8073b3c965640, type: 2}
   normalMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  shotInterval: 1
+  shotInterval: 5
 --- !u!1001 &8643926742968069466
 PrefabInstance:
   m_ObjectHideFlags: 0

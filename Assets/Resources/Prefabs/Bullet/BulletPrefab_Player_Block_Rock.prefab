@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7451408950662466442
+--- !u!114 &5325304105679482391
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26015d196707d574fa7ba709400f6b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 3
+  Type: 0
   moveSpeed: 15
-  rotateSpeed: 20
+  rotateSpeed: 25
   accel: 0
   attack: 500
+  explosionType: 8
 --- !u!1001 &5894710359075223609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24,30 +25,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -5020966952757782419, guid: bf27cb9569b096942aa522946fb35f9c,
+    - target: {fileID: -7451408950662466442, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -5020966952757782419, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_AngularDrag
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 550378323156604716, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 0.64
+      propertyPath: explosionType
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Name
       value: BulletPrefab_Player_Block_Rock
-      objectReference: {fileID: 0}
-    - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Bullet_Player_Block
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
@@ -104,16 +90,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Sprite
@@ -123,12 +99,12 @@ PrefabInstance:
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Size.x
-      value: 0.74285716
+      value: 3.42
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Size.y
-      value: 0.5857143
+      value: 2.61
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
@@ -138,27 +114,17 @@ PrefabInstance:
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.4509804
+      value: 0.509434
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.8980392
+      value: 0.33882165
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.51248395
-      objectReference: {fileID: 0}
-    - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4061107315494808527, guid: bf27cb9569b096942aa522946fb35f9c,
-        type: 3}
-      propertyPath: m_FlipY
-      value: 0
+      value: 0.33882165
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}

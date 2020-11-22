@@ -22,6 +22,7 @@ MonoBehaviour:
   boundSpeed: 10
   boundTime: 1
   bulletType: 3
+  explodeType: 8
 --- !u!1001 &5200458058438022558
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -17,7 +17,8 @@ namespace Enemy
         float boundRemainTime = 0.0f;                 // 弾かれ時間残り
 
         // 種別で決まるもの
-        [SerializeField] protected BulletType bulletType = default;
+        [SerializeField] protected BulletType bulletType = default;     // 取得時のBullet
+        [SerializeField] protected BulletType explodeType = default;    // 爆破時のBullet
 
         /***** MonoBehaviourイベント処理 ****************************************************/
         public virtual new void Start()
@@ -56,8 +57,14 @@ namespace Enemy
             // 弾が当たったら上に弾かれる タイマー開始
             if ("Bullet" == other.tag) boundRemainTime = boundTime;
 
-            // Block弾に当たったら破壊される TODO:衝撃波発生
-            if ("Bullet_Player_Block" == other.tag) Destroy(this.gameObject);
+            // Block弾に当たったらお互い爆発
+            if ("Bullet_Player_Block" == other.tag)
+            {
+                ShotBullet(other.GetComponent<Bullet_Player_Block>().GetExplosionType(), 0.0f);
+                ShotBullet(explodeType, 0.0f);
+
+                Destroy(this.gameObject);
+            }
 
         }
         public virtual void OnTriggerStay2D(Collider2D other)

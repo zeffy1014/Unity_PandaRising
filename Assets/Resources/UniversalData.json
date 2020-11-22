@@ -84,6 +84,8 @@
 		"Prefabs/Bullet/BulletPrefab_Enemy_Circle_Straight",
 		"Prefabs/Bullet/BulletPrefab_xxx",
 		"Prefabs/Bullet/BulletPrefab_xxx",
+		"Prefabs/Bullet/BulletPrefab_Explosion_Rock",
+		"Prefabs/Bullet/BulletPrefab_Explosion_Rock",
 		"Prefabs/Bullet/BulletPrefab_FallDown"
 	],
 	"bgmResources":[

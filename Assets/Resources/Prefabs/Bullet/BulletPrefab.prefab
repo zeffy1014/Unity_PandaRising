@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 550378323156604716}
   m_Layer: 0
   m_Name: BulletPrefab
-  m_TagString: Bullet
+  m_TagString: Bullet_Player_Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.3, y: 0.5}
+  m_Size: {x: 0.74285716, y: 0.5857143}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -117,5 +117,5 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.3, y: 0.5}
+  m_Size: {x: 0.64, y: 0.5}
   m_Direction: 0

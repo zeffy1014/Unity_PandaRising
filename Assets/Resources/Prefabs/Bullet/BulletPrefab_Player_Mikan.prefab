@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03730bea8a7fff4468b8e47f4f1cdc3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
   moveSpeed: 25
   rotateSpeed: 0
   accel: 0
-  size: 0
-  color: {r: 1, g: 1, b: 1, a: 0}
+  attack: 0
 --- !u!1001 &614130750040437634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -103,6 +103,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BulletPrefab_Player_Mikan
+      objectReference: {fileID: 0}
+    - target: {fileID: 4061107315494808525, guid: bf27cb9569b096942aa522946fb35f9c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Bullet
       objectReference: {fileID: 0}
     - target: {fileID: 4061107315494808526, guid: bf27cb9569b096942aa522946fb35f9c,
         type: 3}
@@ -198,6 +203,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 4466249072700621737, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
     - {fileID: 3258776464465187045, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
+    - {fileID: -7451408950662466442, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bf27cb9569b096942aa522946fb35f9c, type: 3}
 --- !u!1 &3521295114062469199 stripped
 GameObject:
