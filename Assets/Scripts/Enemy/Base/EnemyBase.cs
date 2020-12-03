@@ -98,7 +98,7 @@ namespace Enemy
             // 後逸検出したらHouseに弾を出して消える
             if ("WallMiss" == other.tag)
             {
-                ShotBullet2House(300); //TODO:とりあえず固定ダメージ
+                ShotBullet2House(enemyData.houseAttack); //ダメージは敵によって変わる
                 Destroy(this.gameObject);
             }
 

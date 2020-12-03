@@ -11,4 +11,5 @@ public class EnemyData : ScriptableObject
     public float maxHp;             // 最大ライフ
     public float moveSpeed;         // 移動速度
     public float rotateSpeed;       // 旋回速度
+    public float houseAttack;       // 後逸時の家へのダメージ(落とす弾の攻撃力)
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   maxHp: 0
   moveSpeed: 2
   rotateSpeed: 200
+  houseAttack: 500

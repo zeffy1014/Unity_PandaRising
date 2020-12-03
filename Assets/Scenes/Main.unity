@@ -3979,6 +3979,7 @@ MonoBehaviour:
   maxLife: 1000
   autoHealAmount: 1
   autoHealCycle: 0.05
+  standardDamage: 100
   damageEffect: {fileID: 823950032691681971, guid: 7be9698ae87e5db4ca1f2314556d0ac0,
     type: 3}
   returnInterval: 3

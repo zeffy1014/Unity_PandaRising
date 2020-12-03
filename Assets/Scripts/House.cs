@@ -10,6 +10,8 @@ public class House : MonoBehaviour, ILoadData
     [SerializeField] int autoHealAmount = 1;      // 自然回復量
     [SerializeField] float autoHealCycle = 0.05f; // 1回の自然回復にかかる時間
 
+    [SerializeField] float standardDamage = 300;  // 家へのダメージ基準値(これに対する大小でエフェクトサイズを変える)
+
     private float waitHeal;                       // 回復待ち時間
 
     // 演出
@@ -118,8 +120,12 @@ public class House : MonoBehaviour, ILoadData
         }
 
         // 被弾位置にエフェクト これは無敵状態でも見た目の関係で出しておく
-        Instantiate(damageEffect, pos, Quaternion.identity);
-
+        GameObject effect = Instantiate(damageEffect, pos, Quaternion.identity);
+        // ダメージ量に応じてサイズ変更
+        var psmain = effect.GetComponent<ParticleSystem>().main;
+        psmain.startSize = damage / standardDamage;
+        //effect.transform.localScale = new Vector2(damage / standardDamage, damage / standardDamage);
+        effect.SetActive(true);
     }
 
     // 回復処理
