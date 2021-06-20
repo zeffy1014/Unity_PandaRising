@@ -12,4 +12,6 @@ public class EnemyData : ScriptableObject
     public float moveSpeed;         // 移動速度
     public float rotateSpeed;       // 旋回速度
     public float houseAttack;       // 後逸時の家へのダメージ(落とす弾の攻撃力)
+    public int dropMoney;           // 撃破時に得られるお金
+    public int baseScore;           // 撃破時に得られるスコア(実際はコンボなどの倍率がかかる)
 }

@@ -17,3 +17,5 @@ MonoBehaviour:
   moveSpeed: 2
   rotateSpeed: 200
   houseAttack: 500
+  dropMoney: 100
+  baseScore: 1000

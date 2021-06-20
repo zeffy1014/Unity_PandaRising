@@ -147,6 +147,14 @@ public class GameController : MonoBehaviour, ILoadData
         return;
     }
 
+    // Enemy撃破
+    public void OnDefeatEnemy(DefeatEnemySignal signal)
+    {
+        // 所持金とスコアを増加させる
+        _moneyReactiveProperty.Value += signal.dropMoney;
+        _scoreReactiveProperty.Value += signal.baseScore;
+    }
+
     /***** GameController処理 ****************************************************/
     // 各種設定・情報読み込み
     bool LoadData()

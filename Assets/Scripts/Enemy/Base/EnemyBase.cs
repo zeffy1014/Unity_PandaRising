@@ -1,7 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 using Bullet;
+
+// 撃破時のSignal
+public class DefeatEnemySignal {
+    public int dropMoney;
+    public int baseScore;
+}
 
 namespace Enemy
 {
@@ -53,6 +60,9 @@ namespace Enemy
         public Material damageMaterial;    // ダメージ中にスプライトに適用するマテリアル(白くするため)
         public Material normalMaterial;    // 通常時のマテリアル(もとに戻すため)
 
+        // このClassはSignalを発行する
+        static SignalBus signalBus;
+        public static void SetSignalBus(SignalBus sb) { signalBus = sb; }
 
         /***** MonoBehaviourイベント処理 ****************************************************/
         public virtual void Start()
@@ -87,11 +97,16 @@ namespace Enemy
                 // Playerが無敵時間でなければ
                 if (!other.GetComponent<Player>().BeingDamaged)
                 {
-                    // 撃破されて消える
+                    // 撃破されてスコアとお金を加算して消える
                     Vector2 fallSpeed = new Vector2(0.0f, FALLDOWN_SPEED * speedMagnification);
                     var effect = Instantiate(defeatedEffect, transform.position, Quaternion.identity);
                     effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
+
+                    // 撃破時の通知
+                    NotifyDefeated();
+
                     Destroy(this.gameObject);
+
                 }
             }
 
@@ -237,6 +252,9 @@ namespace Enemy
                 effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
                 AudioController.Instance.PlaySE(defeatedSound);
 
+                // 撃破時の通知
+                NotifyDefeated();
+
                 Destroy(this.gameObject);
             }
             else
@@ -253,6 +271,13 @@ namespace Enemy
             this.gameObject.GetComponent<SpriteRenderer>().material = damageMaterial;
             yield return new WaitForSeconds(time);
             this.gameObject.GetComponent<SpriteRenderer>().material = normalMaterial;
+        }
+
+        // 撃破時のスコア(基本)と所持金の加算通知
+        protected void NotifyDefeated()
+        {
+            // Signal発行して所持金とスコア増加させる
+            signalBus.Fire(new DefeatEnemySignal() { dropMoney = this.enemyData.dropMoney, baseScore = this.enemyData.baseScore });
         }
     }
 }

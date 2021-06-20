@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using Zenject;
 using System;
 using System.IO;
 using System.Linq;
@@ -109,6 +110,9 @@ namespace Enemy {
 
         bool loadTable = false;        // テーブル読み込み完了チェック
 
+        // Zenject Signal送信用(生成したBullet側に必要に応じて渡す)
+        SignalBus signalBus;
+
         // 敵生成テーブル
         List<EnemyGenerateInfo> generateTable = new List<EnemyGenerateInfo>();
         // 敵生成高度を抽出・重複排除したもの(監視対象のフィルタに使用する)
@@ -126,13 +130,14 @@ namespace Enemy {
 
         /***** 読み込み・準備処理 **********************************************************/
         // コンストラクタ
-        EnemyGenerator(GameController gc, GameArea ga, Player pl, House hs, BulletGenerator bg)
+        EnemyGenerator(GameController gc, GameArea ga, Player pl, House hs, BulletGenerator bg, SignalBus sb)
         {
             gameController = gc;
             gameArea = ga;
             player = pl;
             house = hs;
             bulletGenerator = bg;
+            signalBus = sb;
 
             // ステージ指定してDataLibrarianからステージ構成情報→敵生成テーブル読み込み
             bool loadResult = LoadTable(DataLibrarian.Instance.GetStageInfo(gc.PlayingStage).GetPathEnemyGenerateTable());
@@ -153,6 +158,8 @@ namespace Enemy {
             EnemyBase.SetGameArea(gameArea);
             EnemyBase.SetBulletGenerator(bulletGenerator);
             gameController.SpeedMagReactiveProperty.DistinctUntilChanged().Subscribe(mag => EnemyBase.UpdateSpeedMagnification(mag));
+
+            EnemyBase.SetSignalBus(signalBus);
 
         }
 
