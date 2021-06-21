@@ -44,9 +44,10 @@ namespace Enemy
         // 動的に変わるもの
         float elaspedActionTime = 0.0f;        // 出現からの経過時間
         float nowHp;                           // 現在のHP
+        bool defeated = false;                 // 撃破されたかどうか(撃破時の処理が複数回呼ばれないように管理)
 
         // Generatorから渡される情報
-        int id;                 // ユニークなID
+        protected int id;                 // ユニークなID
         float activityTime;     // 活動時間(この時間経過で離脱開始)
         float undefeatableTime; // 出現から一定時間の無敵時間
         public void SetGenerateInfo(int idIn, float activityTimeIn, float undefeatableTimeIn)
@@ -102,8 +103,8 @@ namespace Enemy
                     var effect = Instantiate(defeatedEffect, transform.position, Quaternion.identity);
                     effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
 
-                    // 撃破時の通知
-                    NotifyDefeated();
+                    // 撃破時の処理
+                    DefeatedAction();
 
                     Destroy(this.gameObject);
 
@@ -252,8 +253,8 @@ namespace Enemy
                 effect.GetComponent<Rigidbody2D>().AddForce(fallSpeed, ForceMode2D.Impulse);
                 AudioController.Instance.PlaySE(defeatedSound);
 
-                // 撃破時の通知
-                NotifyDefeated();
+                // 撃破時の処理
+                DefeatedAction();
 
                 Destroy(this.gameObject);
             }
@@ -273,11 +274,21 @@ namespace Enemy
             this.gameObject.GetComponent<SpriteRenderer>().material = normalMaterial;
         }
 
-        // 撃破時のスコア(基本)と所持金の加算通知
-        protected void NotifyDefeated()
+        // 撃破時の処理
+        protected void DefeatedAction()
         {
-            // Signal発行して所持金とスコア増加させる
-            signalBus.Fire(new DefeatEnemySignal() { dropMoney = this.enemyData.dropMoney, baseScore = this.enemyData.baseScore });
+            // 撃破処理されていなければ1回だけ実行する
+            if (!defeated)
+            {
+                // Signal発行して所持金とスコア増加させる
+                signalBus.Fire(new DefeatEnemySignal() { dropMoney = this.enemyData.dropMoney, baseScore = this.enemyData.baseScore });
+                //Debug.Log("enemy defeated id:" + this.id);
+                defeated = true;
+            }
+            else
+            {
+                //Debug.Log("enemy defeated but already processed id:" + this.id);
+            }
         }
     }
 }

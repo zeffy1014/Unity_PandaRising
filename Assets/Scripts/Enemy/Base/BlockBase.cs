@@ -63,8 +63,8 @@ namespace Enemy
                 ShotBullet(other.GetComponent<Bullet_Player_Block>().GetExplosionType(), 0.0f);
                 ShotBullet(explodeType, 0.0f);
 
-                // 撃破時の通知
-                NotifyDefeated();
+                // 撃破時の処理
+                DefeatedAction();
 
                 Destroy(this.gameObject);
             }

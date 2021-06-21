@@ -87,6 +87,13 @@ public class GameController : MonoBehaviour, ILoadData
     // 現在の上昇速度
     float risingSpeed = default;
 
+    // コンボ持続時間関連
+    [SerializeField] float defaultComboDuration = 3.0f;  // 初期値
+    [SerializeField] float finalComboDuration   = 1.0f;  // 最終的にここまで短くなる
+    [SerializeField] int finalCombo = 100;               // このコンボ数までの間で持続時間が短くなっていく
+    float comboDuration = 0.0f;                          // 現在のコンボ持続時間(残り時間)
+
+
     /***** MonoBehaviourイベント処理 ****************************************************/
     void Awake()
     {
@@ -130,6 +137,18 @@ public class GameController : MonoBehaviour, ILoadData
                 ? (HeightMax)
                 : (_heightReactiveProperty.Value + risingSpeed * Time.deltaTime);
 
+            // コンボ中は持続時間が減少
+            if (comboDuration > 0.0f)
+            {
+                comboDuration -= Time.deltaTime;
+
+                if (comboDuration <= 0.0f)
+                {
+                    // コンボが途切れた
+                    _comboReactiveProperty.Value = 0;
+                    comboDuration = 0.0f;
+                }
+            }
         }
     }
 
@@ -153,6 +172,10 @@ public class GameController : MonoBehaviour, ILoadData
         // 所持金とスコアを増加させる
         _moneyReactiveProperty.Value += signal.dropMoney;
         _scoreReactiveProperty.Value += signal.baseScore;
+
+        // コンボ増加・持続時間設定
+        _comboReactiveProperty.Value++;
+        comboDuration = GetComboDuration(_comboReactiveProperty.Value);
     }
 
     /***** GameController処理 ****************************************************/
@@ -327,5 +350,29 @@ public class GameController : MonoBehaviour, ILoadData
 
         // 倍率をかける
         return basicSpeed * mag;
+    }
+
+    // コンボ数に対する持続時間を取得
+    public float GetComboDuration(int combo)
+    {
+        float ret = 0.0f;
+
+        if (finalCombo <= combo)
+        {
+            // これ以上は短くならない
+            ret = finalComboDuration;
+        }
+        else if (0 == combo)
+        {
+            // 今後数無しの場合はゼロで返す
+            ret = 0.0f;
+        }
+        else
+        {
+            // 持続時間を計算する
+            ret = defaultComboDuration - ((defaultComboDuration - finalComboDuration) * (combo / finalCombo));
+        }
+
+        return ret;
     }
 }
