@@ -90,7 +90,8 @@ public class GameController : MonoBehaviour, ILoadData
     // コンボ持続時間関連
     [SerializeField] float defaultComboDuration = 3.0f;  // 初期値
     [SerializeField] float finalComboDuration   = 1.0f;  // 最終的にここまで短くなる
-    [SerializeField] int finalCombo = 100;               // このコンボ数までの間で持続時間が短くなっていく
+    [SerializeField] int finalCombo = 100;               // このコンボ数までの間で持続時間が短くなっていく・倍率ボーナスつく
+    [SerializeField] float finalMagBonus = 10.0f;        // コンボ数による倍率ボーナス最大値
     float comboDuration = 0.0f;                          // 現在のコンボ持続時間(残り時間)
 
 
@@ -169,13 +170,17 @@ public class GameController : MonoBehaviour, ILoadData
     // Enemy撃破
     public void OnDefeatEnemy(DefeatEnemySignal signal)
     {
-        // 所持金とスコアを増加させる
-        _moneyReactiveProperty.Value += signal.dropMoney;
-        _scoreReactiveProperty.Value += signal.baseScore;
-
         // コンボ増加・持続時間設定
         _comboReactiveProperty.Value++;
         comboDuration = GetComboDuration(_comboReactiveProperty.Value);
+
+        // 所持金とスコア(コンボによる倍率ボーナスあり)を増加させる
+        _moneyReactiveProperty.Value += signal.dropMoney;
+        // 倍率ボーナス計算 最大値あり
+        float magBonus = (finalCombo >= _comboReactiveProperty.Value) ? (finalMagBonus) : (finalMagBonus * (_comboReactiveProperty.Value / finalCombo));
+        // スコアに反映
+        _scoreReactiveProperty.Value += (int)(signal.baseScore * (1.0f + magBonus));
+
     }
 
     /***** GameController処理 ****************************************************/
